@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
@@ -25,6 +26,7 @@ class EventResource extends JsonResource
             'end_time'         => $this->end_time,
             'quota'            => $this->quota,
             'registered_count' => $this->registered_count,
+            'likes_count'      => $this->likes_count ?? 0,
             'remaining_quota'  => $this->remainingQuota(),
             'is_full'          => $this->isFull(),
             'status'           => $this->status,
@@ -32,8 +34,11 @@ class EventResource extends JsonResource
             'contact_person'   => $this->contact_person,
             'contact_phone'    => $this->contact_phone,
             'created_at'       => $this->created_at?->format('d M Y'),
-            'categories'   => $this->whenLoaded('categories'),
-            'organization' => $this->whenLoaded('organization', fn() => new OrganizationResource($this->organization)),
+            'categories'       => $this->whenLoaded('categories'),
+            'organization'     => $this->whenLoaded(
+                'organization',
+                fn() => new OrganizationResource($this->organization)
+            ),
         ];
     }
 }

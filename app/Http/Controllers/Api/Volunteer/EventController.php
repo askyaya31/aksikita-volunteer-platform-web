@@ -26,7 +26,7 @@ class EventController extends Controller
 
     public function show(string $slug): JsonResponse
     {
-        $event = Event::with(['organization', 'categories'])
+        $event = Event::with(['organization', 'organization.user', 'categories'])
             ->where('slug', $slug)
             ->where('status', 'published')
             ->firstOrFail();

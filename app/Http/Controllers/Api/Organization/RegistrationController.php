@@ -24,6 +24,18 @@ class RegistrationController extends Controller
 
         return RegistrationResource::collection($registrations);
     }
+    public function show(Request $request, int $id): JsonResponse
+    {
+        $org = $request->user()->organizationProfile;
+
+        $registration = Registration::with(['user.volunteerProfile', 'event'])
+            ->whereHas('event', fn($q) => $q->where('organization_profile_id', $org->id))
+            ->findOrFail($id);
+
+        return response()->json([
+            'registration' => new RegistrationResource($registration)
+        ]);
+    }
 
     public function confirm(Request $request, int $id): JsonResponse
     {
@@ -34,8 +46,6 @@ class RegistrationController extends Controller
         }
 
         $registration->update(['status' => 'confirmed']);
-
-        // kirim notifikasi ke volunteer bahwa pendaftarannya diterima
         Notification::create([
             'user_id'          => $registration->user_id,
             'title'            => 'Pendaftaran Diterima!',
@@ -46,8 +56,6 @@ class RegistrationController extends Controller
 
         return response()->json(['message' => 'Volunteer berhasil diterima.']);
     }
-
-    // tolak volunteer
     public function reject(Request $request, int $id): JsonResponse
     {
         $request->validate([
@@ -68,7 +76,6 @@ class RegistrationController extends Controller
 
         $registration->event->decrement('registered_count');
 
-        // kirim notifikasi ke volunteer bahwa pendaftarannya ditolak
         Notification::create([
             'user_id'          => $registration->user_id,
             'title'            => 'Pendaftaran Tidak Diterima',

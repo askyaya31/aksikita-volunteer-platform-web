@@ -1,95 +1,96 @@
 <?php
+
 namespace App\Http\Controllers\Api\Volunteer;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\RegistrationResource;
 use App\Models\Event;
+use App\Models\Notification;
 use App\Models\Registration;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use App\Http\Resources\RegistrationResource;
 
 class RegistrationController extends Controller
 {
     public function store(Request $request, int $id): JsonResponse
     {
-        $user  = $request->user();
-        $event = Event::findOrFail($id);
+        $request->validate([
+            'notes' => 'nullable|string|max:500',
+        ]);
 
-        // cek 1: event harus berstatus published
+        $user  = $request->user();
+        $event = Event::with('organization.user')->findOrFail($id);
+
         if ($event->status !== 'published') {
             return response()->json([
-                'message' => 'Event ini tidak menerima pendaftaran saat ini.',
+                'message' => 'Event ini tidak sedang membuka pendaftaran.',
             ], 422);
         }
 
-        // cek 2: event tidak boleh sudah lewat tanggalnya
-        if ($event->end_date < now()->toDateString()) {
-            return response()->json([
-                'message' => 'Event ini sudah selesai.',
-            ], 422);
-        }
-
-        // cek 3: kuota tidak boleh penuh
         if ($event->isFull()) {
             return response()->json([
-                'message' => 'Kuota pendaftaran sudah penuh.',
+                'message' => 'Kuota event ini sudah penuh.',
             ], 422);
         }
 
-        // cek 4: volunteer tidak boleh daftar dua kali ke event yang sama
-        $sudahDaftar = Registration::where('event_id', $id)
-            ->where('user_id', $user->id)
+        $alreadyRegistered = Registration::where('user_id', $user->id)
+            ->where('event_id', $event->id)
+            ->whereNotIn('status', ['cancelled'])
             ->exists();
 
-        if ($sudahDaftar) {
+        if ($alreadyRegistered) {
             return response()->json([
-                'message' => 'Anda sudah terdaftar di event ini.',
+                'message' => 'Kamu sudah mendaftar ke event ini.',
             ], 422);
         }
 
-        try {
-            $registration = Registration::create([
-                'event_id'      => $event->id,
-                'user_id'       => $user->id,
-                'status'        => 'confirmed',
-                'registered_at' => now(),
-                'notes'         => $request->notes,
-            ]);
-        } catch (\Illuminate\Database\QueryException $e) {
-            if ($e->getCode() === '23000') {
-                return response()->json([
-                    'message' => 'Anda sudah terdaftar di event ini.',
-                ], 422);
-            }
-            throw $e;
-        }
+        $registration = Registration::create([
+            'user_id'       => $user->id,
+            'event_id'      => $event->id,
+            'notes'         => $request->notes,
+            'status'        => 'pending',
+            'registered_at' => now(),
+        ]);
 
         $event->increment('registered_count');
-        $user->volunteerProfile->increment('total_events_joined');
+
+        Notification::create([
+            'user_id'          => $user->id,
+            'title'            => 'Pendaftaran Berhasil Dikirim',
+            'message'          => "Pendaftaran kamu untuk event \"{$event->title}\" berhasil dikirim. Tunggu konfirmasi dari organisasi!",
+            'type'             => 'registration_pending',
+            'related_event_id' => $event->id,
+        ]);
+
+        $orgUserId = $event->organization?->user_id;
+        if ($orgUserId) {
+            Notification::create([
+                'user_id'          => $orgUserId,
+                'title'            => 'Pendaftar Baru!',
+                'message'          => "{$user->name} mendaftar ke event \"{$event->title}\". Segera tinjau pendaftarannya.",
+                'type'             => 'new_registration',
+                'related_event_id' => $event->id,
+            ]);
+        }
 
         return response()->json([
-            'message'      => 'Pendaftaran berhasil!',
+            'message'      => 'Pendaftaran berhasil dikirim! Menunggu konfirmasi dari organisasi.',
             'registration' => new RegistrationResource($registration->load('event')),
         ], 201);
     }
 
     public function cancel(Request $request, int $id): JsonResponse
     {
-        $registration = Registration::with('event')
-            ->where('event_id', $id)
-            ->where('user_id', $request->user()->id)
-            ->firstOrFail();
+        $request->validate(['reason' => 'nullable|string|max:500']);
+
+        $registration = Registration::where('user_id', $request->user()->id)->findOrFail($id);
 
         if ($registration->status === 'cancelled') {
-            return response()->json([
-                'message' => 'Pendaftaran ini sudah dibatalkan sebelumnya.',
-            ], 422);
+            return response()->json(['message' => 'Pendaftaran sudah dibatalkan.'], 422);
         }
 
-        if ($registration->event->status === 'completed') {
-            return response()->json([
-                'message' => 'Tidak dapat membatalkan pendaftaran untuk event yang sudah selesai.',
-            ], 422);
+        if ($registration->event?->status === 'completed') {
+            return response()->json(['message' => 'Event sudah selesai.'], 422);
         }
 
         $registration->update([
@@ -98,30 +99,28 @@ class RegistrationController extends Controller
             'cancellation_reason' => $request->reason,
         ]);
 
-        $registration->event->decrement('registered_count');
-$registration->user->volunteerProfile->decrement('total_events_joined');
+        $registration->event?->decrement('registered_count');
+
         return response()->json(['message' => 'Pendaftaran berhasil dibatalkan.']);
     }
 
     public function index(Request $request)
     {
-        $registrations = Registration::with(['event.categories', 'event.organization'])
+        $registrations = Registration::with(['event.organization', 'event.categories'])
             ->where('user_id', $request->user()->id)
             ->when($request->status, fn($q) => $q->where('status', $request->status))
-            ->latest()
-            ->paginate(10);
+            ->latest('registered_at')
+            ->paginate(15);
 
         return RegistrationResource::collection($registrations);
     }
 
     public function show(Request $request, int $id): JsonResponse
     {
-        $registration = Registration::with(['event.categories', 'event.organization'])
+        $registration = Registration::with(['event.organization', 'event.categories'])
             ->where('user_id', $request->user()->id)
             ->findOrFail($id);
 
-        return response()->json([
-            'registration' => new RegistrationResource($registration),
-        ]);
+        return response()->json(['registration' => new RegistrationResource($registration)]);
     }
 }

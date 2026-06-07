@@ -5,7 +5,6 @@
 <div class="min-h-screen flex items-center justify-center py-12 px-4 bg-surface">
     <div class="w-full max-w-lg">
 
-        {{-- Header --}}
         <div class="text-center mb-8">
             <h1 class="text-2xl font-bold text-gray-800">
                 Selamat datang, {{ $googleUser['name'] }}!
