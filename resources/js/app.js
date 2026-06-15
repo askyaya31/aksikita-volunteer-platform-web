@@ -8,6 +8,7 @@ function ready(fn) {
     }
 }
 
+
 function initScrollReveal() {
     const REVEAL_SELECTORS = [
         '.reveal',
@@ -47,7 +48,40 @@ function initScrollReveal() {
         });
     });
 }
+document.addEventListener("click", async (e) => {
 
+    const saveBtn = e.target.closest(".save-btn");
+    const likeBtn = e.target.closest(".like-btn");
+
+    if (saveBtn) {
+
+        const id = saveBtn.dataset.event;
+
+        await fetch(`/api/volunteer/events/${id}/save`, {
+            method: "POST",
+            headers: {
+                "Authorization":
+                    "Bearer " + localStorage.getItem("token"),
+                "Accept": "application/json"
+            }
+        });
+    }
+
+    if (likeBtn) {
+
+        const id = likeBtn.dataset.event;
+
+        await fetch(`/api/volunteer/events/${id}/like`, {
+            method: "POST",
+            headers: {
+                "Authorization":
+                    "Bearer " + localStorage.getItem("token"),
+                "Accept": "application/json"
+            }
+        });
+    }
+
+});
 function initNavScroll() {
     const nav = document.querySelector('nav[data-nav], nav.sticky, nav');
     if (!nav) return;

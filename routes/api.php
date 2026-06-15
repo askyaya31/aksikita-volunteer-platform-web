@@ -8,7 +8,7 @@ use App\Http\Controllers\Api\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Api\Admin\OrganizationController as AdminOrgController;
 use App\Http\Controllers\Api\Admin\EventReviewController;
 use App\Http\Controllers\Api\Admin\ReportController as AdminReportController;
-use App\Http\Controllers\Api\Admin\StatisticsController;
+use App\Http\Controllers\Api\Admin\StatisticsController as StatisticsController;
 use App\Http\Controllers\Api\Admin\NotificationController as AdminNotificationController;
 use App\Http\Controllers\Api\Organization\ProfileController as OrgProfileController;
 use App\Http\Controllers\Api\Organization\EventController as OrgEventController;

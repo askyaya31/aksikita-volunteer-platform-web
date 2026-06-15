@@ -37,6 +37,8 @@ class EventController extends Controller
             ->where('user_id', session('user_id'))
             ->first(); 
 
-        return view('volunteer.events.show', compact('event', 'registrasi'));
+        $isSaved = \App\Models\SavedEvent::where('user_id', session('user_id'))->where('event_id', $event->id)->exists();
+        $isLiked = \App\Models\LikedEvent::where('user_id', session('user_id'))->where('event_id', $event->id)->exists();
+        return view('volunteer.events.show', compact('event', 'registrasi', 'isSaved', 'isLiked'));
     }
 }

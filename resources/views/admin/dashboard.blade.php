@@ -2,188 +2,385 @@
 
 @section('title', 'Dashboard Admin')
 
+@push('styles')
+<style>
+
+/* ── Header ── */
+.dh {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    gap: 16px;
+}
+.dh__title {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--color-navy);
+    letter-spacing: -0.02em;
+    margin: 0 0 2px;
+}
+.dh__date {
+    font-size: 0.75rem;
+    color: var(--color-ink-muted);
+}
+
+/* Alert pill — pending org */
+.dh__alert {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 8px 7px 12px;
+    background: var(--color-navy);
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    transition: opacity 0.15s;
+    flex-shrink: 0;
+}
+.dh__alert:hover { opacity: 0.88; }
+.dh__alert-body {
+    display: flex;
+    align-items: baseline;
+    gap: 5px;
+}
+.dh__alert-num {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: -0.04em;
+    line-height: 1;
+}
+.dh__alert-text {
+    font-size: 0.73rem;
+    color: rgba(255,255,255,0.75);
+    line-height: 1.3;
+}
+.dh__alert-btn {
+    font-size: 0.71rem;
+    font-weight: 700;
+    background: var(--color-blue);
+    color: #fff;
+    padding: 4px 11px;
+    border-radius: var(--radius-full);
+    white-space: nowrap;
+}
+
+/* ── Metrics — 4 col strip ── */
+.dm {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--color-border);
+    gap: 1px;
+    overflow: hidden;
+    margin-bottom: 18px;
+}
+.dm__cell {
+    background: var(--color-surface);
+    padding: 15px 18px;
+    transition: background 0.12s;
+}
+.dm__cell:hover { background: var(--color-bg); }
+
+.dm__label {
+    font-size: 0.69rem;
+    color: var(--color-ink-muted);
+    font-weight: 500;
+    margin-bottom: 5px;
+}
+.dm__val {
+    font-family: var(--font-display);
+    font-size: 1.85rem;
+    font-weight: 800;
+    color: var(--color-navy);
+    letter-spacing: -0.05em;
+    line-height: 1;
+    margin-bottom: 5px;
+    font-variant-numeric: tabular-nums;
+}
+.dm__sub {
+    font-size: 0.71rem;
+    color: var(--color-ink-muted);
+    line-height: 1.4;
+}
+.dm__sub b { color: var(--color-ink-soft); font-weight: 600; }
+.dm__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 0.71rem;
+    font-weight: 600;
+    color: var(--color-blue);
+    text-decoration: none;
+}
+.dm__cta:hover { text-decoration: underline; }
+
+/* ── Queue cards ── */
+.dq {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+}
+
+.qc {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+}
+.qc__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 11px 14px;
+    border-bottom: 1px solid var(--color-border);
+}
+.qc__title {
+    font-size: 0.79rem;
+    font-weight: 600;
+    color: var(--color-ink);
+    margin: 0;
+}
+.qc__right {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+.qc__count {
+    font-size: 0.65rem;
+    font-weight: 700;
+    background: var(--color-blue);
+    color: #fff;
+    padding: 1px 6px;
+    border-radius: var(--radius-full);
+    font-variant-numeric: tabular-nums;
+}
+.qc__link {
+    font-size: 0.72rem;
+    color: var(--color-ink-muted);
+    text-decoration: none;
+}
+.qc__link:hover { color: var(--color-blue); }
+
+/* Queue rows */
+.qr {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 14px;
+    border-bottom: 1px solid var(--color-border-soft);
+    transition: background 0.1s;
+}
+.qr:last-child { border-bottom: none; }
+.qr:hover { background: var(--color-bg); }
+
+.qr__ava {
+    width: 32px; height: 32px;
+    border-radius: 6px;
+    border: 1px solid var(--color-border);
+    object-fit: cover;
+    flex-shrink: 0;
+}
+.qr__mono {
+    width: 32px; height: 32px;
+    border-radius: 6px;
+    border: 1px solid var(--color-border);
+    background: var(--color-border-soft);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 12px;
+    color: var(--color-ink-soft);
+    flex-shrink: 0;
+}
+.qr__body { flex: 1; min-width: 0; }
+.qr__name {
+    font-size: 0.81rem;
+    font-weight: 600;
+    color: var(--color-ink);
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.25;
+}
+.qr__meta {
+    font-size: 0.7rem;
+    color: var(--color-ink-muted);
+    margin: 1px 0 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.qr__status {
+    font-size: 0.7rem;
+    color: var(--color-ink-muted);
+    flex-shrink: 0;
+}
+.qr__btn {
+    font-size: 0.71rem;
+    font-weight: 600;
+    color: var(--color-blue);
+    text-decoration: none;
+    flex-shrink: 0;
+    padding: 4px 11px;
+    border: 1px solid var(--color-blue-light);
+    border-radius: var(--radius-full);
+    transition: background 0.12s, color 0.12s, border-color 0.12s;
+}
+.qr__btn:hover {
+    background: var(--color-blue);
+    color: #fff;
+    border-color: var(--color-blue);
+}
+
+.qc-empty {
+    padding: 28px 14px;
+    text-align: center;
+}
+.qc-empty p {
+    font-size: 0.76rem;
+    color: var(--color-ink-muted);
+    margin: 0;
+}
+
+/* ── Responsive ── */
+@media (max-width: 860px) {
+    .dm  { grid-template-columns: repeat(2, 1fr); }
+    .dq  { grid-template-columns: 1fr; }
+}
+@media (max-width: 520px) {
+    .dm__val { font-size: 1.5rem; }
+    .dh { flex-direction: column; align-items: flex-start; }
+}
+</style>
+@endpush
+
 @section('content')
 
-{{-- Page header --}}
-<div class="ak-page-header">
-    <div class="ak-flex-between" style="flex-wrap:wrap; gap:12px;">
-        <div>
-            <h1 style="font-size:1.5rem; margin-bottom:4px;">Selamat datang, {{ session('user_name') }}</h1>
-            <p style="margin:0; font-size:0.9rem;">Pantau aktivitas platform AksiKita dari sini.</p>
-        </div>
-        <div style="font-size:0.8rem; color:var(--color-ink-muted); background:var(--color-border-soft); padding:6px 14px; border-radius:var(--radius-full);">
-            {{ now()->translatedFormat('l, d F Y') }}
-        </div>
+{{-- Header --}}
+<div class="dh">
+    <div>
+        <p class="dh__title">Dashboard Admin AksiKita</p>
+        <span class="dh__date">{{ now()->isoFormat('dddd, D MMMM YYYY') }}</span>
     </div>
 </div>
 
-<div class="ak-grid-4" style="margin-bottom:32px;">
-
-    <div class="ak-stat-card">
-        <div class="ak-stat-icon navy">
-            <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
-            </svg>
-        </div>
-        <div>
-            <div class="ak-stat-value">{{ number_format($stats['total_users']) }}</div>
-            <div class="ak-stat-label">Total Pengguna</div>
-            <div style="margin-top:6px; display:flex; gap:8px; flex-wrap:wrap;">
-                <span class="ak-badge ak-badge-blue">{{ number_format($stats['total_volunteers']) }} Volunteer</span>
-                <span class="ak-badge ak-badge-navy">{{ number_format($stats['total_organizations']) }} Org</span>
-            </div>
+{{-- Metrics --}}
+<div class="dm">
+    <div class="dm__cell">
+        <div class="dm__label">Total Pengguna</div>
+        <div class="dm__val">{{ number_format($stats['total_users']) }}</div>
+        <div class="dm__sub">
+            <b>{{ number_format($stats['total_volunteers']) }}</b> relawan &middot;
+            <b>{{ number_format($stats['total_organizations']) }}</b> organisasi
         </div>
     </div>
 
-    <div class="ak-stat-card">
-        <div class="ak-stat-icon blue">
-            <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-            </svg>
-        </div>
-        <div>
-            <div class="ak-stat-value">{{ number_format($stats['total_events']) }}</div>
-            <div class="ak-stat-label">Total Kegiatan</div>
-            <div style="margin-top:6px; display:flex; gap:8px; flex-wrap:wrap;">
-                <span class="ak-badge ak-badge-success">{{ number_format($stats['published_events']) }} Aktif</span>
-                <span class="ak-badge ak-badge-warning">{{ number_format($stats['pending_events']) }} Pending</span>
-            </div>
+    <div class="dm__cell">
+        <div class="dm__label">Total Kegiatan</div>
+        <div class="dm__val">{{ number_format($stats['total_events']) }}</div>
+        <div class="dm__sub">
+            <b>{{ number_format($stats['published_events']) }}</b> aktif &middot;
+            <b>{{ number_format($stats['pending_events']) }}</b> menunggu review
         </div>
     </div>
 
-    <div class="ak-stat-card">
-        <div class="ak-stat-icon success">
-            <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
-            </svg>
-        </div>
-        <div>
-            <div class="ak-stat-value">{{ number_format($stats['total_registrations']) }}</div>
-            <div class="ak-stat-label">Total Pendaftaran</div>
-        </div>
+    <div class="dm__cell">
+        <div class="dm__label">Total Pendaftaran</div>
+        <div class="dm__val">{{ number_format($stats['total_registrations']) }}</div>
+        <div class="dm__sub">Semua waktu</div>
     </div>
 
-    <div class="ak-stat-card" style="{{ $stats['pending_org'] > 0 ? 'border-color:var(--color-warning); background:var(--color-warning-bg);' : '' }}">
-        <div class="ak-stat-icon warning">
-            <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
-            </svg>
-        </div>
-        <div>
-            <div class="ak-stat-value" style="{{ $stats['pending_org'] > 0 ? 'color:var(--color-warning);' : '' }}">{{ number_format($stats['pending_org']) }}</div>
-            <div class="ak-stat-label">Organisasi Pending</div>
-            @if($stats['pending_org'] > 0)
-                <div style="margin-top:6px;">
-                    <a href="{{ route('admin.users') }}?tab=organisasi" class="ak-badge ak-badge-warning" style="font-size:11px;">Tinjau sekarang</a>
-                </div>
-            @endif
-        </div>
-    </div>
-
-</div>
-
-
-<div style="display:grid; grid-template-columns:1fr 1fr; gap:24px;">
-    {{-- Organisasi menunggu verifikasi --}}
-    <div class="ak-card-flat">
-        <div class="ak-flex-between" style="margin-bottom:20px;">
-            <div>
-                <h3 style="font-size:1rem; margin-bottom:2px;">Organisasi Menunggu Verifikasi</h3>
-                @if($pendingOrgs->count() > 0)
-                    <p style="font-size:0.8rem; margin:0;">{{ $pendingOrgs->count() }} organisasi perlu ditinjau</p>
-                @else
-                    <p style="font-size:0.8rem; margin:0; color:var(--color-success);">Semua sudah ditinjau</p>
-                @endif
-            </div>
-            <a href="{{ route('admin.users') }}?tab=organisasi" class="ak-btn ak-btn-ghost ak-btn-sm">
-                Lihat semua
+    <div class="dm__cell">
+        <div class="dm__label">Organisasi Pending</div>
+        <div class="dm__val">{{ number_format($stats['pending_org']) }}</div>
+        @if($stats['pending_org'] > 0)
+            <a href="{{ route('admin.users') }}?tab=organisasi" class="dm__cta">
+                Tinjau sekarang
+                <svg width="10" height="10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+                </svg>
             </a>
-        </div>
-
-        @if($pendingOrgs->isEmpty())
-            <div class="ak-empty-state" style="padding:32px 16px;">
-                <div class="ak-empty-state__icon">
-                    <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                    </svg>
-                </div>
-                <h3>Tidak ada antrian</h3>
-                <p>Semua organisasi sudah diproses.</p>
-            </div>
         @else
-            <div style="display:flex; flex-direction:column; gap:1px;">
-                @foreach($pendingOrgs as $org)
-                    <div style="display:flex; align-items:center; gap:12px; padding:12px 0; border-bottom:1px solid var(--color-border-soft);">
-                        {{-- Logo / avatar org --}}
-                        <div style="width:36px; height:36px; border-radius:var(--radius-sm); background:var(--color-blue-ghost); display:flex; align-items:center; justify-content:center; flex-shrink:0; font-family:var(--font-display); font-weight:700; font-size:14px; color:var(--color-navy);">
-                            {{ strtoupper(substr($org->organization_name ?? $org->user->name, 0, 1)) }}
-                        </div>
-                        <div style="flex:1; min-width:0;">
-                            <div style="font-weight:600; font-size:0.875rem; color:var(--color-ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
-                                {{ $org->organization_name ?? $org->user->name }}
-                            </div>
-                            <div style="font-size:0.78rem; color:var(--color-ink-muted);">
-                                {{ $org->user->email }} · {{ $org->city ?? '-' }}
-                            </div>
-                        </div>
-                        <div style="flex-shrink:0;">
-                            <span class="ak-badge ak-badge-warning">Pending</span>
-                        </div>
-                    </div>
-                @endforeach
+            <div class="dm__sub">Tidak ada antrian</div>
+        @endif
+    </div>
+</div>
+
+{{-- Queue cards --}}
+<div class="dq">
+
+    <div class="qc">
+        <div class="qc__head">
+            <span class="qc__title">Verifikasi Organisasi</span>
+            <div class="qc__right">
+                @if(!$pendingOrgs->isEmpty())
+                    <span class="qc__count">{{ $pendingOrgs->count() }}</span>
+                @endif
+                <a href="{{ route('admin.users') }}?tab=organisasi" class="qc__link">Lihat semua</a>
             </div>
+        </div>
+        @if($pendingOrgs->isEmpty())
+            <div class="qc-empty"><p>Tidak ada organisasi yang menunggu.</p></div>
+        @else
+            @foreach($pendingOrgs as $org)
+                @php
+                    $logoSrc  = $org->logo ? asset('storage/' . $org->logo) : null;
+                    $initials = strtoupper(substr($org->organization_name ?? $org->user->name, 0, 1));
+                @endphp
+                <div class="qr">
+                    @if($logoSrc)
+                        <img src="{{ $logoSrc }}" alt="{{ $org->organization_name }}" class="qr__ava">
+                    @else
+                        <div class="qr__mono">{{ $initials }}</div>
+                    @endif
+                    <div class="qr__body">
+                        <p class="qr__name">{{ $org->organization_name ?? $org->user->name }}</p>
+                        <p class="qr__meta">{{ $org->user->email }}{{ $org->city ? ' · ' . $org->city : '' }}</p>
+                    </div>
+                    <span class="qr__status">Menunggu</span>
+                </div>
+            @endforeach
         @endif
     </div>
 
-    {{-- Event menunggu review --}}
-    <div class="ak-card-flat">
-        <div class="ak-flex-between" style="margin-bottom:20px;">
-            <div>
-                <h3 style="font-size:1rem; margin-bottom:2px;">Kegiatan Menunggu Review</h3>
-                @if($pendingEvents->count() > 0)
-                    <p style="font-size:0.8rem; margin:0;">{{ $pendingEvents->count() }} kegiatan perlu ditinjau</p>
-                @else
-                    <p style="font-size:0.8rem; margin:0; color:var(--color-success);">Tidak ada antrian</p>
+    <div class="qc">
+        <div class="qc__head">
+            <span class="qc__title">Review Kegiatan</span>
+            <div class="qc__right">
+                @if(!$pendingEvents->isEmpty())
+                    <span class="qc__count">{{ $pendingEvents->count() }}</span>
                 @endif
+                <a href="{{ route('admin.events') }}?status=pending_review" class="qc__link">Lihat semua</a>
             </div>
-            <a href="{{ route('admin.events') }}?tab=review" class="ak-btn ak-btn-ghost ak-btn-sm">
-                Lihat semua
-            </a>
         </div>
-
         @if($pendingEvents->isEmpty())
-            <div class="ak-empty-state" style="padding:32px 16px;">
-                <div class="ak-empty-state__icon">
-                    <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                    </svg>
-                </div>
-                <h3>Tidak ada antrian</h3>
-                <p>Semua kegiatan sudah diproses.</p>
-            </div>
+            <div class="qc-empty"><p>Tidak ada kegiatan yang menunggu review.</p></div>
         @else
-            <div style="display:flex; flex-direction:column; gap:1px;">
-                @foreach($pendingEvents as $event)
-                    <div style="display:flex; align-items:center; gap:12px; padding:12px 0; border-bottom:1px solid var(--color-border-soft);">
-                        <div style="width:36px; height:36px; border-radius:var(--radius-sm); background:linear-gradient(135deg, var(--color-blue-ghost) 0%, var(--color-blue-pale) 100%); display:flex; align-items:center; justify-content:center; flex-shrink:0; color:var(--color-blue);">
-                            <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                            </svg>
-                        </div>
-                        <div style="flex:1; min-width:0;">
-                            <div style="font-weight:600; font-size:0.875rem; color:var(--color-ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
-                                {{ $event->title }}
-                            </div>
-                            <div style="font-size:0.78rem; color:var(--color-ink-muted);">
-                                {{ $event->organization->organization_name ?? '-' }} · {{ $event->city }}
-                            </div>
-                        </div>
-                        <a href="{{ route('admin.events.show', $event->id) }}" class="ak-btn ak-btn-primary ak-btn-sm" style="flex-shrink:0;">
-                            Tinjau
-                        </a>
+            @foreach($pendingEvents as $event)
+                @php
+                    $posterSrc    = $event->poster ? asset('storage/' . $event->poster) : null;
+                    $eventInitial = strtoupper(substr($event->title, 0, 1));
+                @endphp
+                <div class="qr">
+                    @if($posterSrc)
+                        <img src="{{ $posterSrc }}" alt="{{ $event->title }}" class="qr__ava">
+                    @else
+                        <div class="qr__mono">{{ $eventInitial }}</div>
+                    @endif
+                    <div class="qr__body">
+                        <p class="qr__name">{{ $event->title }}</p>
+                        <p class="qr__meta">{{ $event->organization->organization_name ?? '-' }}{{ $event->city ? ' · ' . $event->city : '' }}</p>
                     </div>
-                @endforeach
-            </div>
+                    <a href="{{ route('admin.events.show', $event->id) }}" class="qr__btn">Tinjau</a>
+                </div>
+            @endforeach
         @endif
     </div>
 

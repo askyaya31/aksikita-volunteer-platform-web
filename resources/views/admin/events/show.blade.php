@@ -193,7 +193,7 @@
         </div>
 
         @if($event->status === 'pending_review')
-            <div class="ak-card-flat" style="border:1.5px solid var(--color-warning); background:var(--color-warning-bg);">
+            <div class="ak-card-flat">
                 <h3 style="font-size:0.95rem; margin-bottom:4px; color:var(--color-ink);">Tinjau Kegiatan Ini</h3>
                 <p style="font-size:0.8rem; color:var(--color-ink-muted); margin-bottom:16px;">
                     Pastikan kegiatan memenuhi syarat dan ketentuan platform sebelum menyetujui.
@@ -203,9 +203,9 @@
                 <form method="POST" action="{{ route('admin.events.review', $event->id) }}" id="formApprove">
                     @csrf
                     <input type="hidden" name="action" value="approve">
-                    <button type="submit" class="ak-btn ak-btn-success" style="width:100%; justify-content:center; margin-bottom:10px;"
+                    <button type="submit" class="ak-btn ak-btn-blue" style="width:100%; justify-content:center; margin-bottom:10px;"
                             onclick="return confirm('Setujui kegiatan ini? Kegiatan akan langsung dipublikasikan.')">
-                        <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                        {{-- <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg> --}}
                         Setujui & Publikasikan
                     </button>
                 </form>
@@ -213,7 +213,7 @@
                 {{-- REJECT TOGGLE --}}
                 <button type="button" onclick="document.getElementById('rejectPanel').classList.toggle('hidden')"
                         class="ak-btn ak-btn-ghost" style="width:100%; justify-content:center; color:var(--color-danger); border-color:var(--color-danger);">
-                    <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                    {{-- <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg> --}}
                     Tolak Kegiatan
                 </button>
 
@@ -240,7 +240,9 @@
             </div>
         @elseif($event->status === 'published')
             <div class="ak-alert ak-alert-success">
-                <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="flex-shrink:0;"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="flex-shrink:0;">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
                 <div>
                     <div style="font-weight:600;">Kegiatan Sudah Aktif</div>
                     <div style="font-size:0.8rem; margin-top:2px;">Kegiatan ini sudah dipublikasikan dan tampil di platform.</div>
@@ -248,7 +250,9 @@
             </div>
         @elseif($event->status === 'rejected')
             <div class="ak-alert ak-alert-danger">
-                <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="flex-shrink:0;"><path stroke-linecap="round" stroke-linejoin="round" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="flex-shrink:0;">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
                 <div>
                     <div style="font-weight:600;">Kegiatan Ditolak</div>
                     @if($event->rejection_reason)

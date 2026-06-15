@@ -16,7 +16,29 @@ class RegistrationResource extends JsonResource
             'cancellation_reason' => $this->cancellation_reason,
             'notes'               => $this->notes,
             'event' => $this->whenLoaded('event', fn() => new EventResource($this->event)),
-            'user'  => $this->whenLoaded('user',  fn() => new UserResource($this->user)),
+            'user'  => $this->whenLoaded('user',  function () {
+                $user = $this->user;
+                $regs = $user->registrations;
+
+                return (new UserResource($user))->additional([])->toArray(request()) + [
+                    'volunteer_stats' => [
+                        'total_daftar'    => $regs->count(),
+                        'total_confirmed' => $regs->where('status', 'confirmed')->count(),
+                        'total_hadir'     => $regs->where('status', 'attended')->count(),
+                        'total_batal'     => $regs->where('status', 'cancelled')->count(),
+                    ],
+                    'registration_history' => $regs
+                        ->whereIn('status', ['confirmed', 'attended', 'cancelled'])
+                        ->sortByDesc('registered_at')
+                        ->values()
+                        ->map(fn($r) => [
+                            'event_title' => $r->event?->title,
+                            'start_date'  => $r->event?->start_date?->format('Y-m-d'),
+                            'city'        => $r->event?->city,
+                            'status'      => $r->status,
+                        ]),
+                ];
+            }),
         ];
     }
 }

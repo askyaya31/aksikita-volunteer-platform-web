@@ -14,7 +14,7 @@ class UserController extends Controller
     {
         $tab = $request->get('tab', 'semua');
 
-        $users = User::with('organizationProfile')
+        $users = User::with(['organizationProfile', 'volunteerProfile'])
             ->when($tab !== 'semua', fn($q) => $q->where('role', $tab === 'organisasi' ? 'organization' : 'volunteer'))
             ->when($request->search, fn($q) => $q->where(function ($q) use ($request) {
                 $q->where('name', 'like', "%{$request->search}%")
@@ -78,5 +78,20 @@ class UserController extends Controller
         ->findOrFail($userId);
 
         return view('admin.volunteers.show', compact('user'));
+    }
+
+    public function toggleActive(int $id)
+    {
+        $user = User::findOrFail($id);
+
+        if ($user->isAdmin()) {
+            return response()->json(['message' => 'Akun admin tidak bisa dinonaktifkan.'], 422);
+        }
+
+        $user->update(['is_active' => !$user->is_active]);
+
+        $status = $user->is_active ? 'diaktifkan' : 'dinonaktifkan';
+
+        return response()->json(['message' => "Akun berhasil {$status}.", 'is_active' => $user->is_active]);
     }
 }

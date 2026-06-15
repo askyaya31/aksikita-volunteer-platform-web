@@ -22,7 +22,7 @@ class DashboardController extends Controller
             'total_registrations'  => Registration::count(),
         ];
 
-        $pendingOrgs = OrganizationProfile::with('user')
+        $pendingOrgs = OrganizationProfile::with(['user'])
             ->where('verification_status', 'pending')
             ->latest()
             ->take(5)

@@ -16,6 +16,9 @@ use App\Http\Controllers\Web\Organizer\VolunteerController as OrgVolunteer;
 use App\Http\Controllers\Web\Admin\DashboardController as AdminDashboard;
 use App\Http\Controllers\Web\Admin\UserController as AdminUser;
 use App\Http\Controllers\Web\Admin\EventController as AdminEvent;
+use App\Http\Controllers\Web\Admin\NotificationController as AdminNotification;
+use App\Http\Controllers\Web\Admin\ReportController as AdminReport;
+use App\Http\Controllers\Web\Admin\StatisticsController as AdminStatistics;
 
 Route::get('/', function () {
     return view('welcome');
@@ -49,10 +52,21 @@ Route::prefix('admin')->name('admin.')->middleware(['web.auth', 'web.role:admin'
     Route::post('/users/organizations/{id}/verify',  [AdminUser::class, 'verifyOrganization'])->name('users.verify-organization');
     Route::get('/users/organizations/{userId}',       [AdminUser::class, 'showOrganization'])->name('organizations.show');
     Route::get('/users/volunteers/{userId}',          [AdminUser::class, 'showVolunteer'])->name('volunteers.show');
+    Route::patch('/users/{id}/toggle-active',         [AdminUser::class, 'toggleActive'])->name('users.toggle-active');
 
     Route::get('/events',              [AdminEvent::class, 'index'])->name('events');
     Route::get('/events/{id}',         [AdminEvent::class, 'show'])->name('events.show');
     Route::post('/events/{id}/review', [AdminEvent::class, 'review'])->name('events.review');
+
+    Route::get('/notifications',                    [AdminNotification::class, 'index'])->name('notifications');
+    Route::post('/notifications/{id}/read',         [AdminNotification::class, 'markRead'])->name('notifications.read');
+    Route::post('/notifications/read-all',          [AdminNotification::class, 'markAllRead'])->name('notifications.readAll');
+
+    Route::get('/reports',                  [AdminReport::class, 'index'])->name('reports');
+    Route::get('/reports/{id}',             [AdminReport::class, 'show'])->name('reports.show');
+    Route::patch('/reports/{id}/status',    [AdminReport::class, 'updateStatus'])->name('reports.update');
+
+    Route::get('/statistics', [AdminStatistics::class, 'index'])->name('statistics');
 
 });
 
@@ -64,6 +78,7 @@ Route::prefix('volunteer')->name('volunteer.')->middleware(['web.auth', 'web.rol
     Route::post('/events/{id}/register',    [VolRegistration::class, 'store'])->name('register');
     Route::post('/events/{id}/cancel',      [VolRegistration::class, 'cancel'])->name('cancel');
     Route::get('/history',                  [VolRegistration::class, 'history'])->name('history');
+    Route::get('/saved', [\App\Http\Controllers\Web\Volunteer\SavedEventController::class, 'index'])->name('saved');
     Route::get('/notifications',                [VolNotification::class, 'index'])->name('notifications');
     Route::post('/notifications/{id}/read',     [VolNotification::class, 'markRead'])->name('notifications.read');
     Route::post('/notifications/read-all',      [VolNotification::class, 'markAllRead'])->name('notifications.readAll');
@@ -90,5 +105,4 @@ Route::prefix('organizer')->name('organizer.')->middleware(['web.auth', 'web.rol
     Route::get('/profile',        [OrgProfile::class, 'show'])->name('profile');
     Route::post('/profile',       [OrgProfile::class, 'update'])->name('profile.update');
     Route::get('/notifications',  [OrgNotification::class, 'index'])->name('notifications');
-
 });

@@ -25,17 +25,21 @@ class RegistrationController extends Controller
         return RegistrationResource::collection($registrations);
     }
     public function show(Request $request, int $id): JsonResponse
-    {
-        $org = $request->user()->organizationProfile;
+{
+    $org = $request->user()->organizationProfile;
 
-        $registration = Registration::with(['user.volunteerProfile', 'event'])
-            ->whereHas('event', fn($q) => $q->where('organization_profile_id', $org->id))
-            ->findOrFail($id);
+    $registration = Registration::with([
+        'user.volunteerProfile',
+        'user.registrations.event',   // ← tambahan ini
+        'event',
+    ])
+    ->whereHas('event', fn($q) => $q->where('organization_profile_id', $org->id))
+    ->findOrFail($id);
 
-        return response()->json([
-            'registration' => new RegistrationResource($registration)
-        ]);
-    }
+    return response()->json([
+        'registration' => new RegistrationResource($registration)
+    ]);
+}
 
     public function confirm(Request $request, int $id): JsonResponse
     {

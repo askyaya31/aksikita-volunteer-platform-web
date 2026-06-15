@@ -265,6 +265,44 @@
                 <div class="detail-org-avatar">{{ $orgInitial }}</div>
                 <span class="detail-org-name">{{ $event->organization->organization_name }}</span>
             </div>
+            <div style="display:flex; gap:10px; margin-top:14px;">
+                <button id="btn-like"
+                        data-event-id="{{ $event->id }}"
+                        data-liked="{{ $isLiked ? 'true' : 'false' }}"
+                        style="display:inline-flex; align-items:center; gap:6px;
+                            padding: 7px 14px; border-radius:999px; font-size:13px; font-weight:600;
+                            border: 1.5px solid rgba(255,255,255,0.5); cursor:pointer;
+                            background: {{ $isLiked ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.15)' }};
+                            color: {{ $isLiked ? '#E8501A' : '#fff' }};
+                            backdrop-filter: blur(4px); transition: all 0.2s;">
+                    <svg id="icon-like" width="14" height="14" fill="{{ $isLiked ? 'currentColor' : 'none' }}"
+                        viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                    </svg>
+                    <span id="text-like">{{ $isLiked ? 'Disukai' : 'Suka' }}</span>
+                    <span id="count-like">{{ $event->likes_count }}</span>
+                </button>
+
+                {{-- Tombol SAVE --}}
+                <button id="btn-save"
+                        data-event-id="{{ $event->id }}"
+                        data-saved="{{ $isSaved ? 'true' : 'false' }}"
+                        style="display:inline-flex; align-items:center; gap:6px;
+                            padding: 7px 14px; border-radius:999px; font-size:13px; font-weight:600;
+                            border: 1.5px solid rgba(255,255,255,0.5); cursor:pointer;
+                            background: {{ $isSaved ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.15)' }};
+                            color: {{ $isSaved ? '#0F2057' : '#fff' }};
+                            backdrop-filter: blur(4px); transition: all 0.2s;">
+                    <svg id="icon-save" width="14" height="14" fill="{{ $isSaved ? 'currentColor' : 'none' }}"
+                        viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/>
+                    </svg>
+                    <span id="text-save">{{ $isSaved ? 'Disimpan' : 'Simpan' }}</span>
+                </button>
+
+            </div>
         </div>
     </div>
 
@@ -465,5 +503,47 @@
         if (btnText) btnText.textContent = 'Mendaftarkan…';
     });
 })();
+// ── LIKE ──────────────────────────────────────────────
+document.getElementById('btn-like')?.addEventListener('click', async function () {
+    const id   = this.dataset.eventId;
+    const res  = await fetch(`/api/events/${id}/like`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer {{ session("api_token") ?? "" }}',
+            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+        }
+    });
+    const data = await res.json();
+    const liked = data.liked;
+
+    this.dataset.liked = liked;
+    document.getElementById('icon-like').setAttribute('fill', liked ? 'currentColor' : 'none');
+    document.getElementById('text-like').textContent = liked ? 'Disukai' : 'Suka';
+    document.getElementById('count-like').textContent = data.likes_count;
+    this.style.background = liked ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.15)';
+    this.style.color = liked ? '#E8501A' : '#fff';
+});
+
+// ── SAVE ──────────────────────────────────────────────
+document.getElementById('btn-save')?.addEventListener('click', async function () {
+    const id  = this.dataset.eventId;
+    const res = await fetch(`/api/events/${id}/save`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer {{ session("api_token") ?? "" }}',
+            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+        }
+    });
+    const data = await res.json();
+    const saved = data.saved;
+
+    this.dataset.saved = saved;
+    document.getElementById('icon-save').setAttribute('fill', saved ? 'currentColor' : 'none');
+    document.getElementById('text-save').textContent = saved ? 'Disimpan' : 'Simpan';
+    this.style.background = saved ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.15)';
+    this.style.color = saved ? '#0F2057' : '#fff';
+});
 </script>
 @endpush
