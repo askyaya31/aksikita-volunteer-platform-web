@@ -4,7 +4,6 @@
 
 @section('content')
 
-{{-- Breadcrumb --}}
 <div style="display:flex; align-items:center; gap:8px; font-size:0.8rem; color:var(--color-ink-muted); margin-bottom:20px;">
     <a href="{{ route('admin.users') }}" style="color:var(--color-ink-muted); text-decoration:none; hover:color:var(--color-navy);">Pengguna</a>
     <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
@@ -15,7 +14,6 @@
 
 @php $profile = $user->volunteerProfile; @endphp
 
-{{-- Header --}}
 <div style="display:flex; align-items:flex-start; gap:18px; margin-bottom:28px; flex-wrap:wrap;">
     <div style="width:68px; height:68px; border-radius:50%; overflow:hidden; flex-shrink:0; border:1px solid var(--color-border);">
         @if($user->avatar)
@@ -52,10 +50,8 @@
 
 <div style="display:grid; grid-template-columns:1fr 300px; gap:24px; align-items:start;">
 
-    {{-- LEFT --}}
     <div style="display:flex; flex-direction:column; gap:20px;">
 
-        {{-- Bio --}}
         @if($profile?->bio)
             <div class="ak-card-flat">
                 <h3 style="font-size:0.875rem; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; color:var(--color-ink-muted); margin-bottom:12px;">Bio</h3>
@@ -63,7 +59,6 @@
             </div>
         @endif
 
-        {{-- Skills & Minat --}}
         @if($profile && ($profile->skills || $profile->interests))
             <div class="ak-card-flat">
                 <h3 style="font-size:0.875rem; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; color:var(--color-ink-muted); margin-bottom:16px;">Keahlian & Minat</h3>
@@ -91,8 +86,6 @@
                 </div>
             </div>
         @endif
-
-        {{-- Riwayat Kegiatan --}}
         @php $registrations = $user->registrations ?? collect(); @endphp
         <div class="ak-card-flat">
             <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;">
@@ -156,7 +149,6 @@
             @endif
         </div>
 
-        {{-- Statistik partisipasi --}}
         @if($registrations->count() > 0)
             <div class="ak-card-flat">
                 <h3 style="font-size:0.875rem; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; color:var(--color-ink-muted); margin-bottom:16px;">Statistik Partisipasi</h3>
@@ -181,10 +173,8 @@
 
     </div>
 
-    {{-- RIGHT --}}
     <div style="display:flex; flex-direction:column; gap:16px; position:sticky; top:calc(var(--spacing-navbar) + 16px);">
 
-        {{-- Info akun --}}
         <div class="ak-card-flat">
             <h3 style="font-size:0.875rem; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; color:var(--color-ink-muted); margin-bottom:14px;">Informasi Akun</h3>
             <div style="display:flex; flex-direction:column; gap:11px;">
@@ -236,7 +226,6 @@
             </div>
         </div>
 
-        {{-- Status akun --}}
         <div class="ak-card-flat">
             <h3 style="font-size:0.875rem; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; color:var(--color-ink-muted); margin-bottom:6px;">Status Akun</h3>
             <p style="font-size:0.8rem; color:var(--color-ink-muted); margin-bottom:14px; line-height:1.5;">

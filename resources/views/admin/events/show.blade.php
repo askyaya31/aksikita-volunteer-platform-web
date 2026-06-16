@@ -40,7 +40,6 @@
 <div style="display:grid; grid-template-columns:1fr 380px; gap:24px; align-items:start;">
     <div style="display:flex; flex-direction:column; gap:20px;">
 
-        {{-- Poster --}}
         @if($event->poster)
             <div class="ak-card-flat" style="padding:0; overflow:hidden;">
                 <img src="{{ Storage::url($event->poster) }}" alt="{{ $event->title }}"
@@ -48,13 +47,11 @@
             </div>
         @endif
 
-        {{-- Deskripsi --}}
         <div class="ak-card-flat">
             <h3 style="font-size:0.95rem; margin-bottom:12px;">Deskripsi Kegiatan</h3>
             <div style="font-size:0.9rem; color:var(--color-ink-soft); line-height:1.75; white-space:pre-wrap;">{{ $event->description }}</div>
         </div>
 
-        {{-- Persyaratan --}}
         @if($event->requirements)
             <div class="ak-card-flat">
                 <h3 style="font-size:0.95rem; margin-bottom:12px;">Persyaratan Volunteer</h3>
@@ -62,7 +59,6 @@
             </div>
         @endif
 
-        {{-- Kategori --}}
         @if($event->categories->count() > 0)
             <div class="ak-card-flat">
                 <h3 style="font-size:0.95rem; margin-bottom:12px;">Kategori</h3>
@@ -74,7 +70,6 @@
             </div>
         @endif
 
-        {{-- Registrations summary --}}
         <div class="ak-card-flat">
             <h3 style="font-size:0.95rem; margin-bottom:16px;">Statistik Pendaftaran</h3>
             <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:16px;">
@@ -93,7 +88,6 @@
             </div>
         </div>
 
-        {{-- Alasan penolakan sebelumnya --}}
         @if($event->rejection_reason)
             <div class="ak-alert ak-alert-danger">
                 <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="flex-shrink:0;"><path stroke-linecap="round" stroke-linejoin="round" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
@@ -108,7 +102,6 @@
 
     <div style="display:flex; flex-direction:column; gap:20px; position:sticky; top:calc(var(--spacing-navbar) + 16px);">
 
-        {{-- Info singkat --}}
         <div class="ak-card-flat">
             <h3 style="font-size:0.95rem; margin-bottom:16px;">Informasi Kegiatan</h3>
 
@@ -199,25 +192,21 @@
                     Pastikan kegiatan memenuhi syarat dan ketentuan platform sebelum menyetujui.
                 </p>
 
-                {{-- APPROVE --}}
                 <form method="POST" action="{{ route('admin.events.review', $event->id) }}" id="formApprove">
                     @csrf
                     <input type="hidden" name="action" value="approve">
                     <button type="submit" class="ak-btn ak-btn-blue" style="width:100%; justify-content:center; margin-bottom:10px;"
                             onclick="return confirm('Setujui kegiatan ini? Kegiatan akan langsung dipublikasikan.')">
-                        {{-- <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg> --}}
                         Setujui & Publikasikan
                     </button>
                 </form>
 
-                {{-- REJECT TOGGLE --}}
                 <button type="button" onclick="document.getElementById('rejectPanel').classList.toggle('hidden')"
                         class="ak-btn ak-btn-ghost" style="width:100%; justify-content:center; color:var(--color-danger); border-color:var(--color-danger);">
                     {{-- <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg> --}}
                     Tolak Kegiatan
                 </button>
 
-                {{-- REJECT FORM --}}
                 <div id="rejectPanel" class="hidden" style="margin-top:14px; padding-top:14px; border-top:1px solid var(--color-warning);">
                     <form method="POST" action="{{ route('admin.events.review', $event->id) }}">
                         @csrf

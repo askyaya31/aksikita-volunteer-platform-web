@@ -24,25 +24,21 @@ class User extends Authenticatable
         'password'          => 'hashed',
     ];
 
-    // relasi ke profil organisasi
     public function organizationProfile()
     {
         return $this->hasOne(OrganizationProfile::class);
     }
 
-    // relasi ke profil volunteer
     public function volunteerProfile()
     {
         return $this->hasOne(VolunteerProfile::class);
     }
 
-    // relasi ke notifikasi yang diterima user ini
     public function notifications()
     {
         return $this->hasMany(Notification::class);
     }
 
-    // relasi ke semua pendaftaran event milik user ini
     public function registrations()
     {
         return $this->hasMany(Registration::class);

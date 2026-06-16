@@ -49,6 +49,35 @@
                             Riwayat
                         </a>
                     </li>
+                    <li>
+                        <a href="{{ route('volunteer.liked-events') }}"
+                           class="ak-nav-link {{ request()->routeIs('volunteer.liked-events*') ? 'active' : '' }}">
+                            Disukai
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('volunteer.saved-events') }}"
+                           class="ak-nav-link {{ request()->routeIs('volunteer.saved-events*') ? 'active' : '' }}">
+                            Tersimpan
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('volunteer.schedule') }}"
+                        class="ak-nav-link {{ request()->routeIs('volunteer.schedule*') ? 'active' : '' }}">
+                            Jadwal
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('volunteer.chat.index') }}"
+                        class="ak-nav-link {{ request()->routeIs('volunteer.chat.*') ? 'active' : '' }}"
+                        style="position:relative;">
+                            Pesan
+                            <span id="chatBadge"
+                                style="display:none; position:absolute; top:-4px; right:-10px;
+                                        background:#E8501A; color:#fff; font-size:10px; font-weight:700;
+                                        border-radius:999px; padding:1px 5px; line-height:1.4;">0</span>
+                        </a>
+                    </li>
                 </ul>
 
                 <div class="ak-nav-links-desktop" style="display:flex; align-items:center; gap:12px; margin-left:auto;">
@@ -141,9 +170,14 @@
                 <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                 Riwayat
             </a>
-            <a href="{{ route('volunteer.saved') }}"
-               class="ak-mobile-nav-link {{ request()->routeIs('volunteer.history*') ? 'active' : '' }}">
-                <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <a href="{{ route('volunteer.liked-events') }}"
+               class="ak-mobile-nav-link {{ request()->routeIs('volunteer.liked-events*') ? 'active' : '' }}">
+                <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+                Disukai
+            </a>
+            <a href="{{ route('volunteer.saved-events') }}"
+               class="ak-mobile-nav-link {{ request()->routeIs('volunteer.saved-events*') ? 'active' : '' }}">
+                <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/></svg>
                 Tersimpan
             </a>
             <a href="{{ route('volunteer.notifications') }}"
@@ -154,10 +188,21 @@
                     <span class="ak-badge ak-badge-danger" style="margin-left:auto;">{{ session('unread_count') }}</span>
                 @endif
             </a>
+            <a href="{{ route('volunteer.chat.index') }}"
+                class="{{ request()->routeIs('volunteer.chat.*') ? 'nav-link active' : 'nav-link' }}">
+                    Pesan
+            </a>
             <a href="{{ route('volunteer.profile') }}"
                class="ak-mobile-nav-link {{ request()->routeIs('volunteer.profile*') ? 'active' : '' }}">
                 <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
                 Profil Saya
+            </a>
+            <a href="{{ route('volunteer.schedule') }}"
+            class="ak-mobile-nav-link {{ request()->routeIs('volunteer.schedule*') ? 'active' : '' }}">
+                <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                </svg>
+                My Schedule
             </a>
             
         </nav>
@@ -209,6 +254,26 @@
    
     <script>
         const volNavbar = document.getElementById('volNavbar');
+        async function refreshChatBadge() {
+    try {
+        const res  = await fetch('{{ route('volunteer.chat.unread') }}', {
+            headers: { 'Accept': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}' }
+        });
+        const data = await res.json();
+        const badge = document.getElementById('chatBadge');
+        if (badge) {
+            if (data.count > 0) {
+                badge.textContent = data.count > 99 ? '99+' : data.count;
+                badge.style.display = 'inline';
+            } else {
+                badge.style.display = 'none';
+            }
+        }
+    } catch (e) {}
+}
+
+refreshChatBadge();                      
+setInterval(refreshChatBadge, 10000);   
         if (volNavbar) {
             window.addEventListener('scroll', () => {
                 volNavbar.classList.toggle('scrolled', window.scrollY > 10);

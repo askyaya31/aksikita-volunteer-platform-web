@@ -11,6 +11,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use App\Models\ChatRoom;
 
 class EventController extends Controller
 {
@@ -108,9 +109,13 @@ class EventController extends Controller
     public function show(int $id)
     {
         $org   = $this->getOrg();
-        $event = Event::with(['categories', 'registrations.user.volunteerProfile'])
-            ->where('organization_profile_id', $org->id)
-            ->findOrFail($id);
+        $event = Event::with([
+                    'categories',
+                    'registrations.user.volunteerProfile',
+                    'registrations.chatRoom',   
+                ])
+                ->where('organization_profile_id', $org->id)
+                ->findOrFail($id);
 
         return view('organizer.events.show', compact('event'));
     }
@@ -170,7 +175,6 @@ class EventController extends Controller
         $event->update($data);
         $event->categories()->sync($request->category_ids);
 
-        // notif ke semua admin bahwa ada event yang diajukan ulang
         User::where('role', 'admin')->each(function ($admin) use ($event, $org) {
             Notification::create([
                 'user_id'          => $admin->id,
@@ -238,7 +242,6 @@ class EventController extends Controller
 
         $event->update(['status' => 'completed']);
 
-        // kirim notifikasi ke semua volunteer yang terdaftar
         Registration::where('event_id', $event->id)
             ->where('status', 'confirmed')
             ->get()
@@ -272,6 +275,15 @@ $reg->event->increment('registered_count');
             'type'             => 'registration_confirmed',
             'related_event_id' => $reg->event_id,
         ]);
+        ChatRoom::firstOrCreate(
+            ['registration_id' => $reg->id],
+            [
+                'event_id'     => $reg->event_id,
+                'volunteer_id' => $reg->user_id,
+                'organizer_id' => session('user_id'),
+                'is_open'      => true,
+            ]
+        );
 
         return back()->with('success', 'Volunteer berhasil diterima.');
     }
@@ -308,7 +320,6 @@ $reg->event->increment('registered_count');
         ->whereHas('event', fn($q) => $q->where('organization_profile_id', $org->id))
         ->findOrFail($id);
 
-    // hanya volunteer yang sudah confirmed yang bisa ditandai hadir
     if ($reg->status !== 'confirmed') {
         return back()->with('error', 'Hanya volunteer berstatus terdaftar yang bisa ditandai hadir.');
     }
@@ -326,6 +337,6 @@ $reg->event->increment('registered_count');
         'related_event_id' => $reg->event_id,
     ]);
 
-    return back()->with('success', 'Volunteer berhasil ditandai hadir.');
+    return back()->with('success', 'Volunteer berhasil ditandai hadir');
 }
 }

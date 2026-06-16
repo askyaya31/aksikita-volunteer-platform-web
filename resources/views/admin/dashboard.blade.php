@@ -5,7 +5,6 @@
 @push('styles')
 <style>
 
-/* ── Header ── */
 .dh {
     display: flex;
     align-items: center;
@@ -26,7 +25,6 @@
     color: var(--color-ink-muted);
 }
 
-/* Alert pill — pending org */
 .dh__alert {
     display: inline-flex;
     align-items: center;
@@ -67,7 +65,6 @@
     white-space: nowrap;
 }
 
-/* ── Metrics — 4 col strip ── */
 .dm {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -118,7 +115,6 @@
 }
 .dm__cta:hover { text-decoration: underline; }
 
-/* ── Queue cards ── */
 .dq {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -165,7 +161,6 @@
 }
 .qc__link:hover { color: var(--color-blue); }
 
-/* Queue rows */
 .qr {
     display: flex;
     align-items: center;
@@ -249,7 +244,6 @@
     margin: 0;
 }
 
-/* ── Responsive ── */
 @media (max-width: 860px) {
     .dm  { grid-template-columns: repeat(2, 1fr); }
     .dq  { grid-template-columns: 1fr; }
@@ -263,7 +257,6 @@
 
 @section('content')
 
-{{-- Header --}}
 <div class="dh">
     <div>
         <p class="dh__title">Dashboard Admin AksiKita</p>
@@ -271,7 +264,6 @@
     </div>
 </div>
 
-{{-- Metrics --}}
 <div class="dm">
     <div class="dm__cell">
         <div class="dm__label">Total Pengguna</div>
@@ -313,7 +305,6 @@
     </div>
 </div>
 
-{{-- Queue cards --}}
 <div class="dq">
 
     <div class="qc">

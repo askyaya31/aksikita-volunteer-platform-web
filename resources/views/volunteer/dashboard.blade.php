@@ -145,8 +145,6 @@
     color: #0F2057;
     background: #EEF3FF;
 }
-
-/* ── Events grid ─────────────────────────────── */
 .events-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -158,7 +156,6 @@
     gap: 1.25rem;
 }
 
-/* ── Event card ──────────────────────────────── */
 .ecard {
     background: #fff;
     border-radius: 18px;
@@ -323,7 +320,6 @@
 
 @section('content')
 
-{{-- ── HERO ─────────────────────────────────── --}}
 <div class="dash-hero">
     <div class="ak-container">
         <div class="dash-hero-inner">
@@ -340,7 +336,6 @@
     </div>
 </div>
 
-{{-- ── STAT CARDS ──────────────────────────── --}}
 <div class="ak-container">
     <div class="dash-stats-wrap">
         <div class="dash-stats">
@@ -383,8 +378,58 @@
 </div>
 
 <div class="ak-container" style="padding-bottom: 3rem;">
-
-    {{-- ── KEGIATAN DI KOTAMU ──────────────────── --}}
+    @if($upcomingSchedule->count())
+    <section style="margin-bottom: 2.5rem;">
+        <div class="dash-section-head">
+            <div class="dash-section-title">Agenda Terdekat</div>
+            <a href="{{ route('volunteer.schedule') }}" class="dash-see-all">
+                Lihat semua
+                <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+                </svg>
+            </a>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:8px;">
+            @foreach($upcomingSchedule as $reg)
+            <a href="{{ route('volunteer.events.show', $reg->event->slug) }}"
+               style="display:flex; gap:12px; align-items:center;
+                      background:#fff; border:1px solid #EEF0F6;
+                      border-radius:14px; padding:12px 16px;
+                      text-decoration:none;
+                      transition:box-shadow 0.15s;"
+               onmouseover="this.style.boxShadow='0 4px 16px rgba(15,32,87,0.09)'"
+               onmouseout="this.style.boxShadow='none'">
+                <div style="min-width:52px; text-align:center;
+                            background:#EEF3FF; border-radius:10px; padding:6px 8px; flex-shrink:0;">
+                    <div style="font-size:18px; font-weight:700; color:#0F2057; line-height:1;">
+                        {{ $reg->event->start_date->format('d') }}
+                    </div>
+                    <div style="font-size:10px; color:#9099B0; text-transform:uppercase; letter-spacing:0.4px;">
+                        {{ $reg->event->start_date->translatedFormat('M') }}
+                    </div>
+                </div>
+                <div style="flex:1; min-width:0;">
+                    <div style="font-size:13.5px; font-weight:700; color:#0F2057;
+                                white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                        {{ $reg->event->title }}
+                    </div>
+                    <div style="font-size:12px; color:#9099B0; margin-top:3px; display:flex; gap:10px;">
+                        @if($reg->event->start_time)
+                            <span>{{ \Carbon\Carbon::parse($reg->event->start_time)->format('H:i') }}</span>
+                        @endif
+                        <span>{{ $reg->event->city }}</span>
+                    </div>
+                </div>
+                <span style="font-size:10.5px; font-weight:700; padding:3px 10px;
+                             border-radius:999px; background:#ECFDF5; color:#059669; flex-shrink:0;">
+                    Diterima
+                </span>
+            </a>
+            @endforeach
+        </div>
+    </section>
+    @endif
+    @include('volunteer.partials.recommendations')
     @if($nearbyEvents->count() > 0)
     <section style="margin-bottom: 2.5rem;">
         <div class="dash-section-head">
@@ -402,7 +447,6 @@
     </section>
     @endif
 
-    {{-- ── FILTER KATEGORI ─────────────────────── --}}
     <div class="cat-pills">
         <a href="{{ route('volunteer.events') }}"
            class="cat-pill {{ !request('category') ? 'active' : '' }}">
@@ -421,7 +465,6 @@
         @endforeach
     </div>
 
-    {{-- ── KEGIATAN TERSEDIA ───────────────────── --}}
     <section>
         <div class="dash-section-head">
             <div class="dash-section-title">Kegiatan Tersedia</div>

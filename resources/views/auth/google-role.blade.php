@@ -14,14 +14,12 @@
             </p>
         </div>
 
-        {{-- Avatar --}}
         <div class="flex justify-center mb-6">
             <div class="w-16 h-16 rounded-full bg-primary flex items-center justify-center text-white text-2xl font-bold ring-4 ring-white shadow-md">
                 {{ strtoupper(substr($googleUser['name'], 0, 1)) }}
             </div>
         </div>
 
-        {{-- Error --}}
         @if($errors->any())
             <div class="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-xl mb-5 text-sm">
                 {{ $errors->first() }}
@@ -32,7 +30,6 @@
             @csrf
             <div class="grid grid-cols-2 gap-4 mb-6" id="roleCards">
 
-                {{-- Volunteer --}}
                 <div class="role-card border-2 border-gray-200 rounded-2xl p-5 text-center cursor-pointer transition-all duration-200 hover:border-blue-300 hover:shadow-md"
                      data-value="volunteer"
                      onclick="selectRole('volunteer')">
@@ -48,7 +45,6 @@
                     </p>
                 </div>
 
-                {{-- Organisasi --}}
                 <div class="role-card border-2 border-gray-200 rounded-2xl p-5 text-center cursor-pointer transition-all duration-200 hover:border-blue-300 hover:shadow-md"
                      data-value="organization"
                      onclick="selectRole('organization')">

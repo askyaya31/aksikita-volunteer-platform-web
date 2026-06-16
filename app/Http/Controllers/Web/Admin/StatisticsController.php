@@ -14,7 +14,7 @@ class StatisticsController extends Controller
 {
     public function index()
     {
-        // -- Pengguna --
+       
         $users = [
             'total'         => User::count(),
             'volunteers'    => User::where('role', 'volunteer')->count(),
@@ -23,7 +23,6 @@ class StatisticsController extends Controller
             'inactive'      => User::where('is_active', false)->count(),
         ];
 
-        // -- Organisasi --
         $organizations = [
             'total'    => OrganizationProfile::count(),
             'pending'  => OrganizationProfile::where('verification_status', 'pending')->count(),
@@ -31,7 +30,6 @@ class StatisticsController extends Controller
             'rejected' => OrganizationProfile::where('verification_status', 'rejected')->count(),
         ];
 
-        // -- Kegiatan --
         $events = [
             'total'          => Event::count(),
             'draft'          => Event::where('status', 'draft')->count(),
@@ -42,7 +40,6 @@ class StatisticsController extends Controller
             'cancelled'      => Event::where('status', 'cancelled')->count(),
         ];
 
-        // -- Pendaftaran --
         $registrations = [
             'total'     => Registration::count(),
             'confirmed' => Registration::where('status', 'confirmed')->count(),
@@ -51,7 +48,6 @@ class StatisticsController extends Controller
             'attended'  => Registration::where('status', 'attended')->count(),
         ];
 
-        // -- Laporan --
         $reports = [
             'total'        => Report::count(),
             'open'         => Report::where('status', 'open')->count(),
@@ -60,7 +56,6 @@ class StatisticsController extends Controller
             'dismissed'    => Report::where('status', 'dismissed')->count(),
         ];
 
-        // -- Tren pendaftaran 6 bulan terakhir --
         $registrationTrend = Registration::select(
                 DB::raw("DATE_FORMAT(registered_at, '%Y-%m') as month"),
                 DB::raw('COUNT(*) as total')
@@ -70,7 +65,6 @@ class StatisticsController extends Controller
             ->orderBy('month')
             ->pluck('total', 'month');
 
-        // -- Tren kegiatan baru 6 bulan terakhir --
         $eventTrend = Event::select(
                 DB::raw("DATE_FORMAT(created_at, '%Y-%m') as month"),
                 DB::raw('COUNT(*) as total')
@@ -80,7 +74,6 @@ class StatisticsController extends Controller
             ->orderBy('month')
             ->pluck('total', 'month');
 
-        // -- Tren pengguna baru 6 bulan terakhir --
         $userTrend = User::select(
                 DB::raw("DATE_FORMAT(created_at, '%Y-%m') as month"),
                 DB::raw('COUNT(*) as total')
@@ -90,7 +83,6 @@ class StatisticsController extends Controller
             ->orderBy('month')
             ->pluck('total', 'month');
 
-        // Nama bulan dalam Bahasa Indonesia (manual, tidak bergantung intl/locale)
         $monthNames = [
             '01' => 'Jan', '02' => 'Feb', '03' => 'Mar',
             '04' => 'Apr', '05' => 'Mei', '06' => 'Jun',

@@ -63,7 +63,6 @@
 
 @section('content')
 
-{{-- Breadcrumb --}}
 <div style="display:flex; align-items:center; gap:6px; font-size:0.78rem; color:var(--color-ink-muted); margin-bottom:20px;">
     <a href="{{ route('admin.users') }}" style="color:var(--color-ink-muted); text-decoration:none;">Pengguna</a>
     <svg width="10" height="10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
@@ -74,10 +73,8 @@
 
 @php $org = $user->organizationProfile; @endphp
 
-{{-- Header --}}
 <div style="display:flex; align-items:flex-start; gap:16px; margin-bottom:24px; flex-wrap:wrap;">
 
-    {{-- Logo / inisial --}}
     <div style="width:56px; height:56px; border-radius:var(--radius-md); background:var(--color-blue-ghost); border:1px solid var(--color-border); display:flex; align-items:center; justify-content:center; flex-shrink:0; overflow:hidden;">
         @if($org?->logo)
             <img src="{{ Storage::url($org->logo) }}" alt="{{ $org->organization_name }}" style="width:100%; height:100%; object-fit:cover;">
@@ -89,7 +86,6 @@
     </div>
 
     <div style="flex:1; min-width:0;">
-        {{-- Role + status verifikasi --}}
         <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:5px;">
             <span style="font-size:0.7rem; font-weight:700; color:var(--color-ink-muted); text-transform:uppercase; letter-spacing:0.08em;">Organisasi</span>
             @if($org)
@@ -129,10 +125,8 @@
 
 <div style="display:grid; grid-template-columns:1fr 320px; gap:20px; align-items:start;">
 
-    {{-- KIRI --}}
     <div style="display:flex; flex-direction:column; gap:16px;">
 
-        {{-- Tentang --}}
         @if($org?->description)
             <div class="org-card">
                 <div class="org-section-title">Tentang Organisasi</div>
@@ -140,7 +134,6 @@
             </div>
         @endif
 
-        {{-- Riwayat Kegiatan --}}
         <div class="org-card" style="padding:0; overflow:hidden;">
             <div style="display:flex; align-items:center; justify-content:space-between; padding:14px 18px; border-bottom:1px solid var(--color-border-soft);">
                 <div class="org-section-title" style="margin-bottom:0;">Riwayat Kegiatan</div>
@@ -206,7 +199,6 @@
             @endif
         </div>
 
-        {{-- Alasan penolakan --}}
         @if($org?->verification_status === 'rejected' && $org->rejection_reason)
             <div class="ak-alert ak-alert-danger">
                 <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="flex-shrink:0;"><path stroke-linecap="round" stroke-linejoin="round" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
@@ -219,10 +211,8 @@
 
     </div>
 
-    {{-- KANAN --}}
     <div style="display:flex; flex-direction:column; gap:14px; position:sticky; top:calc(var(--spacing-navbar) + 16px);">
 
-        {{-- Panel verifikasi pending --}}
         @if($org && $org->verification_status === 'pending')
             <div class="org-action-panel">
                 <div style="font-size:0.7rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--color-ink-muted); margin-bottom:4px;">Tindakan Diperlukan</div>
@@ -276,7 +266,6 @@
             </div>
         @endif
 
-        {{-- Informasi akun --}}
         <div class="org-card">
             <div class="org-section-title">Informasi Akun</div>
             <div style="display:flex; flex-direction:column; gap:10px;">
@@ -326,7 +315,6 @@
             </div>
         </div>
 
-        {{-- Status akun --}}
         @if($user->role !== 'admin')
             <div class="org-card">
                 <div class="org-section-title">Status Akun</div>

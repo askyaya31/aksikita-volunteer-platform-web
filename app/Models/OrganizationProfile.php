@@ -15,25 +15,21 @@ class OrganizationProfile extends Model
         'verified_at' => 'datetime',
     ];
 
-    // relasi ke akun user pemilik organisasi ini
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
-    // relasi ke admin yang memverifikasi organisasi ini
     public function verifiedBy()
     {
         return $this->belongsTo(User::class, 'verified_by');
     }
 
-    // relasi ke semua event yang dibuat organisasi ini
     public function events()
     {
         return $this->hasMany(Event::class);
     }
 
-    // helper cek apakah organisasi sudah terverifikasi
     public function isVerified(): bool
     {
         return $this->verification_status === 'verified';

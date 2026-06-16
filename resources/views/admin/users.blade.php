@@ -4,7 +4,6 @@
 
 @push('styles')
 <style>
-/* ─── Table base ──────────────────────────────────────────────── */
 .user-table { width: 100%; border-collapse: collapse; }
 
 .user-table th {
@@ -31,7 +30,6 @@
 .user-table tbody tr:hover td { background: var(--color-bg); }
 .user-table tbody tr.pending-row:hover td { background: var(--color-blue-200); }
 
-/* ─── Avatar ──────────────────────────────────────────────────── */
 .u-avatar {
     width: 36px;
     height: 36px;
@@ -59,7 +57,6 @@
     letter-spacing: 0;
 }
 
-/* ─── Status indicator ────────────────────────────────────────── */
 .u-status {
     display: inline-flex;
     align-items: center;
@@ -76,16 +73,13 @@
 .u-status__dot--active  { background: var(--color-success); }
 .u-status__dot--inactive { background: var(--color-border); }
 
-/* ─── Verif text (no badge/chip) ─────────────────────────────── */
 .u-verif-verified { color: var(--color-success); font-weight: 500; font-size: 0.8rem; }
 .u-verif-pending  { color: var(--color-warning); font-weight: 500; font-size: 0.8rem; }
 .u-verif-rejected { color: var(--color-danger); font-weight: 500; font-size: 0.8rem; }
 .u-verif-none     { color: var(--color-border); font-size: 0.8rem; }
 
-/* ─── Role text ───────────────────────────────────────────────── */
 .u-role { font-size: 0.8rem; color: var(--color-ink-soft); }
 
-/* ─── Action menu ─────────────────────────────────────────────── */
 .action-menu-wrap { position: relative; display: inline-block; }
 
 .action-dropdown {
@@ -152,7 +146,6 @@
     <p style="margin:0; font-size:0.85rem; color:var(--color-ink-muted);">Akun volunteer, organisasi, dan proses verifikasi.</p>
 </div>
 
-{{-- Tab --}}
 <div style="display:flex; border-bottom:1px solid var(--color-border); margin-bottom:20px;">
     @php
         $tabs = ['semua' => 'Semua Pengguna', 'volunteer' => 'Volunteer', 'organisasi' => 'Organisasi'];
@@ -165,7 +158,6 @@
     @endforeach
 </div>
 
-{{-- Search --}}
 <form method="GET" action="{{ route('admin.users') }}" style="margin-bottom:20px;">
     <input type="hidden" name="tab" value="{{ $tab }}">
     <div style="display:flex; gap:8px; max-width:380px;">
@@ -200,19 +192,18 @@
         <tbody>
             @forelse($users as $user)
                 @php
-                    // Pilih avatar: volunteer pakai volunteerProfile->avatar, organisasi pakai organizationProfile->logo, fallback user->avatar
+                   
                     $avatarSrc = null;
                     if ($user->role === 'volunteer' && $user->volunteerProfile?->avatar) {
                         $avatarSrc = asset('storage/' . $user->volunteerProfile->avatar);
                     } elseif ($user->role === 'organization' && $user->organizationProfile?->logo) {
                         $avatarSrc = asset('storage/' . $user->organizationProfile->logo);
                     } elseif ($user->avatar) {
-                        $avatarSrc = $user->avatar; // bisa Google URL langsung
+                        $avatarSrc = $user->avatar; 
                     }
                 @endphp
 
                 <tr>
-                    {{-- Kolom Pengguna: avatar lebih besar + nama + email --}}
                     <td>
                         <div style="display:flex; align-items:center; gap:10px; min-width:0;">
                             @if($avatarSrc)
@@ -238,7 +229,6 @@
                     </td>
                     @endif
 
-                    {{-- Status: dot + teks, tanpa chip --}}
                     <td>
                         <span class="u-status">
                             <span class="u-status__dot {{ $user->is_active ? 'u-status__dot--active' : 'u-status__dot--inactive' }}"></span>
@@ -297,7 +287,6 @@
                     </td>
                 </tr>
 
-                {{-- Banner verifikasi pending — tetap amber tapi lebih subtle --}}
                 @if($user->role === 'organization' && $user->organizationProfile?->verification_status === 'pending')
                 <tr class="pending-row">
                     <td colspan="{{ $tab === 'volunteer' ? 4 : 6 }}"
@@ -353,7 +342,6 @@
     </table>
 </div>
 
-{{-- Pagination --}}
 @if($users->hasPages())
     <div style="display:flex; justify-content:space-between; align-items:center; margin-top:14px; flex-wrap:wrap; gap:10px;">
         <div style="font-size:0.8rem; color:var(--color-ink-muted);">
@@ -381,7 +369,6 @@
     </div>
 @endif
 
-{{-- Modal Verifikasi --}}
 <div id="verifyModal" style="display:none; position:fixed; inset:0; z-index:200; background:rgb(0 0 0/0.4); align-items:center; justify-content:center; padding:20px;">
     <div style="background:var(--color-surface); border-radius:14px; padding:26px; max-width:400px; width:100%; box-shadow:var(--shadow-lg);">
         <h3 style="font-size:0.975rem; margin-bottom:6px;">Setujui Verifikasi Organisasi</h3>
@@ -397,7 +384,6 @@
     </div>
 </div>
 
-{{-- Modal Tolak --}}
 <div id="rejectModal" style="display:none; position:fixed; inset:0; z-index:200; background:rgb(0 0 0/0.4); align-items:center; justify-content:center; padding:20px;">
     <div style="background:var(--color-surface); border-radius:14px; padding:26px; max-width:440px; width:100%; box-shadow:var(--shadow-lg);">
         <h3 style="font-size:0.975rem; margin-bottom:6px;">Tolak Verifikasi Organisasi</h3>

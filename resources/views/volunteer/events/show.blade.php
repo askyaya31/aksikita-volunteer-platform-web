@@ -219,6 +219,21 @@
 
 @section('content')
 <div class="detail-wrap">
+    @if(session('warning'))
+        <div class="ak-alert ak-alert-warning" role="alert" style="margin-bottom:1rem;">
+            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="flex-shrink:0;">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+            </svg>
+            <div>
+                <strong>Jadwal Bertabrakan!</strong><br>
+                <span>{{ session('warning') }}</span>
+                <br>
+                <a href="{{ route('volunteer.schedule') }}" style="font-size:12px;color:#92400E;text-decoration:underline;">
+                    Lihat jadwal saya →
+                </a>
+            </div>
+        </div>
+    @endif
 
     @if(session('success'))
         <div class="detail-alert success" role="alert">
@@ -284,7 +299,6 @@
                     <span id="count-like">{{ $event->likes_count }}</span>
                 </button>
 
-                {{-- Tombol SAVE --}}
                 <button id="btn-save"
                         data-event-id="{{ $event->id }}"
                         data-saved="{{ $isSaved ? 'true' : 'false' }}"
@@ -424,8 +438,29 @@
                             <p style="margin:3px 0 0; font-size:12px; opacity:0.8;">Terdaftar sejak {{ $registrasi->registered_at->format('d M Y') }}. Hadir tepat waktu sesuai jadwal.</p>
                         </div>
                     </div>
+
+                    @if($registrasi->chatRoom)
+                        <a href="{{ route('volunteer.chat.show', $registrasi->chatRoom) }}"
+                        style="display:flex; align-items:center; justify-content:center; gap:8px;
+                                width:100%; padding:12px;
+                                background:#0F2057; color:#fff;
+                                border-radius:12px; font-size:14px; font-weight:700;
+                                text-decoration:none; margin-bottom:10px;
+                                transition:background 0.15s;"
+                        onmouseover="this.style.background='#1A3575'"
+                        onmouseout="this.style.background='#0F2057'">
+                            <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863
+                                        9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574
+                                        3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                            </svg>
+                            Buka Chat dengan Organisasi
+                        </a>
+                    @endif
+
                     <form action="{{ route('volunteer.cancel', $event->id) }}" method="POST"
-                          onsubmit="return confirm('Yakin ingin membatalkan pendaftaran?')">
+                        onsubmit="return confirm('Yakin ingin membatalkan pendaftaran?')">
                         @csrf
                         <button type="submit" class="cancel-btn">
                             <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
@@ -503,14 +538,12 @@
         if (btnText) btnText.textContent = 'Mendaftarkan…';
     });
 })();
-// ── LIKE ──────────────────────────────────────────────
 document.getElementById('btn-like')?.addEventListener('click', async function () {
     const id   = this.dataset.eventId;
-    const res  = await fetch(`/api/events/${id}/like`, {
+    const res  = await fetch(`/volunteer/events/${id}/like`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer {{ session("api_token") ?? "" }}',
             'X-CSRF-TOKEN': '{{ csrf_token() }}'
         }
     });
@@ -525,14 +558,12 @@ document.getElementById('btn-like')?.addEventListener('click', async function ()
     this.style.color = liked ? '#E8501A' : '#fff';
 });
 
-// ── SAVE ──────────────────────────────────────────────
 document.getElementById('btn-save')?.addEventListener('click', async function () {
     const id  = this.dataset.eventId;
-    const res = await fetch(`/api/events/${id}/save`, {
+    const res = await fetch(`/volunteer/events/${id}/save`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer {{ session("api_token") ?? "" }}',
             'X-CSRF-TOKEN': '{{ csrf_token() }}'
         }
     });

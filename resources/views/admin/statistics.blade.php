@@ -1,10 +1,9 @@
 @extends('layouts.admin')
 
-@section('title', 'Statistik — AksiKita Admin')
+@section('title', 'Statistik - AksiKita Admin')
 
 @push('styles')
 <style>
-/* ─── Header ─── */
 .stats-head {
     display: flex;
     align-items: center;
@@ -36,7 +35,6 @@
     border-radius: var(--radius-full);
 }
 
-/* ─── Reports callout ─── */
 .rcallout {
     display: flex;
     align-items: center;
@@ -83,7 +81,6 @@
 }
 .rcallout__action:hover { background: var(--color-danger); color: #fff; }
 
-/* ─── Main 2-col layout ─── */
 .stats-body {
     display: grid;
     grid-template-columns: 1fr 280px;
@@ -91,13 +88,10 @@
     align-items: start;
 }
 
-/* ─── Left column ─── */
 .stats-main { display: flex; flex-direction: column; gap: 16px; }
 
-/* ─── Right column (sidebar) ─── */
 .stats-side { display: flex; flex-direction: column; gap: 16px; }
 
-/* ─── Panel base ─── */
 .sp {
     background: var(--color-surface);
     border: 1px solid var(--color-border);
@@ -138,7 +132,6 @@
 }
 .sp__link:hover { border-color: var(--color-navy); color: var(--color-navy); }
 
-/* ─── Chart panel ─── */
 .sp__chart {
     padding: 16px 18px 18px;
 }
@@ -166,7 +159,6 @@
     border-radius: 1px;
 }
 
-/* ─── Breakdown rows ─── */
 .brow {
     display: flex;
     align-items: center;
@@ -204,15 +196,13 @@
     font-size: 0.78rem;
 }
 
-/* ─── Fill colors — graduated from palet ─── */
-.fill-1 { background: #1E3A8A; }   /* navy */
-.fill-2 { background: #3B82F6; }   /* blue */
-.fill-3 { background: #60A5FA; }   /* blue-mid */
-.fill-4 { background: #93C5FD; }   /* blue-light */
-.fill-5 { background: #BFDBFE; }   /* blue-pale */
-.fill-x { background: var(--color-border); } /* inactive/rejected */
+.fill-1 { background: #1E3A8A; }   
+.fill-2 { background: #3B82F6; }   
+.fill-3 { background: #60A5FA; }   
+.fill-4 { background: #93C5FD; }   
+.fill-5 { background: #BFDBFE; }   
+.fill-x { background: var(--color-border); } 
 
-/* ─── Side: number stack ─── */
 .numstack { padding: 0; }
 .numstack__row {
     display: flex;
@@ -242,13 +232,11 @@
     font-size: 0.875rem;
 }
 
-/* accent bar on left of numstack row */
 .numstack__row--accent-1 { border-left: 2px solid #1E3A8A; }
 .numstack__row--accent-2 { border-left: 2px solid #3B82F6; }
 .numstack__row--accent-3 { border-left: 2px solid #60A5FA; }
 .numstack__row--accent-x { border-left: 2px solid var(--color-border); }
 
-/* ─── Responsive ─── */
 @media (max-width: 960px) {
     .stats-body { grid-template-columns: 1fr; }
     .stats-side { flex-direction: row; flex-wrap: wrap; }
@@ -264,7 +252,6 @@
 
 @section('content')
 
-{{-- Header --}}
 <div class="stats-head">
     <div>
         <h1 class="stats-head__title">Statistik Platform</h1>
@@ -273,7 +260,6 @@
     <span class="stats-head__ts">{{ now()->isoFormat('D MMM YYYY, HH:mm') }} WIB</span>
 </div>
 
-{{-- Reports callout (conditional) --}}
 @if($reports['open'] > 0)
 <div class="rcallout">
     <div class="rcallout__num">{{ $reports['open'] }}</div>
@@ -285,13 +271,10 @@
 </div>
 @endif
 
-{{-- 2-col body --}}
 <div class="stats-body">
 
-    {{-- ═══ LEFT ═══ --}}
     <div class="stats-main">
 
-        {{-- Chart: Aktivitas --}}
         <div class="sp">
             <div class="sp__head">
                 <span class="sp__name">Aktivitas 6 Bulan Terakhir</span>
@@ -317,7 +300,6 @@
             </div>
         </div>
 
-        {{-- Breakdown: Pengguna + Kegiatan side by side --}}
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
 
             <div class="sp">
@@ -380,7 +362,6 @@
 
         </div>
 
-        {{-- Breakdown: Organisasi + Pendaftaran --}}
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
 
             <div class="sp">
@@ -439,12 +420,10 @@
 
         </div>
 
-    </div>{{-- /stats-main --}}
+    </div>
 
-    {{-- ═══ RIGHT SIDEBAR ═══ --}}
     <div class="stats-side">
 
-        {{-- Ringkasan angka utama --}}
         <div class="sp">
             <div class="sp__head">
                 <span class="sp__name">Ringkasan</span>
@@ -469,7 +448,6 @@
             </div>
         </div>
 
-        {{-- Chart: Kegiatan Baru (bar kecil) --}}
         <div class="sp">
             <div class="sp__head">
                 <span class="sp__name">Kegiatan Baru</span>
@@ -480,8 +458,6 @@
                 </div>
             </div>
         </div>
-
-        {{-- Status cepat organisasi --}}
         <div class="sp">
             <div class="sp__head">
                 <span class="sp__name">Status Organisasi</span>
@@ -502,9 +478,9 @@
             </div>
         </div>
 
-    </div>{{-- /stats-side --}}
+    </div>
 
-</div>{{-- /stats-body --}}
+</div>
 
 @endsection
 
@@ -547,7 +523,6 @@
         boxHeight: 8,
     };
 
-    // Chart utama — 3 dataset dalam satu canvas
     new Chart(document.getElementById('chartActivity'), {
         type: 'line',
         data: {
@@ -597,7 +572,6 @@
         },
     });
 
-    // Chart kecil — kegiatan baru (bar)
     new Chart(document.getElementById('chartEvents'), {
         type: 'bar',
         data: {

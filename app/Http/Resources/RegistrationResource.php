@@ -15,6 +15,7 @@ class RegistrationResource extends JsonResource
             'cancelled_at'        => $this->cancelled_at?->format('d M Y H:i'),
             'cancellation_reason' => $this->cancellation_reason,
             'notes'               => $this->notes,
+            'chat_room_id'        => $this->chatRoom?->id,   
             'event' => $this->whenLoaded('event', fn() => new EventResource($this->event)),
             'user'  => $this->whenLoaded('user',  function () {
                 $user = $this->user;

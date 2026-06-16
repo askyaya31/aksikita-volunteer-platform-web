@@ -26,7 +26,6 @@ class UserResource extends JsonResource
             ),
             'organization_profile' => $this->whenLoaded('organizationProfile'),
 
-            // Hanya muncul kalau relasi registrations di-load
             'volunteer_stats' => $this->when(
                 $this->relationLoaded('registrations'),
                 fn() => [

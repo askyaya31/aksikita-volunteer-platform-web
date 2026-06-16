@@ -81,6 +81,6 @@ class EventController extends Controller
 
         return redirect()
             ->route('admin.events.show', $event->id)
-            ->with('success', 'Event berhasil di-review.');
+            ->with('success', 'Event berhasil di-review');
     }
 }

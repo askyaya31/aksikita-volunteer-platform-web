@@ -13,7 +13,6 @@
     </div>
 </div>
 
-{{-- Tabs --}}
 @php
     $tabs = [
         'open'         => 'Baru',
@@ -43,7 +42,6 @@
     @endforeach
 </div>
 
-{{-- Filter bar --}}
 <form method="GET" action="{{ route('admin.reports') }}" style="margin-bottom:20px;">
     <input type="hidden" name="tab" value="{{ $tab }}">
     <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
@@ -71,7 +69,6 @@
     <div class="ak-alert ak-alert-success" style="margin-bottom:16px;">{{ session('success') }}</div>
 @endif
 
-{{-- Table --}}
 <div class="ak-table-wrapper">
     <table class="ak-table">
         <thead>

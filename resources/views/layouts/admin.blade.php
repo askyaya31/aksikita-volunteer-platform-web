@@ -38,7 +38,6 @@
                 @php
                     $adminUnread = \App\Models\Notification::where('user_id', session('user_id'))->where('is_read', false)->count();
                 @endphp
-                {{-- Notif Bell --}}
                 <a href="{{ route('admin.notifications') }}"
                    class="ak-btn ak-btn-ghost ak-btn-icon ak-notif-badge"
                    aria-label="Notifikasi">
@@ -184,7 +183,6 @@
             @endif
         </a>
 
-        {{-- Keluar: margin-top biasa, bukan auto, agar tidak terpotong saat sidebar overflow --}}
         <div style="margin-top:16px; padding-top:16px; border-top:1px solid var(--color-border);">
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
@@ -250,14 +248,12 @@
         const adminSidebarOverlay = document.getElementById('adminSidebarOverlay');
         const adminLayout         = document.querySelector('.ak-layout-with-sidebar');
 
-        /* ── Persist collapse state ── */
         const COLLAPSE_KEY = 'ak_sidebar_collapsed';
         if (adminSidebar && localStorage.getItem(COLLAPSE_KEY) === '1' && window.innerWidth >= 1024) {
             adminSidebar.classList.add('collapsed');
             adminLayout && adminLayout.classList.add('collapsed');
         }
 
-        /* ── Mobile: open / close ── */
         function closeAdminSidebar() {
             adminSidebar.classList.remove('open');
             adminSidebarToggle.classList.remove('open');
@@ -273,7 +269,6 @@
             }
         }
 
-        /* ── Desktop: collapse / expand ── */
         function toggleCollapse() {
             const isCollapsed = adminSidebar.classList.toggle('collapsed');
             adminLayout && adminLayout.classList.toggle('collapsed', isCollapsed);

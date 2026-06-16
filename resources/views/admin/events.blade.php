@@ -9,7 +9,6 @@
     <p style="font-size: 0.875rem; color: var(--color-ink-muted); margin: 0;">Tinjau dan kelola semua kegiatan yang masuk ke platform.</p>
 </div>
 
-{{-- Tab navigasi --}}
 <div style="display: flex; gap: 0; border-bottom: 1px solid var(--color-border); margin-bottom: 24px; overflow-x: auto;">
     @php
         $tabs = [
@@ -50,7 +49,7 @@
     @endforeach
 </div>
 
-{{-- Pencarian --}}
+
 <form method="GET" action="{{ route('admin.events') }}" style="margin-bottom: 20px;">
     <input type="hidden" name="tab" value="{{ $tab }}">
     <div style="display: flex; gap: 8px; max-width: 420px;">
@@ -69,7 +68,6 @@
     </div>
 </form>
 
-{{-- Tabel --}}
 <div class="ak-table-wrapper">
     <table class="ak-table">
         <thead>
@@ -146,7 +144,6 @@
     </table>
 </div>
 
-{{-- Pagination --}}
 @if($events->hasPages())
     <div style="display: flex; justify-content: space-between; align-items: center;
                 margin-top: 20px; flex-wrap: wrap; gap: 12px;">

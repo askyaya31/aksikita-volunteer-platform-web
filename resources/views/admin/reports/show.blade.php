@@ -4,7 +4,6 @@
 
 @section('content')
 
-{{-- Breadcrumb --}}
 <div style="display:flex; align-items:center; gap:8px; font-size:0.85rem; color:var(--color-ink-muted); margin-bottom:20px;">
     <a href="{{ route('admin.reports') }}" style="color:var(--color-ink-muted); text-decoration:none;">Laporan</a>
     <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -13,7 +12,6 @@
     <span style="color:var(--color-ink);">Laporan #{{ $report->id }}</span>
 </div>
 
-{{-- Header --}}
 @php
     $statusMap = [
         'open'         => ['label' => 'Baru',             'class' => 'ak-badge-danger'],
@@ -53,10 +51,8 @@
 
 <div style="display:grid; grid-template-columns:1fr 340px; gap:24px; align-items:start;">
 
-    {{-- Left column --}}
     <div style="display:flex; flex-direction:column; gap:20px;">
 
-        {{-- Objek dilaporkan --}}
         <div class="ak-card-flat">
             <h3 style="font-size:0.875rem; font-weight:700; color:var(--color-ink-muted); text-transform:uppercase; letter-spacing:0.05em; margin:0 0 14px;">
                 Objek Dilaporkan
@@ -96,7 +92,6 @@
             </div>
         </div>
 
-        {{-- Alasan & deskripsi --}}
         <div class="ak-card-flat">
             <h3 style="font-size:0.875rem; font-weight:700; color:var(--color-ink-muted); text-transform:uppercase; letter-spacing:0.05em; margin:0 0 14px;">
                 Isi Laporan
@@ -115,7 +110,6 @@
             @endif
         </div>
 
-        {{-- Catatan admin (jika sudah ditangani) --}}
         @if($report->admin_notes)
             <div class="ak-card-flat" style="border-color:var(--color-success); background:var(--color-success-bg, #F0FDF4);">
                 <h3 style="font-size:0.875rem; font-weight:700; color:var(--color-success); text-transform:uppercase; letter-spacing:0.05em; margin:0 0 10px;">
@@ -134,10 +128,8 @@
 
     </div>
 
-    {{-- Right column --}}
     <div style="display:flex; flex-direction:column; gap:16px;">
 
-        {{-- Info singkat --}}
         <div class="ak-card-flat">
             <h3 style="font-size:0.875rem; font-weight:700; color:var(--color-ink-muted); text-transform:uppercase; letter-spacing:0.05em; margin:0 0 14px;">
                 Info Laporan
@@ -165,7 +157,6 @@
             </div>
         </div>
 
-        {{-- Aksi admin --}}
         @if($canAct)
             <div class="ak-card-flat">
                 <h3 style="font-size:0.875rem; font-weight:700; color:var(--color-ink-muted); text-transform:uppercase; letter-spacing:0.05em; margin:0 0 14px;">

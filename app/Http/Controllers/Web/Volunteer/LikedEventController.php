@@ -9,7 +9,6 @@ use Illuminate\Http\Request;
 
 class LikedEventController extends Controller
 {
-    // GET /volunteer/liked-events
     public function index(Request $request)
     {
         $likedEvents = LikedEvent::with(['event.organization', 'event.categories'])
@@ -21,7 +20,6 @@ class LikedEventController extends Controller
         return view('volunteer.liked-events', compact('likedEvents'));
     }
 
-    // POST /volunteer/events/{id}/like → toggle
     public function toggle(Request $request, int $id)
     {
         $event  = Event::findOrFail($id);
@@ -35,7 +33,11 @@ class LikedEventController extends Controller
             $existing->delete();
             $event->decrement('likes_count');
 
-            return back()->with('success', 'Suka pada kegiatan dibatalkan.');
+            return response()->json([
+                'liked'       => false,
+                'likes_count' => max(0, $event->fresh()->likes_count),
+                'message'     => 'Suka dibatalkan.',
+            ]);
         }
 
         LikedEvent::create([
@@ -44,6 +46,10 @@ class LikedEventController extends Controller
         ]);
         $event->increment('likes_count');
 
-        return back()->with('success', 'Kegiatan berhasil disukai!');
+        return response()->json([
+            'liked'       => true,
+            'likes_count' => $event->fresh()->likes_count,
+            'message'     => 'Kegiatan disukai!',
+        ]);
     }
 }

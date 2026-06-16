@@ -2,6 +2,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\ChatRoom;
 
 class Registration extends Model
 {
@@ -15,13 +16,15 @@ class Registration extends Model
         'cancelled_at'  => 'datetime',
     ];
 
-    // relasi ke event yang didaftari
     public function event()
     {
         return $this->belongsTo(Event::class);
     }
+    public function chatRoom()
+    {
+        return $this->hasOne(ChatRoom::class);
+    }
 
-    // relasi ke volunteer yang mendaftar
     public function user()
     {
         return $this->belongsTo(User::class);

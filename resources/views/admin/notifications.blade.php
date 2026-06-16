@@ -223,14 +223,12 @@
         @endif
     </div>
 
-    {{-- Flash message --}}
     @if(session('success'))
         <div class="ak-alert ak-alert-success" style="margin-bottom:16px;">
             {{ session('success') }}
         </div>
     @endif
 
-    {{-- Notification list --}}
     @forelse($notifications as $notif)
     @php
         $iconMap = [
@@ -307,7 +305,6 @@
 
     @endforelse
 
-    {{-- Pagination --}}
     @if($notifications->hasPages())
         <div style="margin-top:24px; display:flex; justify-content:center;">
             {{ $notifications->links() }}

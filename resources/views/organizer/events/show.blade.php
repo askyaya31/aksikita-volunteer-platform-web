@@ -728,9 +728,44 @@
                         @else
                             <span class="es-pill es-pill--confirmed">Diterima</span>
                         @endif
+                        
+                        @if($reg->chatRoom)
+                            <a href="{{ route('organizer.chat.show', $reg->chatRoom) }}"
+                            class="es-btn-xs"
+                            style="background:var(--color-navy); color:#fff;
+                                    border-color:var(--color-navy);"
+                            onmouseover="this.style.background='var(--color-blue)';this.style.borderColor='var(--color-blue)'"
+                            onmouseout="this.style.background='var(--color-navy)';this.style.borderColor='var(--color-navy)'">
+                                <svg width="12" height="12" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor" stroke-width="2" style="margin-right:4px;">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9
+                                            8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512
+                                            15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                                </svg>
+                                Chat
+                            </a>
+                        @endif
 
                     @elseif($reg->status === 'attended')
                         <span class="es-pill es-pill--attended">Hadir</span>
+                        @if($reg->chatRoom)
+                            <a href="{{ route('organizer.chat.show', $reg->chatRoom) }}"
+                            class="es-btn-xs"
+                            style="background:var(--color-navy); color:#fff;
+                                    border-color:var(--color-navy);"
+                            onmouseover="this.style.background='var(--color-blue)';this.style.borderColor='var(--color-blue)'"
+                            onmouseout="this.style.background='var(--color-navy)';this.style.borderColor='var(--color-navy)'">
+                                <svg width="12" height="12" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor" stroke-width="2" style="margin-right:4px;">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9
+                                            8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512
+                                            15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                                </svg>
+                                Chat
+                            </a>
+                        @endif
 
                     @elseif($reg->status === 'cancelled')
                         <span class="es-pill es-pill--cancelled">Dibatalkan</span>

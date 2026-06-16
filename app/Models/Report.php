@@ -15,19 +15,16 @@ class Report extends Model
         'resolved_at' => 'datetime',
     ];
 
-    // relasi ke user yang membuat laporan
     public function reporter()
     {
         return $this->belongsTo(User::class, 'reporter_id');
     }
 
-    // relasi ke admin yang menyelesaikan laporan
     public function resolvedBy()
     {
         return $this->belongsTo(User::class, 'resolved_by');
     }
 
-    // relasi polimorfik ke objek yang dilaporkan (Event atau User)
     public function reportable()
     {
         return $this->morphTo();

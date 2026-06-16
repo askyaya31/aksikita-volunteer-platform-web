@@ -120,7 +120,7 @@ class RegistrationController extends Controller
 
     public function show(Request $request, int $id): JsonResponse
     {
-        $registration = Registration::with(['event.organization', 'event.categories'])
+        $registration = Registration::with(['event.organization', 'event.categories', 'chatRoom'])
             ->where('user_id', $request->user()->id)
             ->findOrFail($id);
 

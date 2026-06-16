@@ -7,6 +7,8 @@ use App\Http\Controllers\Web\Volunteer\DashboardController as VolDashboard;
 use App\Http\Controllers\Web\Volunteer\EventController as VolEvent;
 use App\Http\Controllers\Web\Volunteer\RegistrationController as VolRegistration;
 use App\Http\Controllers\Web\Volunteer\NotificationController as VolNotification;
+use App\Http\Controllers\Web\Volunteer\LikedEventController as VolLiked;
+use App\Http\Controllers\Web\Volunteer\SavedEventController as VolSaved;
 use App\Http\Controllers\Web\Volunteer\ProfileController as VolProfile;
 use App\Http\Controllers\Web\Organizer\DashboardController as OrgDashboard;
 use App\Http\Controllers\Web\Organizer\EventController as OrgEvent;
@@ -19,6 +21,9 @@ use App\Http\Controllers\Web\Admin\EventController as AdminEvent;
 use App\Http\Controllers\Web\Admin\NotificationController as AdminNotification;
 use App\Http\Controllers\Web\Admin\ReportController as AdminReport;
 use App\Http\Controllers\Web\Admin\StatisticsController as AdminStatistics;
+use App\Http\Controllers\Web\Volunteer\ScheduleController as VolSchedule;
+use App\Http\Controllers\Web\Volunteer\ChatController as VolChat;
+use App\Http\Controllers\Web\Organizer\ChatController as OrgChat;
 
 Route::get('/', function () {
     return view('welcome');
@@ -78,13 +83,33 @@ Route::prefix('volunteer')->name('volunteer.')->middleware(['web.auth', 'web.rol
     Route::post('/events/{id}/register',    [VolRegistration::class, 'store'])->name('register');
     Route::post('/events/{id}/cancel',      [VolRegistration::class, 'cancel'])->name('cancel');
     Route::get('/history',                  [VolRegistration::class, 'history'])->name('history');
-    Route::get('/saved', [\App\Http\Controllers\Web\Volunteer\SavedEventController::class, 'index'])->name('saved');
     Route::get('/notifications',                [VolNotification::class, 'index'])->name('notifications');
     Route::post('/notifications/{id}/read',     [VolNotification::class, 'markRead'])->name('notifications.read');
     Route::post('/notifications/read-all',      [VolNotification::class, 'markAllRead'])->name('notifications.readAll');
     Route::get('/profile',   [VolProfile::class, 'show'])->name('profile');
     Route::post('/profile',  [VolProfile::class, 'update'])->name('profile.update');
 
+    Route::post('/events/{id}/like',  [VolLiked::class, 'toggle'])->name('events.like');
+    Route::get('/liked-events',       [VolLiked::class, 'index'])->name('liked-events');
+
+    Route::post('/events/{id}/save',  [VolSaved::class, 'toggle'])->name('events.save');
+    Route::get('/saved-events',       [VolSaved::class, 'index'])->name('saved-events');
+    Route::get('/schedule',             [VolSchedule::class, 'index'])->name('schedule'); 
+
+    Route::get('/chat',                      [VolChat::class, 'index'])->name('chat.index');
+
+Route::get('/chat/unread-count', function () {
+    $userId = session('user_id');
+    $count  = \App\Models\ChatRoom::where('volunteer_id', $userId)
+        ->withCount(['messages as unread' => fn($q) =>
+            $q->where('sender_id', '!=', $userId)->whereNull('read_at')
+        ])->get()->sum('unread');
+    return response()->json(['count' => $count]);
+})->name('chat.unread');
+    Route::get('/chat/{room}',               [VolChat::class, 'show'])->name('chat.show');
+    Route::post('/chat/{room}/send',         [VolChat::class, 'send'])->name('chat.send');
+    Route::get('/chat/{room}/poll',          [VolChat::class, 'poll'])->name('chat.poll');
+    
 });
 
 Route::prefix('organizer')->name('organizer.')->middleware(['web.auth', 'web.role:organization'])->group(function () {
@@ -105,4 +130,8 @@ Route::prefix('organizer')->name('organizer.')->middleware(['web.auth', 'web.rol
     Route::get('/profile',        [OrgProfile::class, 'show'])->name('profile');
     Route::post('/profile',       [OrgProfile::class, 'update'])->name('profile.update');
     Route::get('/notifications',  [OrgNotification::class, 'index'])->name('notifications');
+    Route::get('/chat',                      [OrgChat::class, 'index'])->name('chat.index');
+    Route::get('/chat/{room}',               [OrgChat::class, 'show'])->name('chat.show');
+    Route::post('/chat/{room}/send',         [OrgChat::class, 'send'])->name('chat.send');
+    Route::get('/chat/{room}/poll',          [OrgChat::class, 'poll'])->name('chat.poll');
 });

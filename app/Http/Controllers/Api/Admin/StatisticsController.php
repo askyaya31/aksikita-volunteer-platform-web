@@ -12,10 +12,7 @@ use Illuminate\Support\Facades\DB;
 
 class StatisticsController extends Controller
 {
-    /**
-     * GET /api/v1/admin/dashboard
-     * Ringkasan singkat untuk dashboard card.
-     */
+
     public function index()
     {
         return response()->json([
@@ -58,13 +55,8 @@ class StatisticsController extends Controller
         ]);
     }
 
-    /**
-     * GET /api/v1/admin/statistics
-     * Data lengkap termasuk tren 6 bulan terakhir.
-     */
     public function detailed()
     {
-        // ── Statistik ringkasan ──────────────────────────────────────────
         $users = [
             'total'         => User::count(),
             'volunteers'    => User::where('role', 'volunteer')->count(),
@@ -106,7 +98,6 @@ class StatisticsController extends Controller
             'dismissed'    => Report::where('status', 'dismissed')->count(),
         ];
 
-        // ── Tren 6 bulan terakhir ────────────────────────────────────────
         $registrationTrend = Registration::select(
                 DB::raw("DATE_FORMAT(registered_at, '%Y-%m') as month"),
                 DB::raw('COUNT(*) as total')
@@ -134,7 +125,6 @@ class StatisticsController extends Controller
             ->orderBy('month')
             ->pluck('total', 'month');
 
-        // Bangun array 6 bulan dengan nilai 0 untuk bulan yang kosong
         $trendLabels        = [];
         $trendData          = [];
         $eventTrendData     = [];

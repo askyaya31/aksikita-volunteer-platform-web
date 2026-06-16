@@ -1,7 +1,6 @@
 @import "tailwindcss";
 
 @theme {
-    /* --- Brand Colors ---. */
     --color-navy:        #1E3A8A;
     --color-navy-dark:   #152d6b;
     --color-navy-light:  #253f99;
@@ -10,8 +9,6 @@
     --color-blue-light:  #93C5FD;
     --color-blue-pale:   #BFDBFE;
     --color-blue-ghost:  #F0F4FF;
-
-    /* --- Neutral --- */
     --color-ink:         #111827;
     --color-ink-soft:    #374151;
     --color-ink-muted:   #6B7280;
@@ -19,8 +16,6 @@
     --color-border-soft: #F3F4F6;
     --color-surface:     #FFFFFF; 
     --color-bg:          #F5F7FA;
-
-    /* --- Semantic --- */
     --color-success:     #10B981;
     --color-success-bg:  #ECFDF5;
     --color-warning:     #F59E0B;
@@ -29,25 +24,17 @@
     --color-danger-bg:   #FEF2F2;
     --color-pending:     #6B7280;
     --color-pending-bg:  #F3F4F6;
-
-    /* --- Typography --- */
     --font-display:   'Plus Jakarta Sans', sans-serif;
     --font-body:      'DM Sans', sans-serif;
-
-    /* --- Radius --- */
     --radius-sm:   6px;
     --radius-md:   12px;
     --radius-lg:   20px;
     --radius-xl:   28px;
     --radius-full: 9999px;
-
-    /* --- Shadows --- */
     --shadow-sm:   0 1px 3px 0 rgb(0 0 0 / 0.06), 0 1px 2px -1px rgb(0 0 0 / 0.04);
     --shadow-md:   0 4px 16px -2px rgb(30 58 138 / 0.08), 0 2px 8px -2px rgb(30 58 138 / 0.05);
     --shadow-lg:   0 12px 32px -4px rgb(30 58 138 / 0.12), 0 4px 12px -4px rgb(30 58 138 / 0.06);
     --shadow-card: 0 2px 12px 0 rgb(30 58 138 / 0.07);
-
-    /* --- Spacing extras --- */
     --spacing-navbar: 68px;
 }
 *, *::before, *::after {
@@ -116,7 +103,6 @@ a:hover { color: var(--color-navy); }
     transition: box-shadow 0.3s ease;
 }
 
-/* Kompensasi navbar fixed */
 body {
     padding-top: var(--spacing-navbar);
 }
@@ -166,7 +152,6 @@ body {
     background:#FEF2F2;
     color:#DC2626;
 }
-/* Brand / Logo */
 .ak-logo {
     display: flex;
     align-items: center;
@@ -442,9 +427,9 @@ body {
     background: var(--color-surface);
     border-right: 1px solid var(--color-border);
     display: block;
-    overflow-y: scroll; /* scroll bukan auto — selalu tampil scrollbar track */
+    overflow-y: scroll;
     overflow-x: hidden;
-    padding: 16px 12px 60px; /* padding bawah besar agar Keluar tidak kepotong */
+    padding: 16px 12px 60px; 
     scrollbar-width: thin;
     scrollbar-color: #CBD5E1 transparent;
     transition: width 0.25s cubic-bezier(0.4,0,0.2,1), transform 0.3s cubic-bezier(0.32, 0.72, 0, 1);
@@ -465,7 +450,6 @@ body {
     background: #94A3B8;
 }
 
-/* webkit (Chrome/Safari/Edge) scrollbar */
 .ak-sidebar::-webkit-scrollbar {
     width: 4px;
 }
@@ -480,7 +464,6 @@ body {
     background: #64748B;
 }
 
-/* ── Desktop collapsed state ── */
 @media (min-width: 1024px) {
     .ak-sidebar.collapsed {
         width: 56px;
@@ -523,7 +506,6 @@ body {
         box-shadow: none !important;
     }
 
-    /* Tooltip */
     .ak-sidebar.collapsed .ak-sidebar-link::after {
         content: attr(data-label);
         position: absolute;
@@ -635,10 +617,9 @@ body {
 @media (max-width: 1024px) {
     .ak-sidebar {
         width: 260px;
-        transform: translateX(-110%); /* 110% biar benar-benar hilang */
+        transform: translateX(-110%); 
         z-index: 45;
         visibility: hidden;
-        /* reset collapsed desktop state */
         overflow: visible;
         transition: transform 0.28s cubic-bezier(0.32, 0.72, 0, 1),
                     visibility 0s linear 0.28s;
@@ -650,7 +631,6 @@ body {
         transition: transform 0.28s cubic-bezier(0.32, 0.72, 0, 1),
                     visibility 0s linear 0s;
     }
-    /* reset semua collapsed state agar tidak bocor ke mobile */
     .ak-sidebar.collapsed,
     .ak-sidebar.collapsed .ak-sidebar-group-label,
     .ak-sidebar.collapsed .ak-sidebar-link span,
@@ -916,8 +896,6 @@ body {
     line-height: 1.4;
     white-space: nowrap;
 }
-
-/* Badge: outline style — tidak pastel, tidak AI-generated */
 .ak-badge-blue    { background: transparent; color: var(--color-blue); border: 1px solid var(--color-blue-light); }
 .ak-badge-navy    { background: transparent; color: var(--color-navy); border: 1px solid var(--color-navy); opacity: 0.85; }
 .ak-badge-success { background: transparent; color: #059669; border: 1px solid #6EE7B7; }
