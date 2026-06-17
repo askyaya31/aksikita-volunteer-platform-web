@@ -3,8 +3,8 @@
 @section('title', 'Platform Volunteer Indonesia')
 
 @push('styles')
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap');
+<style>family=Plus+Jakarta+Sans:ital,
+@import url('https://fonts.googleapis.com/css2?family=League+Spartan:wght@700;800&wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap');
 
 *, *::before, *::after { box-sizing: border-box; }
 
@@ -194,17 +194,17 @@ body > footer  { display: none !important; }
     50%      { opacity:0.4; transform:scale(0.7); }
 }
 .lp-hero__heading {
-    font-size: clamp(2.5rem, 5.5vw, 4rem);
+    font-size: clamp(4rem, 5.5vw, 7rem);
     font-weight: 800;
     color: #fff;
     line-height: 1.1;
-    letter-spacing: -0.03em;
+    letter-spacing: 0em;
     margin-bottom: 24px;
     max-width: 740px;
 }
 .lp-hero__heading em {
     font-style: normal;
-    color: #93C5FD;
+    color: #a5cbf6;
 }
 .lp-hero__sub {
     font-size: clamp(1rem, 2vw, 1.125rem);
@@ -257,7 +257,71 @@ body > footer  { display: none !important; }
 .lp-hero__scroll-line { width: 24px; height: 1px; background: rgba(255,255,255,0.25); }
 @keyframes lp-float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(5px)} }
 
-/* STATS (gajadi dipake) */
+.lp-hero__carousel {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    border-radius: 450px 0 0 450px;
+    width: 600px;
+    overflow: hidden;
+    z-index: 1;
+    display: none;
+}
+@media (min-width: 1024px) {
+    .lp-hero__carousel { display: block; }
+}
+.lp-hero__carousel-fade {
+    position: absolute;
+    top: 0; left: 0; bottom: 0;
+    width: 220px;
+    background: linear-gradient(to right, #1E3A8A 0%, #1E3A8A 0%, transparent 95%);
+    z-index: 20;
+    overflow: hidden;
+    pointer-events: none;
+}
+.lp-hero__carousel img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+    z-index: 10;
+}
+.lp-hero__carousel img.is-active {
+    opacity: 1;
+}
+@media (max-width: 1023px) {
+    .lp-hero__carousel {
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        width: 100%;
+        height: 100%;
+        border-radius: 0;
+        z-index: 0;
+    }
+
+    .lp-hero__carousel-fade {
+        display: block;
+        width: 100%;
+        background: linear-gradient(to bottom,
+            rgba(30,58,138,0.85) 0%,
+            rgba(30,58,138,0.7) 50%,
+            rgba(30,58,138,0.85) 100%
+        );
+    }
+
+    .lp-hero__content {
+        position: relative;
+        z-index: 2;
+    }
+}
 .lp-stats {
     background: #F5F8FF;
     border-bottom: 1px solid #DBEAFE;
@@ -329,6 +393,7 @@ body > footer  { display: none !important; }
     font-size: 1.0625rem; color: #5A7090;
     line-height: 1.7; max-width: 500px;
     margin-bottom: 0;
+    text-align; justify;
 }
 
 .lp-steps {
@@ -361,10 +426,26 @@ body > footer  { display: none !important; }
     font-size: 1.25rem; font-weight: 800;
     margin-bottom: 20px;
     box-shadow: 0 4px 16px rgba(30,58,138,0.28);
-    transition: transform 0.3s, box-shadow 0.3s;
+    transition: transform 0.3s, box-shadow 0.3s, background 0.3s;
+    text-decoration: none;
+    cursor: pointer;
+    outline: none;
 }
 .lp-step:hover .lp-step__num { transform: scale(1.1); box-shadow: 0 8px 24px rgba(30,58,138,0.38); }
-.lp-step__title { font-size: 1rem; font-weight: 700; color: #1E3A8A; margin-bottom: 8px; }
+.lp-step__num:hover,
+.lp-step__num:focus-visible {
+    background: #2563EB;
+    box-shadow: 0 0 0 5px rgba(59,130,246,0.16), 0 8px 24px rgba(30,58,138,0.38);
+}
+.lp-step__num:active { transform: scale(1.02); }
+.lp-step__title {
+    font-size: 1rem; font-weight: 700; color: #1E3A8A; margin-bottom: 8px;
+    text-decoration-line: underline;
+    text-decoration-color: transparent;
+    text-underline-offset: 3px;
+    transition: text-decoration-color 0.3s;
+}
+.lp-step:hover .lp-step__title { text-decoration-color: #3B82F6; }
 .lp-step__desc  { font-size: 0.875rem; color: #5A7090; line-height: 1.65; }
 @media (max-width: 768px) {
     .lp-steps { grid-template-columns: 1fr; gap: 36px; }
@@ -670,6 +751,14 @@ body > footer  { display: none !important; }
     <div class="lp-hero__blob lp-hero__blob--1" aria-hidden="true"></div>
     <div class="lp-hero__blob lp-hero__blob--2" aria-hidden="true"></div>
 
+    <div class="lp-hero__carousel" aria-hidden="true">
+        <div class="lp-hero__carousel-fade"></div>
+        <img src="https://images.unsplash.com/photo-1616680214084-22670de1bc82?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Volunteer photo" class="is-active" />
+        <img src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Happy Children photo" />
+        <img src="https://images.unsplash.com/photo-1672084891746-29828996afd6?q=80&w=1074&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Clean Up photo" />
+        <img src="https://images.unsplash.com/photo-1616680214429-d79397e56688?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3DD" alt="Volunteer photo" />
+    </div>
+
     <div class="lp-hero__content">
         <h1 class="lp-hero__heading">
             <em>Aksi</em> Nyata<br>
@@ -705,25 +794,40 @@ body > footer  { display: none !important; }
                     Menghapus Jarak antara<br>
                     <span style="color:#3B82F6;">Niat Baik</span> dan <span style="color:#2563EB;">Kebutuhan</span>
                 </h2>
-                <p class="lp-section-sub reveal reveal-d2" style="margin-top:16px; margin-bottom:20px;">
+                <p class="lp-section-sub reveal reveal-d2" style="margin-top:16px; margin-bottom:20px; text-align:justify;">
                     Di Indonesia, jutaan orang ingin membantu namun tidak tahu harus memulai dari mana.
                     Di sisi lain, banyak organisasi sosial berjuang sendirian mencari dukungan.
                     AksiKita hadir untuk menjembatani keduanya.
                 </p>
-                <p class="lp-section-sub reveal reveal-d3">
+                <p class="lp-section-sub reveal reveal-d3" style="text-align:justify;">
                     Kami percaya gotong royong adalah DNA bangsa ini. Dengan teknologi yang memanusiakan hubungan,
                     kita bisa menghidupkan kembali semangat tersebut dalam bentuk yang lebih terstruktur dan berdampak.
                 </p>
 
                 <div class="lp-mission-trust reveal reveal-d4">
                     <div class="lp-mission-trust__icon">
-                        <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 0 0 1.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.451 10.451 0 0 1 12 4.5c4.756 0 8.773 3.162 10.065 7.498a10.522 10.522 0 0 1-4.293 5.774M6.228 6.228 3 3m3.228 3.228 3.65 3.65m7.894 7.894L21 21m-3.228-3.228-3.65-3.65m0 0a3 3 0 1 0-4.243-4.243m4.242 4.242L9.88 9.88" />
                         </svg>
+
                     </div>
                     <p style="font-size:0.875rem; color:#5A7090; line-height:1.65; margin:0;">
-                        <strong style="color:#1E3A8A;">Data Aman & Terproteksi.</strong>
+                        <strong style="color:#1E3A8A;">Data Aman & Terproteksi.</strong><br>
                         Setiap data relawan dan organisasi dikelola dengan standar keamanan yang ketat.
+                    </p>
+                </div>
+
+                <div class="lp-mission-trust reveal reveal-d4">
+                    <div class="lp-mission-trust__icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" />
+                        </svg>
+
+                    </div>
+                    <p style="font-size:0.875rem; color:#5A7090; line-height:1.65; margin:0;">
+                        <strong style="color:#1E3A8A;">Contact Us.</strong><br>
+                        Untuk pertanyaan, kemitraan, atau dukungan teknis, jangan ragu menghubungi kami di:
+                        aksikita.support@gmail.com
                     </p>
                 </div>
             </div>
@@ -768,7 +872,7 @@ body > footer  { display: none !important; }
 
         <div class="lp-steps">
             <div class="lp-step reveal reveal-d1">
-                <div class="lp-step__num">1</div>
+                <a href="{{ route('register.volunteer') }}" class="lp-step__num" aria-label="Buat Akun Gratis — daftar sebagai volunteer">1</a>
                 <div>
                     <div class="lp-step__title">Buat Akun Gratis</div>
                     <div class="lp-step__desc">
@@ -777,7 +881,7 @@ body > footer  { display: none !important; }
                 </div>
             </div>
             <div class="lp-step reveal reveal-d2">
-                <div class="lp-step__num">2</div>
+                <a href="#kegiatan" class="lp-step__num" aria-label="Temukan Kegiatan — lihat daftar kegiatan">2</a>
                 <div>
                     <div class="lp-step__title">Temukan Kegiatan</div>
                     <div class="lp-step__desc">
@@ -786,7 +890,7 @@ body > footer  { display: none !important; }
                 </div>
             </div>
             <div class="lp-step reveal reveal-d3">
-                <div class="lp-step__num">3</div>
+                <a href="{{ route('login') }}" class="lp-step__num" aria-label="Daftar dan Hadir — masuk ke akun">3</a>
                 <div>
                     <div class="lp-step__title">Daftar dan Hadir</div>
                     <div class="lp-step__desc">
@@ -794,23 +898,6 @@ body > footer  { display: none !important; }
                     </div>
                 </div>
             </div>
-        </div>
-
-    </div>
-</section>
-
-<section class="lp-section lp-section--light" aria-labelledby="cat-heading">
-    <div class="lp-container">
-
-        <div class="lp-eyebrow reveal">Kategori</div>
-        <h2 class="lp-section-title reveal reveal-d1" id="cat-heading">Temukan Kegiatan Sesuai Minatmu</h2>
-        <p class="lp-section-sub reveal reveal-d2" style="margin-top:12px;">
-            Dari pendidikan hingga lingkungan hidup — ada kegiatan untuk setiap minat dan keahlian.
-        </p>
-        <div class="lp-cats" id="categories-container" role="list" aria-label="Kategori kegiatan">
-            @foreach([110, 96, 130, 88, 120, 100, 108, 92] as $w)
-            <span class="lp-cat-skeleton" style="width:{{ $w }}px;" aria-hidden="true"></span>
-            @endforeach
         </div>
 
     </div>
@@ -941,6 +1028,7 @@ document.addEventListener('DOMContentLoaded', function () {
         window.addEventListener('scroll', updateNav, { passive: true });
         updateNav();
     }
+
     var revealEls = document.querySelectorAll('.reveal');
     var revealObserver = null;
 
@@ -993,6 +1081,7 @@ document.addEventListener('DOMContentLoaded', function () {
             revealObserver.observe(el);
         });
     }
+
     var catColors = [
         { bg: '#EFF6FF', text: '#1D4ED8' },
         { bg: '#F0FDF4', text: '#15803D' },
@@ -1057,6 +1146,7 @@ document.addEventListener('DOMContentLoaded', function () {
             '</div>' +
         '</a>';
     }
+
     var eventsContainer = document.getElementById('events-container');
 
     fetch('/api/v1/events?page=1&per_page=6', {
@@ -1107,6 +1197,7 @@ document.addEventListener('DOMContentLoaded', function () {
             '<p style="font-size:0.875rem; color:#5A7090;">Gagal memuat kegiatan. Silakan muat ulang halaman.</p>' +
             '</div>';
     });
+
     var catsContainer = document.getElementById('categories-container');
 
     fetch('/api/v1/categories', {
@@ -1141,6 +1232,17 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
+    var carousel = document.querySelector('.lp-hero__carousel');
+    if (carousel) {
+        var images = carousel.querySelectorAll('img');
+        var currentIndex = 0;
+        images[0].classList.add('is-active');
+        setInterval(function () {
+            images[currentIndex].classList.remove('is-active');
+            currentIndex = (currentIndex + 1) % images.length;
+            images[currentIndex].classList.add('is-active');
+        }, 6000);
+    }
 });
 </script>
 @endpush
