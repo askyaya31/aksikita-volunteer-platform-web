@@ -25,7 +25,7 @@
                     </span>
                     AksiKita
                 </a>
-                <div class="ak-nav-links-desktop" style="display:flex; align-items:center; gap:4px; margin-left:8px; flex:1;">
+                <div class="ak-nav-links-desktop" style="display: flex; align-items: center; justify-content: center; gap: 4px; margin-left: 8px; flex: 1;">
                     <ul class="ak-nav-links">
                         <li>
                             <a href="{{ route('home') }}"
@@ -129,7 +129,7 @@
                         </span>
                         <span class="ak-footer__brand">AksiKita</span>
                     </div>
-                    <p class="ak-footer__tagline">
+                    <p class="ak-footer__tagline" style="text-align:justify;">
                         Menghubungkan relawan dengan organisasi sosial di seluruh Indonesia untuk menciptakan dampak nyata.
                     </p>
                 </div>
