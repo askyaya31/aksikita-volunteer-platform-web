@@ -3,12 +3,17 @@
 
 @push('styles')
 <style>
-.sched-hero {
+/* ── Background gelap meluas dari hero sampai sebelum footer ── */
+.sched-page-bg {
     background: linear-gradient(135deg, #0F2057 0%, #1A3575 60%, #2A4A9C 100%);
+    padding-bottom: 3.5rem;
+}
+
+.sched-hero {
     padding: 2rem 0 3.5rem;
 }
 .sched-hero-title {
-    font-family: 'Fraunces', serif;
+    font-family: 'League Spartan', serif;
     font-size: 24px; font-weight: 700; color: #fff;
     margin-bottom: 4px;
 }
@@ -16,7 +21,7 @@
 
 .sched-wrap {
     max-width: 800px;
-    margin: -2rem auto 3rem;
+    margin: -2rem auto 0;
     padding: 0 1.25rem;
 }
 
@@ -33,7 +38,7 @@
     margin-bottom: 1rem;
 }
 .cal-month-label {
-    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-family: 'League Spartan', sans-serif;
     font-size: 15px; font-weight: 700; color: #0F2057;
 }
 .cal-nav-btn {
@@ -146,24 +151,24 @@
 .sched-tab.active { background: #0F2057; color: #fff; }
 
 .sched-day { margin-bottom: 1.5rem; border-radius: 14px; padding: 2px; transition: background 0.3s; }
-.sched-day.highlighted { background: #EEF3FF; padding: 10px 12px; }
+.sched-day.highlighted { background: rgba(255,255,255,0.08); padding: 10px 12px; }
 .sched-day-header {
     display: flex; align-items: center; gap: 12px;
     margin-bottom: 10px;
 }
 .sched-day-dot {
     width: 10px; height: 10px;
-    border-radius: 50%; background: #0F2057; flex-shrink: 0;
+    border-radius: 50%; background: #fff; flex-shrink: 0;
 }
-.sched-day-dot.today { background: #E8501A; box-shadow: 0 0 0 3px rgba(232,80,26,0.15); }
-.sched-day-dot.past  { background: #9099B0; }
+.sched-day-dot.today { background: #E8501A; box-shadow: 0 0 0 3px rgba(232,80,26,0.25); }
+.sched-day-dot.past  { background: rgba(255,255,255,0.45); }
 .sched-day-label {
     font-size: 12px; font-weight: 700;
-    color: #0F2057; text-transform: uppercase; letter-spacing: 0.5px;
+    color: #fff; text-transform: uppercase; letter-spacing: 0.5px;
 }
 .sched-day-label.today { color: #E8501A; }
-.sched-day-label.past  { color: #9099B0; }
-.sched-day-line { flex: 1; height: 1px; background: #EEF0F6; }
+.sched-day-label.past  { color: rgba(255,255,255,0.45); }
+.sched-day-line { flex: 1; height: 1px; background: rgba(255,255,255,0.18); }
 
 .sched-card {
     background: #fff;
@@ -212,14 +217,14 @@
 .sched-badge.attended  { background: #EEF3FF; color: #1A3575; }
 
 .sched-empty {
-    text-align: center; padding: 3rem 1rem; color: #9099B0;
+    text-align: center; padding: 3rem 1rem; color: rgba(255,255,255,0.6);
 }
-.sched-empty svg { margin-bottom: 12px; opacity: 0.35; }
+.sched-empty svg { margin-bottom: 12px; opacity: 0.45; }
 .sched-empty p { font-size: 14px; }
 .sched-empty a {
     display: inline-flex; align-items: center; gap: 6px;
     margin-top: 14px; padding: 9px 20px;
-    background: #0F2057; color: #fff;
+    background: #fff; color: #0F2057;
     border-radius: 999px; font-size: 13px; font-weight: 600;
     text-decoration: none;
 }
@@ -228,207 +233,210 @@
 
 @section('content')
 
-<div class="sched-hero">
-    <div class="ak-container">
-        <p class="sched-hero-sub">Halo, {{ session('user_name') }}</p>
-        <h1 class="sched-hero-title">Jadwal Saya</h1>
-        <p class="sched-hero-sub" style="margin-top:4px;">
-            {{ $upcoming->flatten()->count() }} kegiatan mendatang
-        </p>
-    </div>
-</div>
+<div class="sched-page-bg">
 
-<div class="sched-wrap">
-
-    <div class="sched-cal-wrap">
-
-        <div class="sched-cal-nav">
-            <a href="?month={{ $prevMonth->month }}&year={{ $prevMonth->year }}"
-               class="cal-nav-btn" title="Bulan sebelumnya">‹</a>
-            <span class="cal-month-label">{{ $calendarMonth->translatedFormat('F Y') }}</span>
-            <a href="?month={{ $nextMonth->month }}&year={{ $nextMonth->year }}"
-               class="cal-nav-btn" title="Bulan berikutnya">›</a>
-        </div>
-
-        @php
-            $startOfMonth = $calendarMonth->copy()->startOfMonth();
-            $endOfMonth   = $calendarMonth->copy()->endOfMonth();
-            $startPad     = $startOfMonth->dayOfWeek;
-            $todayStr     = now()->toDateString();
-        @endphp
-
-        <div class="cal-grid">
-
-            @foreach(['Min','Sen','Sel','Rab','Kam','Jum','Sab'] as $dayName)
-                <div class="cal-day-header">{{ $dayName }}</div>
-            @endforeach
-
-            @for($i = 0; $i < $startPad; $i++)
-                <div class="cal-cell"></div>
-            @endfor
-
-            @for($d = 1; $d <= $endOfMonth->day; $d++)
-                @php
-                    $dateStr   = $calendarMonth->format('Y-m-') . str_pad($d, 2, '0', STR_PAD_LEFT);
-                    $dayEvents = $eventsByDate[$dateStr] ?? [];
-                    $hasEvent  = count($dayEvents) > 0;
-                    $isToday   = $dateStr === $todayStr;
-                    $col       = ($startPad + $d - 1) % 7;
-                    $popupDir  = $col >= 5 ? 'popup-left' : ($col <= 1 ? 'popup-right' : '');
-                @endphp
-
-                <div class="cal-cell {{ $isToday ? 'is-today' : '' }} {{ $hasEvent ? 'has-event ' . $popupDir : '' }}"
-                     @if($hasEvent) onclick="scrollToDate('{{ $dateStr }}')" @endif>
-
-                    {{ $d }}
-
-                    @if($hasEvent)
-                        <span class="cal-ev-badge">{{ count($dayEvents) }}</span>
-                        <div class="cal-popup">
-                            <div class="cal-popup-date">
-                                {{ \Carbon\Carbon::parse($dateStr)->translatedFormat('l, d F Y') }}
-                            </div>
-                            @foreach($dayEvents as $ev)
-                                <div class="cal-popup-item">
-                                    <div class="cal-popup-dot {{ $ev['status'] === 'attended' ? 'attended' : '' }}"></div>
-                                    <div>
-                                        <div class="cal-popup-name">{{ $ev['title'] }}</div>
-                                        @if($ev['start_time'])
-                                            <div class="cal-popup-time">
-                                                {{ $ev['start_time'] }}{{ $ev['end_time'] ? ' – ' . $ev['end_time'] : '' }}
-                                            </div>
-                                        @endif
-                                    </div>
-                                </div>
-                            @endforeach
-                        </div>
-                    @endif
-
-                </div>
-            @endfor
-
+    <div class="sched-hero">
+        <div class="ak-container">
+            <h1 class="sched-hero-title">Jadwal Saya</h1>
+            <p class="sched-hero-sub" style="margin-top:4px;">
+                {{ $upcoming->flatten()->count() }} kegiatan mendatang
+            </p>
         </div>
     </div>
 
-    <div class="sched-tabs" role="tablist">
-        <button class="sched-tab active" id="tab-upcoming" onclick="switchTab('upcoming')" role="tab">
-            Mendatang
-            @if($upcoming->count())
-                <span style="background:#E8501A;color:#fff;border-radius:999px;padding:1px 7px;font-size:10px;margin-left:4px;">
-                    {{ $upcoming->flatten()->count() }}
-                </span>
-            @endif
-        </button>
-        <button class="sched-tab" id="tab-past" onclick="switchTab('past')" role="tab">
-            Sudah Lewat
-        </button>
-    </div>
+    <div class="sched-wrap">
 
-    <div id="panel-upcoming">
-        @forelse($upcoming as $date => $regs)
+        <div class="sched-cal-wrap">
+
+            <div class="sched-cal-nav">
+                <a href="?month={{ $prevMonth->month }}&year={{ $prevMonth->year }}"
+                   class="cal-nav-btn" title="Bulan sebelumnya">‹</a>
+                <span class="cal-month-label">{{ $calendarMonth->translatedFormat('F Y') }}</span>
+                <a href="?month={{ $nextMonth->month }}&year={{ $nextMonth->year }}"
+                   class="cal-nav-btn" title="Bulan berikutnya">›</a>
+            </div>
+
             @php
-                $dt      = \Carbon\Carbon::parse($date);
-                $isToday = $dt->isToday();
-                $label   = $isToday
-                    ? 'Hari ini — ' . $dt->translatedFormat('d F Y')
-                    : $dt->translatedFormat('l, d F Y');
+                $startOfMonth = $calendarMonth->copy()->startOfMonth();
+                $endOfMonth   = $calendarMonth->copy()->endOfMonth();
+                $startPad     = $startOfMonth->dayOfWeek;
+                $todayStr     = now()->toDateString();
             @endphp
 
-            <div class="sched-day" id="date-{{ $date }}">
-                <div class="sched-day-header">
-                    <div class="sched-day-dot {{ $isToday ? 'today' : '' }}"></div>
-                    <span class="sched-day-label {{ $isToday ? 'today' : '' }}">{{ $label }}</span>
-                    <div class="sched-day-line"></div>
-                </div>
+            <div class="cal-grid">
 
-                @foreach($regs as $reg)
-                    <a href="{{ route('volunteer.events.show', $reg->event->slug) }}" class="sched-card">
-                        <div class="sched-time-col">
-                            <div class="sched-time-start">
-                                {{ $reg->event->start_time ? \Carbon\Carbon::parse($reg->event->start_time)->format('H:i') : '—' }}
-                            </div>
-                            <div class="sched-time-end">
-                                {{ $reg->event->end_time ? \Carbon\Carbon::parse($reg->event->end_time)->format('H:i') : '' }}
-                            </div>
-                        </div>
-                        <div class="sched-info">
-                            <div class="sched-cats">
-                                @foreach($reg->event->categories->take(2) as $cat)
-                                    <span class="sched-cat">{{ $cat->name }}</span>
+                @foreach(['Min','Sen','Sel','Rab','Kam','Jum','Sab'] as $dayName)
+                    <div class="cal-day-header">{{ $dayName }}</div>
+                @endforeach
+
+                @for($i = 0; $i < $startPad; $i++)
+                    <div class="cal-cell"></div>
+                @endfor
+
+                @for($d = 1; $d <= $endOfMonth->day; $d++)
+                    @php
+                        $dateStr   = $calendarMonth->format('Y-m-') . str_pad($d, 2, '0', STR_PAD_LEFT);
+                        $dayEvents = $eventsByDate[$dateStr] ?? [];
+                        $hasEvent  = count($dayEvents) > 0;
+                        $isToday   = $dateStr === $todayStr;
+                        $col       = ($startPad + $d - 1) % 7;
+                        $popupDir  = $col >= 5 ? 'popup-left' : ($col <= 1 ? 'popup-right' : '');
+                    @endphp
+
+                    <div class="cal-cell {{ $isToday ? 'is-today' : '' }} {{ $hasEvent ? 'has-event ' . $popupDir : '' }}"
+                         @if($hasEvent) onclick="scrollToDate('{{ $dateStr }}')" @endif>
+
+                        {{ $d }}
+
+                        @if($hasEvent)
+                            <span class="cal-ev-badge">{{ count($dayEvents) }}</span>
+                            <div class="cal-popup">
+                                <div class="cal-popup-date">
+                                    {{ \Carbon\Carbon::parse($dateStr)->translatedFormat('l, d F Y') }}
+                                </div>
+                                @foreach($dayEvents as $ev)
+                                    <div class="cal-popup-item">
+                                        <div class="cal-popup-dot {{ $ev['status'] === 'attended' ? 'attended' : '' }}"></div>
+                                        <div>
+                                            <div class="cal-popup-name">{{ $ev['title'] }}</div>
+                                            @if($ev['start_time'])
+                                                <div class="cal-popup-time">
+                                                    {{ $ev['start_time'] }}{{ $ev['end_time'] ? ' – ' . $ev['end_time'] : '' }}
+                                                </div>
+                                            @endif
+                                        </div>
+                                    </div>
                                 @endforeach
                             </div>
-                            <div class="sched-title">{{ $reg->event->title }}</div>
-                            <div class="sched-meta">
-                                <span>{{ $reg->event->city }}</span>
-                                <span>{{ $reg->event->organization->organization_name }}</span>
+                        @endif
+
+                    </div>
+                @endfor
+
+            </div>
+        </div>
+
+        <div class="sched-tabs" role="tablist">
+            <button class="sched-tab active" id="tab-upcoming" onclick="switchTab('upcoming')" role="tab">
+                Mendatang
+                @if($upcoming->count())
+                    <span style="background:#E8501A;color:#fff;border-radius:999px;padding:1px 7px;font-size:10px;margin-left:4px;">
+                        {{ $upcoming->flatten()->count() }}
+                    </span>
+                @endif
+            </button>
+            <button class="sched-tab" id="tab-past" onclick="switchTab('past')" role="tab">
+                Sudah Lewat
+            </button>
+        </div>
+
+        <div id="panel-upcoming">
+            @forelse($upcoming as $date => $regs)
+                @php
+                    $dt      = \Carbon\Carbon::parse($date);
+                    $isToday = $dt->isToday();
+                    $label   = $isToday
+                        ? 'Hari ini — ' . $dt->translatedFormat('d F Y')
+                        : $dt->translatedFormat('l, d F Y');
+                @endphp
+
+                <div class="sched-day" id="date-{{ $date }}">
+                    <div class="sched-day-header">
+                        <div class="sched-day-dot {{ $isToday ? 'today' : '' }}"></div>
+                        <span class="sched-day-label {{ $isToday ? 'today' : '' }}">{{ $label }}</span>
+                        <div class="sched-day-line"></div>
+                    </div>
+
+                    @foreach($regs as $reg)
+                        <a href="{{ route('volunteer.events.show', $reg->event->slug) }}" class="sched-card">
+                            <div class="sched-time-col">
+                                <div class="sched-time-start">
+                                    {{ $reg->event->start_time ? \Carbon\Carbon::parse($reg->event->start_time)->format('H:i') : '—' }}
+                                </div>
+                                <div class="sched-time-end">
+                                    {{ $reg->event->end_time ? \Carbon\Carbon::parse($reg->event->end_time)->format('H:i') : '' }}
+                                </div>
                             </div>
-                        </div>
-                        <span class="sched-badge {{ $reg->status }}">
-                            {{ $reg->status === 'confirmed' ? 'Diterima' : 'Hadir' }}
-                        </span>
-                    </a>
-                @endforeach
-            </div>
-
-        @empty
-            <div class="sched-empty">
-                <svg width="48" height="48" fill="none" viewBox="0 0 24 24" stroke="#9099B0" stroke-width="1.5">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                </svg>
-                <p>Belum ada jadwal kegiatan mendatang.</p>
-                <a href="{{ route('volunteer.events') }}">Cari Kegiatan →</a>
-            </div>
-        @endforelse
-    </div>
-
-    <div id="panel-past" style="display:none;">
-        @forelse($past as $date => $regs)
-            @php $dt = \Carbon\Carbon::parse($date); @endphp
-
-            <div class="sched-day" id="date-past-{{ $date }}">
-                <div class="sched-day-header">
-                    <div class="sched-day-dot past"></div>
-                    <span class="sched-day-label past">{{ $dt->translatedFormat('l, d F Y') }}</span>
-                    <div class="sched-day-line"></div>
+                            <div class="sched-info">
+                                <div class="sched-cats">
+                                    @foreach($reg->event->categories->take(2) as $cat)
+                                        <span class="sched-cat">{{ $cat->name }}</span>
+                                    @endforeach
+                                </div>
+                                <div class="sched-title">{{ $reg->event->title }}</div>
+                                <div class="sched-meta">
+                                    <span>{{ $reg->event->city }}</span>
+                                    <span>{{ $reg->event->organization->organization_name }}</span>
+                                </div>
+                            </div>
+                            <span class="sched-badge {{ $reg->status }}">
+                                {{ $reg->status === 'confirmed' ? 'Diterima' : 'Hadir' }}
+                            </span>
+                        </a>
+                    @endforeach
                 </div>
 
-                @foreach($regs as $reg)
-                    <a href="{{ route('volunteer.events.show', $reg->event->slug) }}" class="sched-card past">
-                        <div class="sched-time-col">
-                            <div class="sched-time-start">
-                                {{ $reg->event->start_time ? \Carbon\Carbon::parse($reg->event->start_time)->format('H:i') : '—' }}
-                            </div>
-                            <div class="sched-time-end">
-                                {{ $reg->event->end_time ? \Carbon\Carbon::parse($reg->event->end_time)->format('H:i') : '' }}
-                            </div>
-                        </div>
-                        <div class="sched-info">
-                            <div class="sched-cats">
-                                @foreach($reg->event->categories->take(2) as $cat)
-                                    <span class="sched-cat">{{ $cat->name }}</span>
-                                @endforeach
-                            </div>
-                            <div class="sched-title">{{ $reg->event->title }}</div>
-                            <div class="sched-meta">
-                                <span> {{ $reg->event->city }}</span>
-                                <span> {{ $reg->event->organization->organization_name }}</span>
-                            </div>
-                        </div>
-                        <span class="sched-badge {{ $reg->status }}">
-                            {{ $reg->status === 'attended' ? 'Hadir' : 'Selesai' }}
-                        </span>
-                    </a>
-                @endforeach
-            </div>
+            @empty
+                <div class="sched-empty">
+                    <svg width="48" height="48" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                    </svg>
+                    <p style="color: white;">Belum ada jadwal kegiatan mendatang.</p>
+                    <a href="{{ route('volunteer.events') }}">Cari Kegiatan →</a>
+                </div>
+            @endforelse
+        </div>
 
-        @empty
-            <div class="sched-empty">
-                <svg width="48" height="48" fill="none" viewBox="0 0 24 24" stroke="#9099B0" stroke-width="1.5">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                </svg>
-                <p>Belum ada riwayat kegiatan yang selesai.</p>
-            </div>
-        @endforelse
+        <div id="panel-past" style="display:none;">
+            @forelse($past as $date => $regs)
+                @php $dt = \Carbon\Carbon::parse($date); @endphp
+
+                <div class="sched-day" id="date-past-{{ $date }}">
+                    <div class="sched-day-header">
+                        <div class="sched-day-dot past"></div>
+                        <span class="sched-day-label past">{{ $dt->translatedFormat('l, d F Y') }}</span>
+                        <div class="sched-day-line"></div>
+                    </div>
+
+                    @foreach($regs as $reg)
+                        <a href="{{ route('volunteer.events.show', $reg->event->slug) }}" class="sched-card past">
+                            <div class="sched-time-col">
+                                <div class="sched-time-start">
+                                    {{ $reg->event->start_time ? \Carbon\Carbon::parse($reg->event->start_time)->format('H:i') : '—' }}
+                                </div>
+                                <div class="sched-time-end">
+                                    {{ $reg->event->end_time ? \Carbon\Carbon::parse($reg->event->end_time)->format('H:i') : '' }}
+                                </div>
+                            </div>
+                            <div class="sched-info">
+                                <div class="sched-cats">
+                                    @foreach($reg->event->categories->take(2) as $cat)
+                                        <span class="sched-cat">{{ $cat->name }}</span>
+                                    @endforeach
+                                </div>
+                                <div class="sched-title">{{ $reg->event->title }}</div>
+                                <div class="sched-meta">
+                                    <span> {{ $reg->event->city }}</span>
+                                    <span> {{ $reg->event->organization->organization_name }}</span>
+                                </div>
+                            </div>
+                            <span class="sched-badge {{ $reg->status }}">
+                                {{ $reg->status === 'attended' ? 'Hadir' : 'Selesai' }}
+                            </span>
+                        </a>
+                    @endforeach
+                </div>
+
+            @empty
+                <div class="sched-empty">
+                    <svg width="48" height="48" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    <p style="color: white;">Belum ada riwayat kegiatan yang selesai.</p>
+                </div>
+            @endforelse
+        </div>
+
     </div>
 
 </div>
