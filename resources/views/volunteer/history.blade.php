@@ -3,7 +3,7 @@
 
 @push('styles')
 <style>
-.history-wrap { max-width: 720px; margin: 0 auto; }
+.history-wrap { max-width: 760px; margin: 0 auto; }
 
 .history-head {
     margin-bottom: 24px;
@@ -57,39 +57,26 @@
     border-radius: 50%;
 }
 
+/* ── Card: polos, full width, tanpa accent border kiri ── */
 .history-card {
     background: var(--color-canvas);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-xl);
-    padding: 16px;
-    margin-bottom: 10px;
+    padding: 18px 20px;
+    margin-bottom: 12px;
     display: flex;
-    gap: 14px;
-    align-items: flex-start;
+    gap: 16px;
+    align-items: center;
     transition: box-shadow 0.18s, transform 0.18s;
     text-decoration: none;
-    position: relative;
-    overflow: hidden;
 }
 .history-card:hover {
     box-shadow: var(--shadow-md);
     transform: translateY(-1px);
 }
-.history-card::before {
-    content: '';
-    position: absolute;
-    left: 0; top: 0; bottom: 0;
-    width: 3px;
-    border-radius: 0 2px 2px 0;
-    background: var(--color-border);
-}
-.history-card--confirmed::before  { background: #10B981; }
-.history-card--pending::before    { background: #F59E0B; }
-.history-card--attended::before   { background: var(--color-brand-600); }
-.history-card--cancelled::before  { background: var(--color-border); }
 
 .history-card__thumb {
-    width: 72px; height: 72px;
+    width: 64px; height: 64px;
     border-radius: 12px;
     overflow: hidden;
     flex-shrink: 0;
@@ -113,7 +100,7 @@
 .history-card__cats {
     display: flex; gap: 5px;
     flex-wrap: wrap;
-    margin-bottom: 5px;
+    margin-bottom: 6px;
 }
 
 .history-card__title {
@@ -140,7 +127,7 @@
 .history-card__meta {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 14px;
     font-size: 0.775rem;
     color: var(--color-text-muted);
     flex-wrap: wrap;
@@ -152,29 +139,32 @@
     gap: 4px;
 }
 
+/* ── Right column: badge di atas (kanan-atas), tanggal di bawahnya ── */
 .history-card__right {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
-    gap: 6px;
+    gap: 8px;
     flex-shrink: 0;
+    align-self: flex-start;
 }
 
 .history-badge {
     display: inline-flex;
     align-items: center;
     gap: 5px;
-    padding: 5px 12px;
+    padding: 6px 16px;
     border-radius: 9999px;
     font-size: 0.75rem;
     font-weight: 700;
     letter-spacing: 0.01em;
     line-height: 1;
+    color: #fff;
 }
-.history-badge--confirmed  { background: #ECFDF5; color: #065F46; }
-.history-badge--pending    { background: #FFFBEB; color: #92400E; }
-.history-badge--attended   { background: #EFF6FF; color: #1D4ED8; }
-.history-badge--cancelled  { background: var(--color-surface); color: var(--color-text-muted); border: 1px solid var(--color-border); }
+.history-badge--confirmed  { background: #10B981; } /* hijau */
+.history-badge--pending    { background: #F59E0B; } /* kuning */
+.history-badge--attended   { background: #10B981; } /* hijau juga, dianggap selesai/oke */
+.history-badge--cancelled  { background: #EF4444; } /* merah */
 
 .history-card__date {
     font-size: 0.75rem;
@@ -216,7 +206,7 @@
 
 @media (max-width: 560px) {
     .history-card { flex-wrap: wrap; }
-    .history-card__right { flex-direction: row; align-items: center; margin-left: auto; }
+    .history-card__right { flex-direction: row; align-items: center; margin-left: auto; align-self: center; }
     .history-card__thumb { width: 56px; height: 56px; border-radius: 10px; }
 }
 </style>
@@ -229,6 +219,7 @@
         <h1 class="history-head__title">Riwayat Kegiatan</h1>
         <p class="history-head__sub">Semua kegiatan yang pernah kamu daftarkan.</p>
     </div>
+
     <div class="history-tabs">
         <a href="{{ route('volunteer.history', ['tab' => 'aktif']) }}"
            class="history-tab {{ $tab === 'aktif' ? 'history-tab--active' : '' }}">
@@ -245,15 +236,21 @@
     @forelse($registrations as $reg)
     @php
         $catColor = $reg->event->categories->first()?->color ?? '#3B82F6';
-        $statusClass = match($reg->status) {
-            'confirmed' => 'history-card--confirmed',
-            'pending'   => 'history-card--pending',
-            'attended'  => 'history-card--attended',
-            default     => 'history-card--cancelled',
+        $badgeClass = match($reg->status) {
+            'confirmed' => 'history-badge--confirmed',
+            'pending'   => 'history-badge--pending',
+            'attended'  => 'history-badge--attended',
+            default     => 'history-badge--cancelled',
+        };
+        $badgeLabel = match($reg->status) {
+            'confirmed' => 'Diterima',
+            'pending'   => 'Menunggu',
+            'attended'  => 'Hadir',
+            default     => 'Dibatalkan',
         };
     @endphp
 
-    <article class="history-card {{ $statusClass }}">
+    <article class="history-card">
         <div class="history-card__thumb">
             @if($reg->event->poster)
                 <img src="{{ asset('storage/' . $reg->event->poster) }}"
@@ -262,7 +259,7 @@
             @else
                 <div class="history-card__thumb-placeholder"
                      style="background: linear-gradient(135deg, {{ $catColor }}22 0%, {{ $catColor }}55 100%);">
-                    <svg width="24" height="24" fill="none" viewBox="0 0 24 24"
+                    <svg width="22" height="22" fill="none" viewBox="0 0 24 24"
                          stroke="{{ $catColor }}" stroke-width="1.5" opacity="0.7">
                         <path stroke-linecap="round" stroke-linejoin="round"
                               d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
@@ -301,7 +298,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round"
                               d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
                     </svg>
-                    {{ $reg->event->city }}, {{ $reg->event->province }}
+                    {{ $reg->event->city }}
                 </span>
                 <span class="history-card__meta-item">
                     <svg width="11" height="11" fill="none" viewBox="0 0 24 24"
@@ -312,49 +309,16 @@
                     {{ $reg->event->start_date->format('d M Y') }}
                 </span>
             </div>
-
         </div>
 
         <div class="history-card__right">
-            @switch($reg->status)
-                @case('confirmed')
-                    <span class="history-badge history-badge--confirmed">
-                        <svg width="10" height="10" fill="none" viewBox="0 0 24 24"
-                             stroke="currentColor" stroke-width="2.5">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
-                        </svg>
-                        Diterima
-                    </span>
-                    @break
-                @case('pending')
-                    <span class="history-badge history-badge--pending">
-                        <svg width="10" height="10" fill="none" viewBox="0 0 24 24"
-                             stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                        </svg>
-                        Menunggu
-                    </span>
-                    @break
-                @case('attended')
-                    <span class="history-badge history-badge--attended">
-                        <svg width="10" height="10" fill="none" viewBox="0 0 24 24"
-                             stroke="currentColor" stroke-width="2.5">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                        </svg>
-                        Hadir
-                    </span>
-                    @break
-                @default
-                    <span class="history-badge history-badge--cancelled">Dibatalkan</span>
-            @endswitch
-
+            <span class="history-badge {{ $badgeClass }}">
+                {{ $badgeLabel }}
+            </span>
             <span class="history-card__date">
                 {{ $reg->registered_at?->format('d M Y') ?? $reg->created_at->format('d M Y') }}
             </span>
         </div>
-
     </article>
     @empty
 

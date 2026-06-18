@@ -124,34 +124,30 @@
     margin-top: 6px;
 }
 
+/* ── Empty state: card besar, border solid tipis, rounded penuh ── */
 .notif-empty {
     text-align: center;
-    padding: 72px 24px;
+    padding: 110px 24px;
     background: var(--color-canvas);
-    border: 1px dashed var(--color-border);
-    border-radius: var(--radius-xl);
+    border: 1px solid var(--color-border);
+    border-radius: 28px;
 }
 .notif-empty__icon {
-    width: 64px; height: 64px;
-    border-radius: var(--radius-xl);
-    background: var(--color-brand-50);
-    display: flex; align-items: center; justify-content: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     margin: 0 auto 18px;
-}
-.notif-empty h3 {
-    font-size: 1rem;
-    font-weight: 700;
-    color: var(--color-text-primary);
-    margin-bottom: 6px;
 }
 .notif-empty p {
     font-size: 0.875rem;
     color: var(--color-text-muted);
+    line-height: 1.6;
 }
 
 @media (max-width: 480px) {
     .notif-header { flex-direction: column; align-items: flex-start; }
     .notif-item__icon { width: 34px; height: 34px; font-size: 1rem; border-radius: 9px; }
+    .notif-empty { padding: 72px 20px; }
 }
 </style>
 @endpush
@@ -228,14 +224,13 @@
 
     <div class="notif-empty">
         <div class="notif-empty__icon">
-            <svg width="28" height="28" fill="none" viewBox="0 0 24 24"
-                 stroke="var(--color-brand-400)" stroke-width="1.5">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                      d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+            <svg width="40" height="40" fill="none" viewBox="0 0 24 24"
+                 stroke="#1E293B" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 8a6 6 0 10-12 0c0 3.5-1 5.5-1.5 6.5A1 1 0 005.5 16h13a1 1 0 00.9-1.5C18.9 13.5 18 11.5 18 8z"/>
+                <path d="M9.5 19a2.5 2.5 0 005 0"/>
             </svg>
         </div>
-        <h3>Belum ada notifikasi</h3>
-        <p>Notifikasi akan muncul di sini setelah kamu mendaftar ke suatu kegiatan.</p>
+        <p>Tidak ada notifikasi, notifikasi<br>terbaru akan ditampilkan di sini</p>
     </div>
 
     @endforelse

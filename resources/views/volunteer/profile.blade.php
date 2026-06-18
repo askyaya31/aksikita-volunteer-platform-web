@@ -53,7 +53,7 @@
     display: flex;
     align-items: center;
     gap: 20px;
-    background: linear-gradient(135deg, #1E3A8A 0%, #3B82F6 100%);
+    background: linear-gradient(135deg, #0F2057 0%, #1A3575 60%, #2A4A9C 100%);
 }
 .profile-avatar-ring {
     width: 80px; height: 80px;
@@ -131,7 +131,10 @@
     display: flex;
     align-items: center;
     gap: 8px;
+    justify-content: center;
+    text-align: center;
 }
+.profile-section__label::before,
 .profile-section__label::after {
     content: '';
     flex: 1;
