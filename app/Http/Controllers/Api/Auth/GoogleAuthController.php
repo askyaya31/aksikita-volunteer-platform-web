@@ -9,6 +9,7 @@ use App\Models\VolunteerProfile;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
 
 class GoogleAuthController extends Controller
 {
@@ -85,7 +86,7 @@ class GoogleAuthController extends Controller
             ];
 
             if (!in_array($payload['aud'] ?? '', array_filter($validClientIds))) {
-                \Log::warning('Google token aud mismatch', [
+                Log::warning('Google token aud mismatch', [
                     'aud'      => $payload['aud'] ?? null,
                     'expected' => $validClientIds,
                 ]);
@@ -99,7 +100,7 @@ class GoogleAuthController extends Controller
             return $payload;
 
         } catch (\Exception $e) {
-            \Log::error('Google token verification failed: ' . $e->getMessage());
+            Log::error('Google token verification failed: ' . $e->getMessage());
             return null;
         }
     }

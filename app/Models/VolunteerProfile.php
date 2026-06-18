@@ -16,7 +16,6 @@ class VolunteerProfile extends Model
         'interests'     => 'array',
     ];
 
-    // relasi ke akun user pemilik profil volunteer ini
     public function user()
     {
         return $this->belongsTo(User::class);

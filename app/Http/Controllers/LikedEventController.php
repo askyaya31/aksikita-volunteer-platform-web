@@ -9,7 +9,7 @@ use App\Models\Event;
  
 class LikedEventController extends Controller
 {
-    // GET /volunteer/liked-events
+   
     public function index(Request $request)
     {
         $liked = LikedEvent::with('event.categories', 'event.organization')
@@ -20,7 +20,6 @@ class LikedEventController extends Controller
         return response()->json(['data' => $liked]);
     }
     
-    // POST /volunteer/events/{event}/like → toggle
     public function toggle(Request $request, Event $event)
     {
         $userId  = $request->user()->id;

@@ -1,15 +1,14 @@
 <?php
 
-namespace App\Http\Controllers\Api\Volunteer;  // ✅ konsisten dengan controller lain
+namespace App\Http\Controllers\Api\Volunteer;  
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\SavedEvent;             // ✅ tambahkan ini
-use App\Models\Event;                  // ✅ tambahkan ini
+use App\Models\SavedEvent;            
+use App\Models\Event;                  
 
 class SavedEventController extends Controller
 {
-    // GET /volunteer/saved-events
     public function index(Request $request)
     {
         $saved = SavedEvent::with('event.categories', 'event.organization')
@@ -20,7 +19,6 @@ class SavedEventController extends Controller
         return response()->json(['data' => $saved]);
     }
     
-    // POST /volunteer/events/{event}/save  → toggle
     public function toggle(Request $request, Event $event)
     {
         $userId = $request->user()->id;
@@ -37,7 +35,6 @@ class SavedEventController extends Controller
         return response()->json(['message' => 'Berhasil disimpan', 'saved' => true]);
     }
     
-    // DELETE /volunteer/events/{event}/save → eksplisit unsave
     public function unsave(Request $request, Event $event)
     {
         SavedEvent::where('user_id', $request->user()->id)

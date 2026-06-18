@@ -49,7 +49,6 @@ class AuthController extends Controller
             'phone'    => $request->phone,
         ]);
 
-        // buat profil organisasi dengan status pending, menunggu verifikasi admin
         OrganizationProfile::create([
             'user_id'             => $user->id,
             'organization_name'   => $request->organization_name,

@@ -53,7 +53,14 @@
                         @endif
                     </a>
                 </li>
+                <li>
+                    <a href="{{ route('organizer.chat.index') }}"
+                       class="ak-nav-link {{ request()->routeIs('organizer.chat.*') ? 'active' : '' }}">
+                        Pesan Relawan
+                    </a>
+                </li>
             </ul>
+
             <div class="ak-nav-links-desktop" style="display:flex; align-items:center; gap:12px; margin-left:auto;">
                 <div class="ak-user-menu" id="orgUserMenu">
                     <button class="ak-user-menu__trigger" id="orgUserTrigger" aria-haspopup="true" aria-expanded="false">
@@ -121,6 +128,13 @@
         @if(isset($unreadCount) && $unreadCount > 0)
             <span class="ak-notif-badge__count" style="position:static; margin-left:auto;">{{ $unreadCount }}</span>
         @endif
+    </a>
+    <a href="{{ route('organizer.chat.index') }}"
+       class="ak-mobile-nav-link {{ request()->routeIs('organizer.chat.*') ? 'active' : '' }}">
+        <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+        </svg>
+        Pesan Relawan
     </a>
     <a href="{{ route('organizer.profile') }}"
        class="ak-mobile-nav-link {{ request()->routeIs('organizer.profile') ? 'active' : '' }}">

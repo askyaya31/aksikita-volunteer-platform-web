@@ -150,17 +150,19 @@
     transition: background 0.15s;
     white-space: nowrap;
 }
-.agenda-detail-btn:hover { background: #1A3575; color: #fff; }
-
-/* ══════════════════════════════════════
-   EVENT CARD (Rekomendasi / Kategori)
-══════════════════════════════════════ */
-.ev-grid {
+.cat-pill:hover,
+.cat-pill.active {
+    border-color: #0F2057;
+    color: #0F2057;
+    background: #EEF3FF;
+}
+.events-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 1rem;
 }
-.ev-card {
+
+.ecard {
     background: #fff;
     border-radius: 18px;
     overflow: hidden;
@@ -295,7 +297,6 @@
 
 @section('content')
 
-{{-- ══════ HERO ══════ --}}
 <div class="dash-hero">
     <div class="ak-container">
         <p class="dash-hero-greeting">Selamat datang,</p>
@@ -312,9 +313,9 @@
     </div>
 </div>
 
-{{-- ══════ PAGE BODY ══════ --}}
-<div class="dash-page">
-    <div class="ak-container">
+<div class="ak-container">
+    <div class="dash-stats-wrap">
+        <div class="dash-stats">
 
         {{-- ─────────────────────────────
              SECTION 1 · Agenda Terdekat
@@ -443,58 +444,102 @@
                 {{ $openEvents->count() }} Opportunities Found
             </div>
 
-            {{-- Event grid --}}
-            @if($openEvents->count())
-                <div class="ev-grid">
-                    @foreach($openEvents as $event)
-                        @php $spotsLeft = max(0, $event->quota - ($event->accepted_count ?? 0)); @endphp
-                        <div class="ev-card">
-                            {{-- Thumbnail --}}
-                            <div class="ev-card__thumb">
-                                @if($event->poster)
-                                    <img src="{{ asset('storage/'.$event->poster) }}" alt="{{ $event->title }}">
-                                @else
-                                    <div class="ev-card__thumb-placeholder"></div>
-                                @endif
-                            </div>
+<div class="ak-container" style="padding-bottom: 3rem;">
+    @if($upcomingSchedule->count())
+    <section style="margin-bottom: 2.5rem;">
+        <div class="dash-section-head">
+            <div class="dash-section-title">Agenda Terdekat</div>
+            <a href="{{ route('volunteer.schedule') }}" class="dash-see-all">
+                Lihat semua
+                <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+                </svg>
+            </a>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:8px;">
+            @foreach($upcomingSchedule as $reg)
+            <a href="{{ route('volunteer.events.show', $reg->event->slug) }}"
+               style="display:flex; gap:12px; align-items:center;
+                      background:#fff; border:1px solid #EEF0F6;
+                      border-radius:14px; padding:12px 16px;
+                      text-decoration:none;
+                      transition:box-shadow 0.15s;"
+               onmouseover="this.style.boxShadow='0 4px 16px rgba(15,32,87,0.09)'"
+               onmouseout="this.style.boxShadow='none'">
+                <div style="min-width:52px; text-align:center;
+                            background:#EEF3FF; border-radius:10px; padding:6px 8px; flex-shrink:0;">
+                    <div style="font-size:18px; font-weight:700; color:#0F2057; line-height:1;">
+                        {{ $reg->event->start_date->format('d') }}
+                    </div>
+                    <div style="font-size:10px; color:#9099B0; text-transform:uppercase; letter-spacing:0.4px;">
+                        {{ $reg->event->start_date->translatedFormat('M') }}
+                    </div>
+                </div>
+                <div style="flex:1; min-width:0;">
+                    <div style="font-size:13.5px; font-weight:700; color:#0F2057;
+                                white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                        {{ $reg->event->title }}
+                    </div>
+                    <div style="font-size:12px; color:#9099B0; margin-top:3px; display:flex; gap:10px;">
+                        @if($reg->event->start_time)
+                            <span>{{ \Carbon\Carbon::parse($reg->event->start_time)->format('H:i') }}</span>
+                        @endif
+                        <span>{{ $reg->event->city }}</span>
+                    </div>
+                </div>
+                <span style="font-size:10.5px; font-weight:700; padding:3px 10px;
+                             border-radius:999px; background:#ECFDF5; color:#059669; flex-shrink:0;">
+                    Diterima
+                </span>
+            </a>
+            @endforeach
+        </div>
+    </section>
+    @endif
+    @include('volunteer.partials.recommendations')
+    @if($nearbyEvents->count() > 0)
+    <section style="margin-bottom: 2.5rem;">
+        <div class="dash-section-head">
+            <div class="dash-section-title">Kegiatan di Kotamu</div>
+            <a href="{{ route('volunteer.events') }}" class="dash-see-all">
+                Lihat semua
+                <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+            </a>
+        </div>
+        <div class="events-grid-2">
+            @foreach($nearbyEvents->take(4) as $event)
+                @include('components.event-card', ['event' => $event])
+            @endforeach
+        </div>
+    </section>
+    @endif
 
-                            {{-- Body --}}
-                            <div class="ev-card__body">
-                                <div class="ev-card__cats">
-                                    @foreach($event->categories->take(2) as $cat)
-                                        <span class="ev-card__cat">{{ $cat->name }}</span>
-                                    @endforeach
-                                </div>
-                                <p class="ev-card__org">{{ $event->organization->organization_name }}</p>
-                                <p class="ev-card__title">{{ $event->title }}</p>
+    <div class="cat-pills">
+        <a href="{{ route('volunteer.events') }}"
+           class="cat-pill {{ !request('category') ? 'active' : '' }}">
+            Semua
+        </a>
+        @foreach([
+            ['slug'=>'lingkungan','label'=>'Lingkungan'],
+            ['slug'=>'pendidikan','label'=>'Pendidikan'],
+            ['slug'=>'kesehatan', 'label'=>'Kesehatan'],
+            ['slug'=>'sosial',    'label'=>'Sosial'],
+        ] as $cat)
+            <a href="{{ route('volunteer.events', ['category' => $cat['slug']]) }}"
+               class="cat-pill {{ request('category') === $cat['slug'] ? 'active' : '' }}">
+                {{ $cat['label'] }}
+            </a>
+        @endforeach
+    </div>
 
-                                <div class="ev-card__meta">
-                                    <span class="ev-card__meta-item">
-                                        <svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round">
-                                            <path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/>
-                                            <circle cx="12" cy="10" r="3"/>
-                                        </svg>
-                                        {{ $event->city }}
-                                    </span>
-                                    <span class="ev-card__meta-item">
-                                        <svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round">
-                                            <rect x="3" y="4" width="18" height="18" rx="2"/>
-                                            <line x1="16" y1="2" x2="16" y2="6"/>
-                                            <line x1="8"  y1="2" x2="8"  y2="6"/>
-                                            <line x1="3"  y1="10" x2="21" y2="10"/>
-                                        </svg>
-                                        {{ $event->start_date->format('d M Y') }}
-                                    </span>
-                                    <span class="ev-card__meta-item">
-                                        <svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round">
-                                            <rect x="3" y="4" width="18" height="18" rx="2"/>
-                                            <line x1="16" y1="2" x2="16" y2="6"/>
-                                            <line x1="8"  y1="2" x2="8"  y2="6"/>
-                                            <line x1="3"  y1="10" x2="21" y2="10"/>
-                                        </svg>
-                                        {{ $event->start_date->format('H:i') }}
-                                    </span>
-                                </div>
+    <section>
+        <div class="dash-section-head">
+            <div class="dash-section-title">Kegiatan Tersedia</div>
+            <a href="{{ route('volunteer.events') }}" class="dash-see-all">
+                Jelajahi semua
+                <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+            </a>
+        </div>
 
                                 <div class="ev-card__footer">
                                     <span class="ev-card__spot">

@@ -183,7 +183,6 @@
 
 .ak-input-toggle:hover { color: var(--color-navy); }
 
-/* Submit loading state */
 .ak-btn-submit {
     position: relative;
     width: 100%;
@@ -221,7 +220,6 @@
 @section('content')
 <div class="auth-wrap">
 
-    {{-- Left — brand panel (desktop) --}}
     <div class="auth-panel" role="complementary" aria-label="Brand info">
         <div class="auth-panel__content">
 
@@ -249,7 +247,6 @@
         </div>
     </div>
 
-    {{-- Right — form --}}
     <div class="auth-form-area">
         <div class="auth-form-box">
 
@@ -260,7 +257,6 @@
                 Volunteer & Organisasi login di sini
             </p>
 
-            {{-- Error alerts --}}
             @if(session('error'))
                 <div class="ak-alert ak-alert-danger" role="alert" style="margin-bottom:20px;">
                     <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="flex-shrink:0; margin-top:1px;" aria-hidden="true">
@@ -270,7 +266,6 @@
                 </div>
             @endif
 
-            {{-- Success alerts --}}
             @if(session('success'))
                 <div class="ak-alert ak-alert-success" role="alert" style="margin-bottom:20px;">
                     <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="flex-shrink:0; margin-top:1px;" aria-hidden="true">
@@ -289,7 +284,6 @@
                 </div>
             @endif
 
-            {{-- Login dengan Google --}}
             <a href="{{ route('auth.google') }}" class="ak-btn-google">
                 <svg class="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24" width="20" height="20" style="display:block;">
                     <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -302,13 +296,11 @@
 
             <div class="auth-divider" aria-hidden="true">atau masuk dengan email</div>
 
-            {{-- Login Form --}}
             <form action="{{ route('login.post') }}" method="POST" id="loginForm" novalidate>
                 @csrf
 
                 <div style="display:flex; flex-direction:column; gap:18px;">
 
-                    {{-- Email --}}
                     <div class="ak-form-group">
                         <label for="email" class="ak-label">
                             Alamat Email <span class="required" aria-hidden="true">*</span>
@@ -335,7 +327,6 @@
                         @enderror
                     </div>
 
-                    {{-- Password --}}
                     <div class="ak-form-group">
                         <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:6px;">
                             <label for="password" class="ak-label" style="margin-bottom:0;">
@@ -360,11 +351,9 @@
                                 aria-label="Tampilkan password"
                                 tabindex="-1"
                             >
-                                {{-- Eye icon --}}
                                 <svg id="iconEyeOff" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/>
                                 </svg>
-                                {{-- Eye open icon --}}
                                 <svg id="iconEyeOn" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true" style="display:none;">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
@@ -381,7 +370,6 @@
                         @enderror
                     </div>
 
-                    {{-- Submit --}}
                     <button type="submit" class="ak-btn ak-btn-primary ak-btn-submit" id="loginSubmit" style="margin-top:4px;">
                         <span id="loginBtnText">Masuk</span>
                         <svg id="loginBtnSpinner" width="16" height="16" style="display:none; animation: ak-spin 0.7s linear infinite;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
@@ -414,7 +402,7 @@
 @push('scripts')
 <script>
 (function () {
-    // Password toggle
+   
     const passwordInput  = document.getElementById('password');
     const toggleBtn      = document.getElementById('togglePassword');
     const iconEyeOff     = document.getElementById('iconEyeOff');
@@ -430,7 +418,6 @@
         });
     }
 
-    // Submit loading state
     const loginForm    = document.getElementById('loginForm');
     const loginSubmit  = document.getElementById('loginSubmit');
     const loginBtnText = document.getElementById('loginBtnText');

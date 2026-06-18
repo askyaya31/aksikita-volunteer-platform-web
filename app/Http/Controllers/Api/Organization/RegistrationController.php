@@ -11,12 +11,13 @@ use App\Http\Resources\RegistrationResource;
 
 class RegistrationController extends Controller
 {
+    
     public function index(Request $request, int $id)
     {
         $org   = $request->user()->organizationProfile;
         $event = Event::where('organization_profile_id', $org->id)->findOrFail($id);
 
-        $registrations = Registration::with('user.volunteerProfile')
+        $registrations = Registration::with(['user.volunteerProfile', 'chatRoom'])
             ->where('event_id', $event->id)
             ->when($request->status, fn($q) => $q->where('status', $request->status))
             ->latest()
@@ -24,13 +25,19 @@ class RegistrationController extends Controller
 
         return RegistrationResource::collection($registrations);
     }
+    
     public function show(Request $request, int $id): JsonResponse
     {
         $org = $request->user()->organizationProfile;
 
-        $registration = Registration::with(['user.volunteerProfile', 'event'])
-            ->whereHas('event', fn($q) => $q->where('organization_profile_id', $org->id))
-            ->findOrFail($id);
+        $registration = Registration::with([
+            'user.volunteerProfile',
+            'user.registrations.event',
+            'event',
+            'chatRoom',
+        ])
+        ->whereHas('event', fn($q) => $q->where('organization_profile_id', $org->id))
+        ->findOrFail($id);
 
         return response()->json([
             'registration' => new RegistrationResource($registration)

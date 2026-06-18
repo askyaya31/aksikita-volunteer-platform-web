@@ -219,6 +219,21 @@
 
 @section('content')
 <div class="detail-wrap">
+    @if(session('warning'))
+        <div class="ak-alert ak-alert-warning" role="alert" style="margin-bottom:1rem;">
+            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="flex-shrink:0;">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+            </svg>
+            <div>
+                <strong>Jadwal Bertabrakan!</strong><br>
+                <span>{{ session('warning') }}</span>
+                <br>
+                <a href="{{ route('volunteer.schedule') }}" style="font-size:12px;color:#92400E;text-decoration:underline;">
+                    Lihat jadwal saya →
+                </a>
+            </div>
+        </div>
+    @endif
 
     @if(session('success'))
         <div class="detail-alert success" role="alert">
@@ -264,6 +279,43 @@
             <div class="detail-org-row">
                 <div class="detail-org-avatar">{{ $orgInitial }}</div>
                 <span class="detail-org-name">{{ $event->organization->organization_name }}</span>
+            </div>
+            <div style="display:flex; gap:10px; margin-top:14px;">
+                <button id="btn-like"
+                        data-event-id="{{ $event->id }}"
+                        data-liked="{{ $isLiked ? 'true' : 'false' }}"
+                        style="display:inline-flex; align-items:center; gap:6px;
+                            padding: 7px 14px; border-radius:999px; font-size:13px; font-weight:600;
+                            border: 1.5px solid rgba(255,255,255,0.5); cursor:pointer;
+                            background: {{ $isLiked ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.15)' }};
+                            color: {{ $isLiked ? '#E8501A' : '#fff' }};
+                            backdrop-filter: blur(4px); transition: all 0.2s;">
+                    <svg id="icon-like" width="14" height="14" fill="{{ $isLiked ? 'currentColor' : 'none' }}"
+                        viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                    </svg>
+                    <span id="text-like">{{ $isLiked ? 'Disukai' : 'Suka' }}</span>
+                    <span id="count-like">{{ $event->likes_count }}</span>
+                </button>
+
+                <button id="btn-save"
+                        data-event-id="{{ $event->id }}"
+                        data-saved="{{ $isSaved ? 'true' : 'false' }}"
+                        style="display:inline-flex; align-items:center; gap:6px;
+                            padding: 7px 14px; border-radius:999px; font-size:13px; font-weight:600;
+                            border: 1.5px solid rgba(255,255,255,0.5); cursor:pointer;
+                            background: {{ $isSaved ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.15)' }};
+                            color: {{ $isSaved ? '#0F2057' : '#fff' }};
+                            backdrop-filter: blur(4px); transition: all 0.2s;">
+                    <svg id="icon-save" width="14" height="14" fill="{{ $isSaved ? 'currentColor' : 'none' }}"
+                        viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/>
+                    </svg>
+                    <span id="text-save">{{ $isSaved ? 'Disimpan' : 'Simpan' }}</span>
+                </button>
+
             </div>
         </div>
     </div>
@@ -386,8 +438,29 @@
                             <p style="margin:3px 0 0; font-size:12px; opacity:0.8;">Terdaftar sejak {{ $registrasi->registered_at->format('d M Y') }}. Hadir tepat waktu sesuai jadwal.</p>
                         </div>
                     </div>
+
+                    @if($registrasi->chatRoom)
+                        <a href="{{ route('volunteer.chat.show', $registrasi->chatRoom) }}"
+                        style="display:flex; align-items:center; justify-content:center; gap:8px;
+                                width:100%; padding:12px;
+                                background:#0F2057; color:#fff;
+                                border-radius:12px; font-size:14px; font-weight:700;
+                                text-decoration:none; margin-bottom:10px;
+                                transition:background 0.15s;"
+                        onmouseover="this.style.background='#1A3575'"
+                        onmouseout="this.style.background='#0F2057'">
+                            <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863
+                                        9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574
+                                        3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                            </svg>
+                            Buka Chat dengan Organisasi
+                        </a>
+                    @endif
+
                     <form action="{{ route('volunteer.cancel', $event->id) }}" method="POST"
-                          onsubmit="return confirm('Yakin ingin membatalkan pendaftaran?')">
+                        onsubmit="return confirm('Yakin ingin membatalkan pendaftaran?')">
                         @csrf
                         <button type="submit" class="cancel-btn">
                             <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
@@ -465,5 +538,43 @@
         if (btnText) btnText.textContent = 'Mendaftarkan…';
     });
 })();
+document.getElementById('btn-like')?.addEventListener('click', async function () {
+    const id   = this.dataset.eventId;
+    const res  = await fetch(`/volunteer/events/${id}/like`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+        }
+    });
+    const data = await res.json();
+    const liked = data.liked;
+
+    this.dataset.liked = liked;
+    document.getElementById('icon-like').setAttribute('fill', liked ? 'currentColor' : 'none');
+    document.getElementById('text-like').textContent = liked ? 'Disukai' : 'Suka';
+    document.getElementById('count-like').textContent = data.likes_count;
+    this.style.background = liked ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.15)';
+    this.style.color = liked ? '#E8501A' : '#fff';
+});
+
+document.getElementById('btn-save')?.addEventListener('click', async function () {
+    const id  = this.dataset.eventId;
+    const res = await fetch(`/volunteer/events/${id}/save`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+        }
+    });
+    const data = await res.json();
+    const saved = data.saved;
+
+    this.dataset.saved = saved;
+    document.getElementById('icon-save').setAttribute('fill', saved ? 'currentColor' : 'none');
+    document.getElementById('text-save').textContent = saved ? 'Disimpan' : 'Simpan';
+    this.style.background = saved ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.15)';
+    this.style.color = saved ? '#0F2057' : '#fff';
+});
 </script>
 @endpush

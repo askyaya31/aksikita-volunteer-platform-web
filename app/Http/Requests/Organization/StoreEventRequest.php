@@ -40,8 +40,6 @@ class StoreEventRequest extends FormRequest
         ];
     }
 
-    // DITAMBAH: validated() biasa menyertakan 'poster' (objek file) dan 'category_ids'
-    // ke Event::create() → error. Method ini mengeluarkan keduanya sebelum masuk ke DB.
     public function validatedEventData(): array
     {
         $data = $this->validated();

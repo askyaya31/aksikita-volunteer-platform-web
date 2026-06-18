@@ -21,6 +21,14 @@ class RegistrationController extends Controller
         if (Registration::where('event_id', $id)->where('user_id', session('user_id'))->exists()) {
             return back()->with('error', 'Kamu sudah terdaftar di event ini.');
         }
+        $conflict = $this->checkScheduleConflict(session('user_id'), $event);
+        if ($conflict) {
+            return back()->with('warning',
+                "⚠ Jadwal bertabrakan dengan kegiatan \"{$conflict->event->title}\" " .
+                "pada {$conflict->event->start_date->translatedFormat('d F Y')}."
+            )->with('conflict_event_id', $conflict->event->id);
+        }
+
 
         Registration::create([
             'event_id'      => $event->id,
@@ -29,7 +37,7 @@ class RegistrationController extends Controller
             'registered_at' => now(),
             'notes'         => $request->notes,
         ]);
-        return back()->with('success', 'Pendaftaran berhasil! Selamat.');
+        return back()->with('success', 'Pendaftaran berhasil!');
     }
 
     public function cancel(Request $request, int $id)
@@ -53,6 +61,32 @@ class RegistrationController extends Controller
         }
 
         return back()->with('success', 'Pendaftaran berhasil dibatalkan.');
+    }
+
+    private function checkScheduleConflict(int $userId, Event $newEvent): ?Registration
+    {
+        if (!$newEvent->start_time || !$newEvent->end_time) {
+            return null;
+        }
+
+        $newStart = \Carbon\Carbon::parse($newEvent->start_date->toDateString() . ' ' . $newEvent->start_time);
+        $newEnd   = \Carbon\Carbon::parse($newEvent->end_date->toDateString()   . ' ' . $newEvent->end_time);
+
+        return Registration::with('event')
+            ->where('user_id', $userId)
+            ->whereIn('status', ['confirmed', 'pending'])
+            ->whereHas('event', function ($q) use ($newEvent) {
+                $q->where('id', '!=', $newEvent->id)
+                ->whereNotNull('start_time')
+                ->whereNotNull('end_time');
+            })
+            ->get()
+            ->first(function ($reg) use ($newStart, $newEnd) {
+                $e = $reg->event;
+                $existStart = \Carbon\Carbon::parse($e->start_date->toDateString() . ' ' . $e->start_time);
+                $existEnd   = \Carbon\Carbon::parse($e->end_date->toDateString()   . ' ' . $e->end_time);
+                return $newStart->lt($existEnd) && $newEnd->gt($existStart);
+            });
     }
 
     public function history(Request $request)

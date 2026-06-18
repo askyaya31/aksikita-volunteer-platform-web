@@ -83,7 +83,10 @@ class RegistrationController extends Controller
     {
         $request->validate(['reason' => 'nullable|string|max:500']);
 
-        $registration = Registration::where('user_id', $request->user()->id)->findOrFail($id);
+        $registration = Registration::where('user_id', $request->user()->id)
+        ->where('event_id', $id)          
+        ->whereNotIn('status', ['cancelled'])
+        ->firstOrFail();
 
         if ($registration->status === 'cancelled') {
             return response()->json(['message' => 'Pendaftaran sudah dibatalkan.'], 422);
@@ -117,7 +120,7 @@ class RegistrationController extends Controller
 
     public function show(Request $request, int $id): JsonResponse
     {
-        $registration = Registration::with(['event.organization', 'event.categories'])
+        $registration = Registration::with(['event.organization', 'event.categories', 'chatRoom'])
             ->where('user_id', $request->user()->id)
             ->findOrFail($id);
 

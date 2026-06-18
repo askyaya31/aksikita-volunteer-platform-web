@@ -6,7 +6,6 @@ use Illuminate\Foundation\Http\FormRequest;
 class UpdateEventRequest extends FormRequest
 {
     public function authorize(): bool { return true; }
-
     public function rules(): array
     {
         return [
@@ -17,8 +16,6 @@ class UpdateEventRequest extends FormRequest
             'location_address' => 'nullable|string',
             'city'             => 'sometimes|string|max:100',
             'province'         => 'sometimes|string|max:100',
-            // PERBEDAAN dari StoreEventRequest: start_date BOLEH di masa lalu
-            // karena saat edit event, tanggal lama tidak boleh diinvalidasi
             'start_date'       => 'sometimes|date',
             'end_date'         => 'sometimes|date|after_or_equal:start_date',
             'start_time'       => 'nullable|date_format:H:i',
@@ -40,7 +37,6 @@ class UpdateEventRequest extends FormRequest
         ];
     }
 
-    // keluarkan 'poster' dan 'category_ids' sebelum masuk ke Event::update()
     public function validatedEventData(): array
     {
         $data = $this->validated();

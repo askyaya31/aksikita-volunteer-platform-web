@@ -8,7 +8,7 @@ use App\Http\Controllers\Api\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Api\Admin\OrganizationController as AdminOrgController;
 use App\Http\Controllers\Api\Admin\EventReviewController;
 use App\Http\Controllers\Api\Admin\ReportController as AdminReportController;
-use App\Http\Controllers\Api\Admin\StatisticsController;
+use App\Http\Controllers\Api\Admin\StatisticsController as StatisticsController;
 use App\Http\Controllers\Api\Admin\NotificationController as AdminNotificationController;
 use App\Http\Controllers\Api\Organization\ProfileController as OrgProfileController;
 use App\Http\Controllers\Api\Organization\EventController as OrgEventController;
@@ -21,6 +21,10 @@ use App\Http\Controllers\Api\Volunteer\NotificationController as VolNotification
 use App\Http\Controllers\Api\Volunteer\SavedEventController;
 use App\Http\Controllers\Api\Volunteer\LikedEventController;
 use App\Http\Controllers\Api\Auth\GoogleAuthController;
+use App\Http\Controllers\Api\Volunteer\ChatController as VolChatController;
+use App\Http\Controllers\Api\Volunteer\ScheduleController as VolScheduleController;
+use App\Http\Controllers\Api\Volunteer\RecommendationController as VolRecommendationController;
+use App\Http\Controllers\Api\Organization\ChatController as OrgChatController;
 
 Route::prefix('v1')->group(function () {
     Route::prefix('auth')->group(function () {
@@ -66,7 +70,6 @@ Route::prefix('v1')->group(function () {
             Route::get('notifications/unread-count',  [OrgNotificationController::class, 'unreadCount']);
             Route::put('notifications/{id}/read',     [OrgNotificationController::class, 'markRead']);
             Route::put('notifications/mark-all-read', [OrgNotificationController::class, 'markAllRead']);
-
             Route::middleware('organization.verified')->group(function () {
                 Route::get('events',              [OrgEventController::class, 'index']);
                 Route::post('events',             [OrgEventController::class, 'store']);
@@ -81,6 +84,11 @@ Route::prefix('v1')->group(function () {
                 Route::put('registrations/{id}/confirm', [OrgRegistrationController::class, 'confirm']);
                 Route::put('registrations/{id}/reject',  [OrgRegistrationController::class, 'reject']);
                 Route::put('registrations/{id}/attend',  [OrgRegistrationController::class, 'attend']);
+                Route::get('chats',                       [OrgChatController::class, 'index']);
+                Route::get('chats/unread-count',          [OrgChatController::class, 'unreadCount']);
+                Route::get('chats/{roomId}/messages',     [OrgChatController::class, 'messages']);
+                Route::post('chats/{roomId}/messages',    [OrgChatController::class, 'send']);
+                Route::get('chats/{roomId}/poll',         [OrgChatController::class, 'poll']);
             });
         });
 
@@ -102,6 +110,13 @@ Route::prefix('v1')->group(function () {
             Route::delete('saved-events/{id}',  [SavedEventController::class, 'destroy']);
             Route::get('liked-events',          [LikedEventController::class, 'index']);
             Route::post('events/{id}/like',     [LikedEventController::class, 'toggle']);
+            Route::get('chats',                       [VolChatController::class, 'index']);
+            Route::get('chats/unread-count',          [VolChatController::class, 'unreadCount']);
+            Route::get('chats/{roomId}/messages',     [VolChatController::class, 'messages']);
+            Route::post('chats/{roomId}/messages',    [VolChatController::class, 'send']);
+            Route::get('chats/{roomId}/poll',         [VolChatController::class, 'poll']);
+            Route::get('schedule',                    [VolScheduleController::class, 'index']);
+            Route::get('recommendations',             [VolRecommendationController::class, 'index']);
         });
     });
 });

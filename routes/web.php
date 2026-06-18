@@ -7,6 +7,8 @@ use App\Http\Controllers\Web\Volunteer\DashboardController as VolDashboard;
 use App\Http\Controllers\Web\Volunteer\EventController as VolEvent;
 use App\Http\Controllers\Web\Volunteer\RegistrationController as VolRegistration;
 use App\Http\Controllers\Web\Volunteer\NotificationController as VolNotification;
+use App\Http\Controllers\Web\Volunteer\LikedEventController as VolLiked;
+use App\Http\Controllers\Web\Volunteer\SavedEventController as VolSaved;
 use App\Http\Controllers\Web\Volunteer\ProfileController as VolProfile;
 use App\Http\Controllers\Web\Organizer\DashboardController as OrgDashboard;
 use App\Http\Controllers\Web\Organizer\EventController as OrgEvent;
@@ -16,6 +18,12 @@ use App\Http\Controllers\Web\Organizer\VolunteerController as OrgVolunteer;
 use App\Http\Controllers\Web\Admin\DashboardController as AdminDashboard;
 use App\Http\Controllers\Web\Admin\UserController as AdminUser;
 use App\Http\Controllers\Web\Admin\EventController as AdminEvent;
+use App\Http\Controllers\Web\Admin\NotificationController as AdminNotification;
+use App\Http\Controllers\Web\Admin\ReportController as AdminReport;
+use App\Http\Controllers\Web\Admin\StatisticsController as AdminStatistics;
+use App\Http\Controllers\Web\Volunteer\ScheduleController as VolSchedule;
+use App\Http\Controllers\Web\Volunteer\ChatController as VolChat;
+use App\Http\Controllers\Web\Organizer\ChatController as OrgChat;
 
 Route::get('/', function () {
     return view('welcome');
@@ -49,10 +57,21 @@ Route::prefix('admin')->name('admin.')->middleware(['web.auth', 'web.role:admin'
     Route::post('/users/organizations/{id}/verify',  [AdminUser::class, 'verifyOrganization'])->name('users.verify-organization');
     Route::get('/users/organizations/{userId}',       [AdminUser::class, 'showOrganization'])->name('organizations.show');
     Route::get('/users/volunteers/{userId}',          [AdminUser::class, 'showVolunteer'])->name('volunteers.show');
+    Route::patch('/users/{id}/toggle-active',         [AdminUser::class, 'toggleActive'])->name('users.toggle-active');
 
     Route::get('/events',              [AdminEvent::class, 'index'])->name('events');
     Route::get('/events/{id}',         [AdminEvent::class, 'show'])->name('events.show');
     Route::post('/events/{id}/review', [AdminEvent::class, 'review'])->name('events.review');
+
+    Route::get('/notifications',                    [AdminNotification::class, 'index'])->name('notifications');
+    Route::post('/notifications/{id}/read',         [AdminNotification::class, 'markRead'])->name('notifications.read');
+    Route::post('/notifications/read-all',          [AdminNotification::class, 'markAllRead'])->name('notifications.readAll');
+
+    Route::get('/reports',                  [AdminReport::class, 'index'])->name('reports');
+    Route::get('/reports/{id}',             [AdminReport::class, 'show'])->name('reports.show');
+    Route::patch('/reports/{id}/status',    [AdminReport::class, 'updateStatus'])->name('reports.update');
+
+    Route::get('/statistics', [AdminStatistics::class, 'index'])->name('statistics');
 
 });
 
@@ -70,6 +89,27 @@ Route::prefix('volunteer')->name('volunteer.')->middleware(['web.auth', 'web.rol
     Route::get('/profile',   [VolProfile::class, 'show'])->name('profile');
     Route::post('/profile',  [VolProfile::class, 'update'])->name('profile.update');
 
+    Route::post('/events/{id}/like',  [VolLiked::class, 'toggle'])->name('events.like');
+    Route::get('/liked-events',       [VolLiked::class, 'index'])->name('liked-events');
+
+    Route::post('/events/{id}/save',  [VolSaved::class, 'toggle'])->name('events.save');
+    Route::get('/saved-events',       [VolSaved::class, 'index'])->name('saved-events');
+    Route::get('/schedule',             [VolSchedule::class, 'index'])->name('schedule'); 
+
+    Route::get('/chat',                      [VolChat::class, 'index'])->name('chat.index');
+
+Route::get('/chat/unread-count', function () {
+    $userId = session('user_id');
+    $count  = \App\Models\ChatRoom::where('volunteer_id', $userId)
+        ->withCount(['messages as unread' => fn($q) =>
+            $q->where('sender_id', '!=', $userId)->whereNull('read_at')
+        ])->get()->sum('unread');
+    return response()->json(['count' => $count]);
+})->name('chat.unread');
+    Route::get('/chat/{room}',               [VolChat::class, 'show'])->name('chat.show');
+    Route::post('/chat/{room}/send',         [VolChat::class, 'send'])->name('chat.send');
+    Route::get('/chat/{room}/poll',          [VolChat::class, 'poll'])->name('chat.poll');
+    
 });
 
 Route::prefix('organizer')->name('organizer.')->middleware(['web.auth', 'web.role:organization'])->group(function () {
@@ -90,5 +130,8 @@ Route::prefix('organizer')->name('organizer.')->middleware(['web.auth', 'web.rol
     Route::get('/profile',        [OrgProfile::class, 'show'])->name('profile');
     Route::post('/profile',       [OrgProfile::class, 'update'])->name('profile.update');
     Route::get('/notifications',  [OrgNotification::class, 'index'])->name('notifications');
-
+    Route::get('/chat',                      [OrgChat::class, 'index'])->name('chat.index');
+    Route::get('/chat/{room}',               [OrgChat::class, 'show'])->name('chat.show');
+    Route::post('/chat/{room}/send',         [OrgChat::class, 'send'])->name('chat.send');
+    Route::get('/chat/{room}/poll',          [OrgChat::class, 'poll'])->name('chat.poll');
 });
