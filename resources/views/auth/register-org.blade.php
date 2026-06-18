@@ -3,15 +3,94 @@
 
 @push('styles')
 <style>
+/* ── Layout utama: dua kolom ── */
 .auth-register-wrap {
     min-height: calc(100vh - var(--spacing-navbar));
+    display: flex;
+    align-items: stretch;
+    background: var(--color-bg);
+}
+
+/* ── Panel kiri: branding ── */
+.auth-brand-panel {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 420px;
+    min-width: 380px;
+    background: linear-gradient(160deg, #1E3A8A 0%, #1D4ED8 60%, #2563EB 100%);
+    padding: 48px 40px;
+    position: relative;
+    overflow: hidden;
+}
+
+.auth-brand-panel::before {
+    content: '';
+    position: absolute;
+    width: 340px;
+    height: 340px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.05);
+    top: -80px;
+    right: -80px;
+    pointer-events: none;
+}
+
+.auth-brand-panel::after {
+    content: '';
+    position: absolute;
+    width: 220px;
+    height: 220px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.04);
+    bottom: -60px;
+    left: -60px;
+    pointer-events: none;
+}
+
+.auth-brand-logo {
+    width: 160px;
+    height: 160px;
+    object-fit: contain;
+    position: relative;
+    z-index: 1;
+    margin-bottom: 28px;
+}
+
+.auth-brand-name {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: -0.03em;
+    margin-bottom: 12px;
+    position: relative;
+    z-index: 1;
+}
+
+.auth-brand-tagline {
+    font-size: 0.9375rem;
+    color: #BFDBFE;
+    text-align: center;
+    line-height: 1.6;
+    position: relative;
+    z-index: 1;
+    max-width: 260px;
+    margin-bottom: 0;
+}
+
+/* ── Panel kanan: form ── */
+.auth-form-panel {
+    flex: 1;
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 48px 24px;
-    background: var(--color-bg);
+    overflow-y: auto;
 }
 
+/* ── Box form ── */
 .auth-register-box {
     width: 100%;
     max-width: 560px;
@@ -175,6 +254,17 @@
 .ak-char-counter.warn { color: #D97706; }
 .ak-char-counter.over { color: var(--color-danger); }
 
+/* ── Responsive ── */
+@media (min-width: 900px) {
+    .auth-brand-panel { display: flex; }
+    .auth-register-header__back { display: none; }
+}
+
+@media (max-width: 899px) {
+    .auth-register-wrap { align-items: flex-start; }
+    .auth-form-panel    { padding: 32px 16px 48px; }
+}
+
 @media (max-width: 540px) {
     .auth-register-header { padding: 28px 24px 24px; }
     .auth-register-body   { padding: 24px 24px 28px; }
@@ -184,26 +274,42 @@
 
 @section('content')
 <div class="auth-register-wrap">
-    <div class="auth-register-box">
 
-        <div class="auth-register-header">
-            <a href="{{ route('home') }}" class="auth-register-header__back" aria-label="Kembali ke beranda">
-                <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
-                </svg>
-                Kembali ke Beranda
-            </a>
+    {{-- Panel kiri: branding (tampil di layar ≥900px) --}}
+    <aside class="auth-brand-panel" aria-hidden="true">
+        <img
+            src="{{ asset('images/logo_aksikita.png') }}"
+            alt="Logo AksiKita"
+            class="auth-brand-logo"
+        >
+        <span class="auth-brand-name">AksiKita</span>
+        <p class="auth-brand-tagline">
+            Platform penghubung organisasi sosial dengan relawan terbaik di seluruh Indonesia.
+        </p>
+    </aside>
 
-            <div class="auth-register-header__badge">
-                <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2" aria-hidden="true">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
-                </svg>
-                Untuk Organisasi &amp; NGO
+    {{-- Panel kanan: form registrasi organisasi --}}
+    <div class="auth-form-panel">
+        <div class="auth-register-box">
+
+            <div class="auth-register-header">
+                <a href="{{ route('home') }}" class="auth-register-header__back" aria-label="Kembali ke beranda">
+                    <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                    </svg>
+                    Kembali ke Beranda
+                </a>
+
+                <div class="auth-register-header__badge">
+                    <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                    </svg>
+                    Untuk Organisasi &amp; NGO
+                </div>
+
+                <h1>Daftarkan Organisasi Anda</h1>
+                <p>Rekrut relawan, kelola kegiatan sosial, dan perluas dampak Anda bersama komunitas AksiKita.</p>
             </div>
-
-            <h1>Daftarkan Organisasi Anda</h1>
-            <p>Rekrut relawan, kelola kegiatan sosial, dan perluas dampak Anda bersama komunitas AksiKita.</p>
-        </div>
         <div class="auth-register-body">
 
             <div class="auth-verify-notice" role="note">
