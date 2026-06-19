@@ -18,11 +18,7 @@
             <div class="ak-navbar__inner">
 
                 <a href="{{ route('home') }}" class="ak-logo">
-                    <span class="ak-logo__mark" aria-hidden="true">
-                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15v-4H7l5-8v4h4l-5 8z"/>
-                        </svg>
-                    </span>
+                    <img src="{{ asset('images/logo_aksikita.png') }}" alt="Logo AksiKita" style="height: 36px; width: auto;">
                     AksiKita
                 </a>
                 <div class="ak-nav-links-desktop" style="display: flex; align-items: center; justify-content: center; gap: 4px; margin-left: 8px; flex: 1;">
