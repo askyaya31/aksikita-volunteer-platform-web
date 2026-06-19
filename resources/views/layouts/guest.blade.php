@@ -117,14 +117,13 @@
         <div class="ak-container">
             <div style="display:grid; grid-template-columns: 2fr 1fr 1fr; gap:48px; padding-bottom:8px;">
                 <div>
-                    <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
-                        <span class="ak-logo__mark" aria-hidden="true">
-                            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15v-4H7l5-8v4h4l-5 8z"/>
-                            </svg>
-                        </span>
-                        <span class="ak-footer__brand">AksiKita</span>
+                    <div style="margin-bottom:12px;">
+                        <a href="{{ route('home') }}" class="ak-logo" style="text-decoration: none; display: inline-flex; align-items: center; gap: 10px;">
+                            <img src="{{ asset('images/logo_aksikita.png') }}" alt="Logo AksiKita" style="height: 36px; width: auto;">
+                            <span class="ak-footer__brand" style="font-weight: 800; font-size: 1.25rem; color: var(--ak-navy); letter-spacing: -0.02em;">AksiKita</span>
+                        </a>
                     </div>
+                    
                     <p class="ak-footer__tagline" style="text-align:justify;">
                         Menghubungkan relawan dengan organisasi sosial di seluruh Indonesia untuk menciptakan dampak nyata.
                     </p>
@@ -144,7 +143,7 @@
                     <div class="ak-footer__heading">Informasi</div>
                     <ul class="ak-footer__links">
                         <li><a href="{{ route('home') }}#tentang">Tentang Kami</a></li>
-                        <li><a href="mailto:info@aksikita.id">Hubungi Kami</a></li>
+                        <li><a href="mailto:aksikita.support@gmail.com">Hubungi Kami</a></li>
                     </ul>
                 </div>
 
@@ -158,34 +157,3 @@
         </div>
     </footer>
     @endunless
-    <script>
-        const navbar = document.getElementById('guestNavbar');
-        if (navbar) {
-            window.addEventListener('scroll', () => {
-                navbar.classList.toggle('scrolled', window.scrollY > 10);
-            }, { passive: true });
-        }
-
-        const hamburger = document.getElementById('guestHamburger');
-        const mobileMenu = document.getElementById('guestMobileMenu');
-        if (hamburger && mobileMenu) {
-            hamburger.addEventListener('click', () => {
-                const isOpen = hamburger.classList.toggle('open');
-                mobileMenu.classList.toggle('open', isOpen);
-                mobileMenu.setAttribute('aria-hidden', String(!isOpen));
-                document.body.style.overflow = isOpen ? 'hidden' : '';
-            });
-            mobileMenu.querySelectorAll('a').forEach(link => {
-                link.addEventListener('click', () => {
-                    hamburger.classList.remove('open');
-                    mobileMenu.classList.remove('open');
-                    mobileMenu.setAttribute('aria-hidden', 'true');
-                    document.body.style.overflow = '';
-                });
-            });
-        }
-    </script>
-
-    @stack('scripts')
-</body>
-</html>
