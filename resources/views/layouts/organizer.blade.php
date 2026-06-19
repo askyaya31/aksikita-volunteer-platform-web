@@ -13,7 +13,6 @@
     @stack('styles')
 
     <style>
-        /* ─── RESET & FONTS ──────────────────────────────────────────────── */
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         
         body {
@@ -23,10 +22,9 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            padding-top: 70px; /* Jarak agar tidak tertutup navbar fixed */
+            padding-top: 70px; 
         }
 
-        /* ─── CONTAINER ────────────────────────────────────────────────── */
         .ak-container {
             width: 100%;
             max-width: 1200px;
@@ -138,7 +136,6 @@
             background: #DCE4EC;
         }
 
-        /* ─── DROPDOWN PROFIL (Lihat Profil & Logout) ──────────────────── */
         .org-profile-dropdown {
             position: relative;
         }
@@ -202,13 +199,11 @@
             width: 100%;
         }
 
-        /* ─── MAIN CONTENT ──────────────────────────────────────────────── */
         .org-main {
             flex: 1;
             width: 100%;
         }
 
-        /* ─── FOOTER (Monokrom Biru) ────────────────────────────────────── */
         .org-footer {
             background: #0F2057;
             color: #FFFFFF;
@@ -344,7 +339,6 @@
                             @if(isset($org) && $org->logo)
                                 <img src="{{ asset('storage/' . $org->logo) }}" alt="{{ $org->organization_name }}" style="width:100%; height:100%; object-fit:cover; border-radius:50%;">
                             @else
-                                {{-- Placeholder lingkaran abu-abu jika belum upload logo --}}
                                 <div style="width:100%; height:100%; background:#DCE4EC; border-radius:50%;"></div>
                             @endif
                         </div>
@@ -433,7 +427,7 @@
 
             if (dropdown && trigger) {
                 trigger.addEventListener('click', function (e) {
-                    e.preventDefault(); // cegah navigasi langsung, buka dropdown dulu
+                    e.preventDefault(); 
                     dropdown.classList.toggle('open');
                 });
 

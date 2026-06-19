@@ -197,9 +197,13 @@
 
             <div class="ak-footer__bottom" style="border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 1.5rem;">
                 <p class="ak-footer__copyright" style="margin: 0;">
-                    &copy; 2026 AksiKita. Hak Cipta Dilindungi.
+                    &copy; 2026 AksiKita
                 </p>
             </div>
         </div>
     </footer>
     @endunless
+
+    @stack('scripts')
+</body>
+</html>

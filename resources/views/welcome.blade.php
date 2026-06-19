@@ -772,9 +772,6 @@ body > footer  { display: none !important; }
 
         <div class="lp-hero__actions">
             <a href="{{ route('register.volunteer') }}" class="lp-btn-white">
-                <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
-                </svg>
                 Jadi Volunteer Sekarang
             </a>
             <a href="{{ route('register.organizer') }}" class="lp-btn-ghost-white">
@@ -949,12 +946,12 @@ body > footer  { display: none !important; }
                 Kebaikan Tidak Boleh Menunggu.<br>Mulai Langkah Pertamamu Hari Ini.
             </h2>
             <p class="reveal reveal-d1">
-                Entah sebagai volunteer yang memberikan waktu, atau organisasi yang membutuhkan bantuan —
+                Entah sebagai volunteer yang memberikan waktu, atau organisasi yang membutuhkan bantuan.
                 AksiKita adalah rumah bagi setiap niat baik.
             </p>
             <div class="lp-cta-btns reveal reveal-d2">
                 <a href="{{ route('register.volunteer') }}" class="lp-btn-white">
-                    <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                    {{-- <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg> --}}
                     Saya Ingin Jadi Volunteer
                 </a>
                 <a href="{{ route('register.organizer') }}" class="lp-btn-ghost-white">
@@ -969,9 +966,7 @@ body > footer  { display: none !important; }
     <div class="lp-footer__inner">
         <div>
             <div style="display:flex; align-items:center; gap:10px;">
-                <div style="width:36px; height:36px; background:#3B82F6; border-radius:10px; display:flex; align-items:center; justify-content:center;">
-                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 3C10 3 5 6.5 5 11C5 13.76 7.24 16 10 16C12.76 16 15 13.76 15 11C15 6.5 10 3 10 3Z" fill="white" opacity="0.9"/><path d="M10 8V16M7 11H13" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg>
-                </div>
+                <img src="{{ asset('images/logo_aksikita.png') }}" alt="Logo AksiKita" style="height: 36px; width: auto;">
                 <span style="color:white; font-size:1.125rem; font-weight:800;">AksiKita</span>
             </div>
             <p class="lp-footer__brand-desc">
@@ -1006,7 +1001,7 @@ body > footer  { display: none !important; }
         </div>
     </div>
     <div class="lp-footer__bottom">
-        <p>&copy; {{ date('Y') }} AksiKita. Seluruh hak cipta dilindungi.</p>
+        <p>&copy; {{ date('Y') }} AksiKita.</p>
         <p>Dibuat dengan penuh dedikasi untuk Indonesia yang lebih baik.</p>
     </div>
 </footer>

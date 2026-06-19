@@ -73,6 +73,9 @@
 .notif-item--read:hover {
     box-shadow: var(--shadow-sm);
 }
+.notif-item--read {
+    opacity: 0.75;
+}
 
 .notif-item__icon {
     width: 40px; height: 40px;
@@ -81,16 +84,7 @@
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    font-size: 1.125rem;
-    line-height: 1;
 }
-
-.notif-icon--confirmed    { background: #ECFDF5; }
-.notif-icon--rejected     { background: #FEF2F2; }
-.notif-icon--approved     { background: #ECFDF5; }
-.notif-icon--event-done   { background: var(--color-brand-50); }
-.notif-icon--org          { background: #F0FDF4; }
-.notif-icon--default      { background: var(--color-surface); }
 
 .notif-item__body { flex: 1; min-width: 0; }
 
@@ -127,6 +121,11 @@
     background: var(--color-brand-600);
     flex-shrink: 0;
     margin-top: 6px;
+    animation: notif-pulse 2s ease-in-out infinite;
+}
+@keyframes notif-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
 }
 
 .notif-empty {
@@ -150,7 +149,7 @@
 
 @media (max-width: 480px) {
     .notif-header { flex-direction: column; align-items: flex-start; }
-    .notif-item__icon { width: 34px; height: 34px; font-size: 1rem; border-radius: 9px; }
+    .notif-item__icon { width: 34px; height: 34px; border-radius: 9px; }
     .notif-empty { padding: 72px 20px; }
 }
 </style>
@@ -184,27 +183,54 @@
         </div>
     @endif
 
+    @php
+        // Same visual language as the organizer notification page:
+        // a soft background color + a stroke-based SVG icon, no emoji.
+        $iconMap = [
+            'registration_confirmed' => ['bg' => '#ECFDF5', 'stroke' => '#059669', 'icon' => 'check'],
+            'registration_rejected'  => ['bg' => '#FEF2F2', 'stroke' => '#dc2626', 'icon' => 'x'],
+            'event_approved'         => ['bg' => '#ECFDF5', 'stroke' => '#059669', 'icon' => 'check'],
+            'event_rejected'         => ['bg' => '#FEF2F2', 'stroke' => '#dc2626', 'icon' => 'x'],
+            'event_completed'        => ['bg' => '#EFF6FF', 'stroke' => '#1E3A8A', 'icon' => 'flag'],
+            'event_cancelled'        => ['bg' => '#FEF2F2', 'stroke' => '#dc2626', 'icon' => 'x'],
+            'org_verified'           => ['bg' => '#F0FDF4', 'stroke' => '#16a34a', 'icon' => 'building'],
+            'org_rejected'           => ['bg' => '#FEF2F2', 'stroke' => '#dc2626', 'icon' => 'building'],
+            'attendance_recorded'    => ['bg' => '#EFF6FF', 'stroke' => '#2563EB', 'icon' => 'clipboard'],
+        ];
+    @endphp
+
     @forelse($notifications as $notif)
     @php
-        $iconMap = [
-            'registration_confirmed' => ['emoji' => '🎉', 'class' => 'notif-icon--confirmed'],
-            'registration_rejected'  => ['emoji' => '😔', 'class' => 'notif-icon--rejected'],
-            'event_approved'         => ['emoji' => '✅', 'class' => 'notif-icon--approved'],
-            'event_rejected'         => ['emoji' => '❌', 'class' => 'notif-icon--rejected'],
-            'event_completed'        => ['emoji' => '🏁', 'class' => 'notif-icon--event-done'],
-            'event_cancelled'        => ['emoji' => '🚫', 'class' => 'notif-icon--rejected'],
-            'org_verified'           => ['emoji' => '🏢', 'class' => 'notif-icon--org'],
-            'org_rejected'           => ['emoji' => '🏢', 'class' => 'notif-icon--rejected'],
-            'attendance_recorded'    => ['emoji' => '📋', 'class' => 'notif-icon--confirmed'],
-        ];
-        $icon = $iconMap[$notif->type] ?? ['emoji' => '🔔', 'class' => 'notif-icon--default'];
+        $meta = $iconMap[$notif->type] ?? ['bg' => '#F1F5F9', 'stroke' => '#64748b', 'icon' => 'bell'];
         $isUnread = !$notif->is_read;
     @endphp
 
     <div class="notif-item {{ $isUnread ? 'notif-item--unread' : 'notif-item--read' }}">
 
-        <div class="notif-item__icon {{ $icon['class'] }}">
-            {{ $icon['emoji'] }}
+        <div class="notif-item__icon" style="background: {{ $meta['bg'] }};">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none"
+                 stroke="{{ $meta['stroke'] }}" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round">
+                @if($meta['icon'] === 'check')
+                    <polyline points="20 6 9 17 4 12"/>
+                @elseif($meta['icon'] === 'x')
+                    <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                @elseif($meta['icon'] === 'clock')
+                    <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                @elseif($meta['icon'] === 'flag')
+                    <path d="M4 21V4"/><path d="M4 4h14l-2.5 4L18 12H4"/>
+                @elseif($meta['icon'] === 'building')
+                    <rect x="4" y="3" width="16" height="18" rx="1"/>
+                    <path d="M9 21v-4h6v4"/>
+                    <path d="M9 8h1M14 8h1M9 12h1M14 12h1"/>
+                @elseif($meta['icon'] === 'clipboard')
+                    <rect x="6" y="4" width="12" height="17" rx="2"/>
+                    <path d="M9 4h6v2H9z"/>
+                    <path d="M9 11h6M9 15h6"/>
+                @else
+                    <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                    <path d="M13.73 21a2 2 0 01-3.46 0"/>
+                @endif
+            </svg>
         </div>
 
         <div class="notif-item__body">
