@@ -447,6 +447,12 @@
                             </svg>
                             Tersimpan
                         </a>
+                        <a href="{{ route('volunteer.history') }}" class="ak-dropdown-item" role="menuitem">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                            </svg>
+                            Riwayat
+                        </a>
                         <div class="ak-dropdown-divider"></div>
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
@@ -566,7 +572,7 @@
         @yield('content')
     </main>
 
-    <footer class="ak-footer">
+   <footer class="ak-footer">
         <div class="ak-container">
             <div class="ak-footer__inner">
                 <div>
@@ -610,3 +616,78 @@
             </div>
         </div>
     </footer>
+
+    <script>
+        const volNavbar = document.getElementById('volNavbar');
+        if (volNavbar) {
+            window.addEventListener('scroll', () => {
+                volNavbar.classList.toggle('scrolled', window.scrollY > 10);
+            }, { passive: true });
+        }
+
+        async function refreshChatBadge() {
+            try {
+                const res  = await fetch('{{ route('volunteer.chat.unread') }}', {
+                    headers: { 'Accept': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}' }
+                });
+                const data = await res.json();
+                const badge = document.getElementById('chatBadge');
+                if (badge) {
+                    if (data.count > 0) {
+                        badge.textContent = data.count > 99 ? '99+' : data.count;
+                        badge.style.display = 'inline';
+                    } else {
+                        badge.style.display = 'none';
+                    }
+                }
+            } catch (e) {}
+        }
+        refreshChatBadge();
+        setInterval(refreshChatBadge, 10000);
+
+        const volHamburger  = document.getElementById('volHamburger');
+        const volMobileMenu = document.getElementById('volMobileMenu');
+        if (volHamburger && volMobileMenu) {
+            volHamburger.addEventListener('click', () => {
+                const isOpen = volHamburger.classList.toggle('open');
+                volMobileMenu.classList.toggle('open', isOpen);
+                volMobileMenu.setAttribute('aria-hidden', String(!isOpen));
+                document.body.style.overflow = isOpen ? 'hidden' : '';
+            });
+            volMobileMenu.querySelectorAll('a, button').forEach(el => {
+                el.addEventListener('click', () => {
+                    volHamburger.classList.remove('open');
+                    volMobileMenu.classList.remove('open');
+                    volMobileMenu.setAttribute('aria-hidden', 'true');
+                    document.body.style.overflow = '';
+                });
+            });
+        }
+
+        const volUserMenu    = document.getElementById('volUserMenu');
+        const volUserTrigger = document.getElementById('volUserTrigger');
+        if (volUserMenu && volUserTrigger) {
+            volUserTrigger.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const isOpen = volUserMenu.classList.toggle('open');
+                volUserTrigger.setAttribute('aria-expanded', String(isOpen));
+            });
+            document.addEventListener('click', (e) => {
+                if (!volUserMenu.contains(e.target)) {
+                    volUserMenu.classList.remove('open');
+                    volUserTrigger.setAttribute('aria-expanded', 'false');
+                }
+            });
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    volUserMenu.classList.remove('open');
+                    volUserTrigger.setAttribute('aria-expanded', 'false');
+                    volUserTrigger.focus();
+                }
+            });
+        }
+    </script>
+
+    @stack('scripts')
+</body>
+</html>
