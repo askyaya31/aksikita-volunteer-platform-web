@@ -30,6 +30,7 @@ Route::get('/', function () {
 })->name('home');
 
 Route::get('/events/{slug}', [VolEvent::class, 'showPublic'])->name('events.show');
+Route::view('/panduan-organisasi', 'pages.panduan')->name('panduan.organisasi');
 
 Route::middleware('guest')->group(function () {
     Route::get('/login',               [AuthController::class, 'showLogin'])->name('login');
