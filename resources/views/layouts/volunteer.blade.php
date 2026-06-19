@@ -566,118 +566,47 @@
         @yield('content')
     </main>
 
-   <footer class="ak-footer">
-        <div class="ak-footer__inner">
-            <div>
-                <a href="{{ route('volunteer.dashboard') }}" class="ak-footer__logo">
-                    <img src="{{ asset('images/logo_aksikita.png') }}" alt="Logo AksiKita" style="height: 36px; width: auto;">
-                    <span class="ak-footer__logo-name">AksiKita</span>
-                </a>
-                <p class="ak-footer__desc">
-                    Permudah pengelolaan program sosial dan jangkau ribuan relawan berdedikasi di Indonesia. Bersama AksiKita, mari perluas dampak positif dan gerakkan aksi kebaikan dengan lebih efektif.
-                </p>
-                <p class="ak-footer__copy">© 2026 AksiKita</p>
-                <div class="ak-footer__socials">
-                    <a href="mailto:aksikita.support@gmail.com" class="ak-footer__social-btn gmail" aria-label="Email">
-                        <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+    <footer class="ak-footer">
+        <div class="ak-container">
+            <div class="ak-footer__inner">
+                <div>
+                    <a href="{{ route('volunteer.dashboard') }}" class="ak-footer__logo">
+                        <img src="{{ asset('images/logo_aksikita.png') }}" alt="Logo AksiKita" style="height: 36px; width: auto;">
+                        <span class="ak-footer__logo-name">AksiKita</span>
                     </a>
-                    <a href="https://wa.me/6281225443229" class="ak-footer__social-btn whatsapp" aria-label="WhatsApp" target="_blank" rel="noopener">
-                        <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-                    </a>
-                    <a href="https://instagram.com/aksikita__id" class="ak-footer__social-btn other" aria-label="Instagram" target="_blank" rel="noopener" style="background: #E1306C;">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 18px; height: 18px; stroke: #fff;"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
-                    </a>
+                    <p class="ak-footer__desc">
+                        Menghubungkan relawan dengan organisasi sosial di seluruh Indonesia untuk menciptakan dampak nyata. Bersama AksiKita, mari perluas dampak positif dan gerakkan aksi kebaikan dengan lebih efektif.
+                    </p>
+                    <div class="ak-footer__socials" style="margin-top: 16px; display: flex; gap: 10px;">
+                        <a href="mailto:aksikita.support@gmail.com" class="ak-footer__social-btn gmail" aria-label="Email" style="width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: #EA4335;">
+                            <svg viewBox="0 0 24 24" style="width: 18px; height: 18px; fill: #fff;"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                        </a>
+                        <a href="https://wa.me/6281225443229" class="ak-footer__social-btn whatsapp" aria-label="WhatsApp" target="_blank" rel="noopener" style="width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: #25D366;">
+                            <svg viewBox="0 0 24 24" style="width: 18px; height: 18px; fill: #fff;"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                        </a>
+                        <a href="https://instagram.com/aksikita__id" class="ak-footer__social-btn instagram" aria-label="Instagram" target="_blank" rel="noopener" style="width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: #E1306C;">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 18px; height: 18px; stroke: #fff;"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+                        </a>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="ak-footer__col-title">Platform</h3>
+                    <ul class="ak-footer__col-links">
+                        <li><a href="{{ route('home') }}#tentang">Tentang Kami</a></li>
+                        <li><a href="{{ route('home') }}#cara-kerja">Cara Kerja</a></li>
+                        <li><a href="{{ route('register.organizer') }}">Daftarkan Organisasi</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="ak-footer__col-title">Dukungan</h3>
+                    <ul class="ak-footer__col-links">
+                        <li><a href="https://drive.google.com/drive/folders/1-HmfU9CaZ0Goym3lIZURkyjiPBmic0Vh" target="_blank" rel="noopener">Pusat Bantuan</a></li>
+                        <li><a href="{{ route('panduan.organisasi') }}">Panduan Relawan</a></li>
+                    </ul>
                 </div>
             </div>
-            <div>
-                <h3 class="ak-footer__col-title">Platform</h3>
-                <ul class="ak-footer__col-links">
-                    <li><a href="#">Tentang Kami</a></li>
-                    <li><a href="#">Cara Kerja</a></li>
-                    <li><a href="#">Daftarkan Organisasi</a></li>
-                </ul>
-            </div>
-            <div>
-                <h3 class="ak-footer__col-title">Dukungan</h3>
-                <ul class="ak-footer__col-links">
-                    <li><a href="#">Pusat Bantuan</a></li>
-                    <li><a href="{{ route('panduan.organisasi') }}" class="org-footer-link">Panduan Relawan</a></li>
-                </ul>
+            <div style="border-top: 1px solid rgba(255, 255, 255, 0.1); margin-top: 32px; padding-top: 16px;">
+                <p class="ak-footer__copy" style="margin: 0;">&copy; 2026 AksiKita. Hak Cipta Dilindungi.</p>
             </div>
         </div>
     </footer>
-
-    <script>
-        const volNavbar = document.getElementById('volNavbar');
-        if (volNavbar) {
-            window.addEventListener('scroll', () => {
-                volNavbar.classList.toggle('scrolled', window.scrollY > 10);
-            }, { passive: true });
-        }
-
-        async function refreshChatBadge() {
-            try {
-                const res  = await fetch('{{ route('volunteer.chat.unread') }}', {
-                    headers: { 'Accept': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}' }
-                });
-                const data = await res.json();
-                const badge = document.getElementById('chatBadge');
-                if (badge) {
-                    if (data.count > 0) {
-                        badge.textContent = data.count > 99 ? '99+' : data.count;
-                        badge.style.display = 'inline';
-                    } else {
-                        badge.style.display = 'none';
-                    }
-                }
-            } catch (e) {}
-        }
-        refreshChatBadge();
-        setInterval(refreshChatBadge, 10000);
-
-        const volHamburger  = document.getElementById('volHamburger');
-        const volMobileMenu = document.getElementById('volMobileMenu');
-        if (volHamburger && volMobileMenu) {
-            volHamburger.addEventListener('click', () => {
-                const isOpen = volHamburger.classList.toggle('open');
-                volMobileMenu.classList.toggle('open', isOpen);
-                volMobileMenu.setAttribute('aria-hidden', String(!isOpen));
-                document.body.style.overflow = isOpen ? 'hidden' : '';
-            });
-            volMobileMenu.querySelectorAll('a, button').forEach(el => {
-                el.addEventListener('click', () => {
-                    volHamburger.classList.remove('open');
-                    volMobileMenu.classList.remove('open');
-                    volMobileMenu.setAttribute('aria-hidden', 'true');
-                    document.body.style.overflow = '';
-                });
-            });
-        }
-
-        const volUserMenu    = document.getElementById('volUserMenu');
-        const volUserTrigger = document.getElementById('volUserTrigger');
-        if (volUserMenu && volUserTrigger) {
-            volUserTrigger.addEventListener('click', (e) => {
-                e.stopPropagation();
-                const isOpen = volUserMenu.classList.toggle('open');
-                volUserTrigger.setAttribute('aria-expanded', String(isOpen));
-            });
-            document.addEventListener('click', (e) => {
-                if (!volUserMenu.contains(e.target)) {
-                    volUserMenu.classList.remove('open');
-                    volUserTrigger.setAttribute('aria-expanded', 'false');
-                }
-            });
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape') {
-                    volUserMenu.classList.remove('open');
-                    volUserTrigger.setAttribute('aria-expanded', 'false');
-                    volUserTrigger.focus();
-                }
-            });
-        }
-    </script>
-
-    @stack('scripts')
-</body>
-</html>
