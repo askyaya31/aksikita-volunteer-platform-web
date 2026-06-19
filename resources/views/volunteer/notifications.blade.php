@@ -3,14 +3,19 @@
 
 @push('styles')
 <style>
-.notif-wrap { max-width: 680px; margin: 0 auto; }
+.notif-wrap { 
+    max-width: 900px;
+    margin: 0 auto; 
+    padding: 2rem 1.5rem; 
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
 
 .notif-header {
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
     gap: 12px;
-    margin-bottom: 24px;
+    margin-bottom: 32px; 
     flex-wrap: wrap;
 }
 .notif-header__left h1 {
@@ -124,7 +129,6 @@
     margin-top: 6px;
 }
 
-/* ── Empty state: card besar, border solid tipis, rounded penuh ── */
 .notif-empty {
     text-align: center;
     padding: 110px 24px;

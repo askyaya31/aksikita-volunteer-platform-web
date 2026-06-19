@@ -159,6 +159,7 @@
     color: #475569;
     margin-bottom: 6px;
 }
+
 .profile-field input,
 .profile-field select,
 .profile-field textarea {
@@ -172,8 +173,9 @@
     transition: border-color 0.15s, box-shadow 0.15s;
     outline: none;
     -webkit-appearance: none;
-    font-family: inherit;
+    font-family: 'Plus Jakarta Sans', sans-serif; 
 }
+
 .profile-field input:hover,
 .profile-field select:hover,
 .profile-field textarea:hover { border-color: #BFDBFE; }

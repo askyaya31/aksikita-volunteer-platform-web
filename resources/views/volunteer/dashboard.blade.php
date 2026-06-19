@@ -13,15 +13,17 @@
     position: relative; overflow: hidden;
 }
 .dash-hero-greeting {
+    font-family: 'Plus Jakarta Sans', sans-serif; /* Disamakan */
     font-size: 12.5px; font-weight: 500;
     color: rgba(255,255,255,0.6); margin-bottom: 4px;
 }
 .dash-hero-name {
-    font-family: 'Fraunces', 'Plus Jakarta Sans', serif;
+    font-family: 'Plus Jakarta Sans', sans-serif; /* Hapus Fraunces */
     font-size: 26px; font-weight: 700;
     color: #fff; line-height: 1.2; margin-bottom: 6px;
 }
 .dash-hero-sub {
+    font-family: 'Plus Jakarta Sans', sans-serif; /* Disamakan */
     font-size: 13.5px; color: rgba(255,255,255,0.6); margin-bottom: 22px;
 }
 .dash-hero-cta {
@@ -53,9 +55,16 @@
     margin-bottom: 1rem;
 }
 .dash-sec-title, .dash-section-title {
-    font-family: 'Fraunces', 'Plus Jakarta Sans', serif;
-    font-size: 1.0625rem; font-weight: 700; color: #0F2057;
+    font-family: 'Plus Jakarta Sans', sans-serif; /* Hapus Fraunces */
+    font-size: 1.125rem; font-weight: 700; color: #0F2057;
     margin-bottom: 2px;
+}
+
+/* date block */
+.agenda-date-dd {
+    font-family: 'Plus Jakarta Sans', sans-serif; /* Hapus Fraunces */
+    font-size: 18px; font-weight: 700; color: #0F2057;
+    line-height: 1;
 }
 .dash-sec-sub {
     font-size: 0.775rem; color: #9CA3AF;
@@ -294,14 +303,11 @@
             @endphp
 
             <div class="dash-sec-wrap">
-                <div class="dash-sec-head">
-                    <p class="dash-sec-title">Agenda Terdekat</p>
-                    <a href="{{ route('volunteer.history') }}" class="dash-see-all">
-                        Lihat Semua
-                        <svg width="13" height="13" fill="none" viewBox="0 0 24 24"
-                             stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
-                            <path d="M9 5l7 7-7 7"/>
-                        </svg>
+                <div class="dash-section-head">
+                    <div class="dash-section-title">Agenda Terdekat</div>
+                    <a href="{{ route('volunteer.schedule') }}" class="dash-see-all">
+                        Lihat semua
+                        <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
                     </a>
                 </div>
 

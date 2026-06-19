@@ -13,7 +13,6 @@
     @stack('styles')
 
     <style>
-        /* ─── RESET & FONTS ──────────────────────────────────────────────── */
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         
         body {
@@ -23,10 +22,9 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            padding-top: 70px; /* Jarak agar tidak tertutup navbar fixed */
+            padding-top: 70px; 
         }
 
-        /* ─── CONTAINER ────────────────────────────────────────────────── */
         .ak-container {
             width: 100%;
             max-width: 1200px;
@@ -34,7 +32,6 @@
             padding: 0 24px;
         }
 
-        /* ─── NAVBAR (Sora Font) ───────────────────────────────────────── */
         .org-navbar {
             position: fixed;
             top: 0; left: 0; right: 0;
@@ -66,7 +63,7 @@
             width: auto;
         }
 
-        /* Navigasi Menu Tengah */
+   
         .org-nav-menu {
             display: flex;
             align-items: center;
@@ -87,7 +84,6 @@
             font-weight: 600;
         }
 
-        /* Navigasi Kanan (Aksi & Profil) */
         .org-nav-actions {
             display: flex;
             align-items: center;
@@ -110,8 +106,6 @@
             background: #F3F4F6;
             border-color: #CBD5E1;
         }
-
-        /* Pill Profile Nama Organisasi */
         .org-profile-pill {
             display: flex;
             align-items: center;
@@ -138,77 +132,10 @@
             background: #DCE4EC;
         }
 
-        /* ─── DROPDOWN PROFIL (Lihat Profil & Logout) ──────────────────── */
-        .org-profile-dropdown {
-            position: relative;
-        }
-        .org-profile-dropdown-menu {
-            position: absolute;
-            top: calc(100% + 10px);
-            right: 0;
-            min-width: 200px;
-            background: #FFFFFF;
-            border: 1.5px solid #EAEFF5;
-            border-radius: 14px;
-            box-shadow: 0 12px 28px rgba(15, 32, 87, 0.12);
-            padding: 8px;
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(-6px);
-            transition: opacity 0.15s ease, transform 0.15s ease, visibility 0.15s ease;
-            z-index: 200;
-        }
-        .org-profile-dropdown.open .org-profile-dropdown-menu {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
-        }
-        .org-profile-dropdown-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            width: 100%;
-            padding: 10px 12px;
-            border-radius: 10px;
-            font-family: 'Montserrat', sans-serif;
-            font-size: 0.875rem;
-            font-weight: 500;
-            color: #1F2937;
-            text-decoration: none;
-            background: none;
-            border: none;
-            text-align: left;
-            cursor: pointer;
-            transition: background 0.15s ease;
-        }
-        .org-profile-dropdown-item:hover {
-            background: #F3F4F6;
-        }
-        .org-profile-dropdown-item--danger {
-            color: #EF4444;
-        }
-        .org-profile-dropdown-item--danger:hover {
-            background: #FEF2F2;
-        }
-        .org-profile-dropdown-divider {
-            height: 1px;
-            background: #EEF0F6;
-            margin: 4px 4px;
-        }
-        .org-profile-dropdown-logout-form {
-            width: 100%;
-        }
-
-        /* ─── MAIN CONTENT ──────────────────────────────────────────────── */
         .org-main {
             flex: 1;
             width: 100%;
         }
-
-        /* ─── FOOTER (Monokrom Biru) ────────────────────────────────────── */
         .org-footer {
             background: #0F2057;
             color: #FFFFFF;
@@ -299,7 +226,7 @@
         }
 
         @media (max-width: 768px) {
-            .org-nav-menu { display: none; } /* Hambuger menu bisa ditambahkan nanti */
+            .org-nav-menu { display: none; } 
             .org-footer-grid { grid-template-columns: 1fr; gap: 32px; }
         }
     </style>
@@ -387,7 +314,7 @@
                         <span>AksiKita</span>
                     </div>
                     <p class="org-footer-desc">
-                        Menghubungkan relawan dengan organisasi sosial di seluruh Indonesia untuk menciptakan dampak nyata.
+                        Permudah pengelolaan program sosial dan jangkau ribuan relawan berdedikasi di Indonesia. Bersama AksiKita, mari perluas dampak positif dan gerakkan aksi kebaikan dengan lebih efektif.    
                     </p>
                 </div>
                 <div>
@@ -410,15 +337,9 @@
             <div class="org-footer-bottom">
                 <p>&copy; 2026 AksiKita. Hak Cipta Dilindungi.</p>
                 <div class="org-footer-socials">
-                    <a href="mailto:aksikita.support@gmail.com" class="org-social-icon org-social-icon--email" title="Email Kami">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                            <rect x="3" y="5" width="18" height="14" rx="2" stroke="#9AA0A6"/>
-                            <path d="M3.5 6.5L12 13L20.5 6.5" stroke="#EA4335"/>
-                            <path d="M3 7.2V17a1 1 0 001 1h3" stroke="#4285F4"/>
-                            <path d="M21 7.2V17a1 1 0 01-1 1h-3" stroke="#34A853"/>
-                            <path d="M7 18h10" stroke="#FBBC05"/>
-                        </svg>
-                    </a>
+                    <a href="mailto:aksikita.support@gmail.com" class="org-social-icon" title="Email">M</a>
+                    <a href="https://wa.me/6281225443229" target="_blank" rel="noopener" class="org-social-icon" title="WhatsApp">W</a>
+                    <a href="https://instagram.com/aksikita__id" target="_blank" rel="noopener" class="org-social-icon" title="Instagram">I</a>
                 </div>
             </div>
         </div>

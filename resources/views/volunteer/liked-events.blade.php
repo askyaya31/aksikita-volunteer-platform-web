@@ -1,16 +1,41 @@
 @extends('layouts.volunteer')
 @section('title', 'Kegiatan Disukai')
 
+@push('styles')
+<style>
+.liked-page-wrap {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    max-width: 900px; 
+    margin: 0 auto; 
+    padding: 2rem 1.5rem;
+}
+.liked-title {
+    font-size: 22px; 
+    font-weight: 700; 
+    color: #0F2057; 
+    margin-bottom: 1.5rem;
+    letter-spacing: -0.01em;
+}
+.liked-empty {
+    color: #9099B0; 
+    font-size: 14px;
+}
+.liked-list {
+    display: flex; 
+    flex-direction: column; 
+    gap: 12px;
+}
+</style>
+@endpush
+
 @section('content')
-<div style="max-width:900px; margin:0 auto; padding:2rem 1.5rem;">
-    <h1 style="font-size:20px; font-weight:700; color:#0F2057; margin-bottom:1.5rem;">
-        Kegiatan Disukai
-    </h1>
+<div class="liked-page-wrap">
+    <h1 class="liked-title">Kegiatan Disukai</h1>
 
     @if($likedEvents->isEmpty())
-        <p style="color:#9099B0; font-size:14px;">Belum ada kegiatan yang kamu sukai.</p>
+        <p class="liked-empty">Belum ada kegiatan yang kamu sukai.</p>
     @else
-        <div style="display:flex; flex-direction:column; gap:12px;">
+        <div class="liked-list">
             @foreach($likedEvents as $item)
                 @if($item->event)
                     @include('components.event-list-item', ['event' => $item->event])
