@@ -7,7 +7,7 @@ export default defineConfig({
     plugins: [
         laravel({
             input: ['resources/css/app.css', 'resources/js/app.js'],
-            refresh: true,
+            refresh: true, // <-- Ini yang bikin UI otomatis berubah pas di-save!
             fonts: [
                 bunny('Instrument Sans', {
                     weights: [400, 500, 600],

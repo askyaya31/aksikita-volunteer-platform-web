@@ -6,10 +6,86 @@
 .auth-register-wrap {
     min-height: calc(100vh - var(--spacing-navbar));
     display: flex;
+    align-items: stretch;
+    background: var(--color-bg);
+}
+
+/* ── Panel kiri: branding ── */
+.auth-brand-panel {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 420px;
+    min-width: 380px;
+    background: linear-gradient(160deg, #1E3A8A 0%, #2563EB 100%);
+    padding: 48px 40px;
+    position: relative;
+    overflow: hidden;
+}
+
+.auth-brand-panel::before {
+    content: '';
+    position: absolute;
+    width: 340px;
+    height: 340px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.05);
+    top: -80px;
+    right: -80px;
+    pointer-events: none;
+}
+
+.auth-brand-panel::after {
+    content: '';
+    position: absolute;
+    width: 220px;
+    height: 220px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.04);
+    bottom: -60px;
+    left: -60px;
+    pointer-events: none;
+}
+
+.auth-brand-logo {
+    width: 160px;
+    height: 160px;
+    object-fit: contain;
+    position: relative;
+    z-index: 1;
+    margin-bottom: 28px;
+}
+
+.auth-brand-name {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: -0.03em;
+    margin-bottom: 12px;
+    position: relative;
+    z-index: 1;
+}
+
+.auth-brand-tagline {
+    font-size: 0.9375rem;
+    color: #BFDBFE;
+    text-align: center;
+    line-height: 1.6;
+    position: relative;
+    z-index: 1;
+    max-width: 260px;
+}
+
+
+.auth-form-panel {
+    flex: 1;
+    display: flex;
     align-items: center;
     justify-content: center;
     padding: 48px 24px;
-    background: var(--color-bg);
+    overflow-y: auto;
 }
 
 .auth-register-box {
@@ -142,6 +218,18 @@
     font-weight: 500;
 }
 
+/* ── Responsive ── */
+@media (min-width: 900px) {
+    .auth-brand-panel { display: flex; }
+    /* Sembunyikan tombol back & header biru di form saat panel kiri tampil */
+    .auth-register-header__back { display: none; }
+}
+
+@media (max-width: 899px) {
+    .auth-register-wrap { align-items: flex-start; }
+    .auth-form-panel    { padding: 32px 16px 48px; }
+}
+
 @media (max-width: 540px) {
     .auth-register-header { padding: 28px 24px 24px; }
     .auth-register-body   { padding: 24px 24px 28px; }
@@ -151,18 +239,31 @@
 
 @section('content')
 <div class="auth-register-wrap">
-    <div class="auth-register-box">
 
-        <div class="auth-register-header">
-            <a href="{{ route('home') }}" class="auth-register-header__back" aria-label="Kembali ke beranda">
-                <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
-                </svg>
-                Kembali ke Beranda
-            </a>
-            <h1>Daftar sebagai Volunteer</h1>
-            <p>Bergabung gratis dan mulai berkontribusi untuk Indonesia.</p>
-        </div>
+    <aside class="auth-brand-panel" aria-hidden="true">
+        <img
+            src="{{ asset('images/logo_aksikita.png') }}"
+            alt="Logo AksiKita"
+            class="auth-brand-logo"
+        >
+        <span class="auth-brand-name">AksiKita</span>
+        <p class="auth-brand-tagline">
+            Menghubungkan relawan dengan organisasi sosial di seluruh Indonesia untuk menciptakan dampak nyata.
+        </p>
+    </aside>
+
+    <div class="auth-form-panel">
+        <div class="auth-register-box">
+            <div class="auth-register-header">
+                <a href="{{ route('home') }}" class="auth-register-header__back" aria-label="Kembali ke beranda">
+                    <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                    </svg>
+                    Kembali ke Beranda
+                </a>
+                <h1>Daftar sebagai Volunteer</h1>
+                <p>Bergabung gratis dan mulai berkontribusi untuk Indonesia.</p>
+            </div>
 
         <div class="auth-register-body">
             @if($errors->any())
