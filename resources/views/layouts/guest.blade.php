@@ -198,34 +198,3 @@
         </div>
     </footer>
     @endunless
-    <script>
-        const navbar = document.getElementById('guestNavbar');
-        if (navbar) {
-            window.addEventListener('scroll', () => {
-                navbar.classList.toggle('scrolled', window.scrollY > 10);
-            }, { passive: true });
-        }
-
-        const hamburger = document.getElementById('guestHamburger');
-        const mobileMenu = document.getElementById('guestMobileMenu');
-        if (hamburger && mobileMenu) {
-            hamburger.addEventListener('click', () => {
-                const isOpen = hamburger.classList.toggle('open');
-                mobileMenu.classList.toggle('open', isOpen);
-                mobileMenu.setAttribute('aria-hidden', String(!isOpen));
-                document.body.style.overflow = isOpen ? 'hidden' : '';
-            });
-            mobileMenu.querySelectorAll('a').forEach(link => {
-                link.addEventListener('click', () => {
-                    hamburger.classList.remove('open');
-                    mobileMenu.classList.remove('open');
-                    mobileMenu.setAttribute('aria-hidden', 'true');
-                    document.body.style.overflow = '';
-                });
-            });
-        }
-    </script>
-
-    @stack('scripts')
-</body>
-</html>

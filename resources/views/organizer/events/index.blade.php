@@ -87,7 +87,9 @@
         color: var(--color-navy);
     }
 
-    /* Komponen Navigasi Tabs Filter Tepat di Bawah Hero */
+    /* ===================================================================
+       NAVIGASI TABS — MENGGUNAKAN .is-active AGAR TIDAK BENTROK
+       =================================================================== */
     .org-tabs-wrap {
         background: #fff;
         border-bottom: 1.5px solid #EAEFF5;
@@ -103,37 +105,42 @@
         scrollbar-width: none;
     }
     .org-tabs::-webkit-scrollbar { display: none; }
-    
-    /* Perbaikan Garis Bawah (Underline) Agar Hanya Muncul Sesuai Lebar Teks Kata Aktif */
+
+    /* Default semua tab: warna abu, weight normal (500), TIDAK underline */
     .org-tab {
-        position: relative;
+        position: relative;       /* wajib: jadi acuan posisi underline (::after) */
+        display: inline-block;    /* wajib: agar width:100% pada ::after akurat */
         padding: 18px 0;
         font-size: 0.875rem; 
         font-weight: 500;
         color: #6B7280;
         text-decoration: none;
         white-space: nowrap;
-        transition: color 0.15s ease;
+        transition: color 0.2s ease;
     }
     .org-tab:hover { color: var(--color-navy); }
-    
-    /* Underline presisi menggunakan pseudo-element ::after */
+
+    /* Garis underline disiapkan untuk SEMUA tab, tapi lebarnya 0 (tak terlihat) */
     .org-tab::after {
         content: '';
         position: absolute;
-        bottom: -1.5px; /* Pas menempel di border-bottom pembungkus */
+        bottom: -1.5px; /* pas menempel border-bottom pembungkus */
         left: 0;
         width: 0;
         height: 3px;
         background-color: var(--color-navy);
-        transition: width 0.15s ease;
+        transition: width 0.2s ease;
     }
-    .org-tab.active { 
-        color: var(--color-navy); 
-        font-weight: 600; 
+
+    /* HANYA tab dengan class .is-active yang dapat warna gelap + bold */
+    .org-tab.is-active { 
+        color: var(--color-navy) !important; 
+        font-weight: 600 !important; 
     }
-    .org-tab.active::after {
-        width: 100%; /* Hanya selebar teks a link tersebut */
+
+    /* HANYA tab .is-active yang underline-nya dilebarkan jadi 100% */
+    .org-tab.is-active::after {
+        width: 100% !important;
     }
 
     /* Bingkai Luar Utama Area List Event */
@@ -315,13 +322,12 @@
 
 @section('content')
 
-{{-- Bagian Jumbotron Atas (Judul Sejajar dengan Tombol Tambah Kegiatan) --}}
+{{-- Bagian Jumbotron Atas --}}
 <section class="org-page-hero">
     <div class="ak-container">
         <div class="org-page-hero-inner">
             <h1 class="org-page-hero-title">Kelola Event</h1>
             
-            {{-- Tombol Berada Tepat di Samping Kanan Judul Utama --}}
             @if($org->verification_status === 'verified')
                 <a href="{{ route('organizer.events.create') }}" class="org-hero-cta">
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
@@ -338,7 +344,7 @@
     </div>
 </section>
 
-{{-- Navigasi Tabs Filter Berada Di Bawah Hero Dengan Underline Presisi --}}
+{{-- Navigasi Tabs Filter — Menggunakan class .is-active --}}
 <div class="org-tabs-wrap">
     <div class="ak-container">
         <nav class="org-tabs" aria-label="Filter event">
@@ -350,7 +356,7 @@
                 'selesai' => 'Selesai',
             ] as $key => $label)
                 <a href="{{ route('organizer.events', ['tab' => $key]) }}"
-                   class="org-tab {{ $tab === $key ? 'active' : '' }}">
+                   class="org-tab {{ $tab === $key ? 'is-active' : '' }}">
                     {{ $label }}
                 </a>
             @endforeach
@@ -438,7 +444,7 @@
                         @endif
                     </div>
 
-                    {{-- Kontrol Aksi Sisi Kanan (Samping Hanya Berisi Edit & Detail) --}}
+                    {{-- Kontrol Aksi Sisi Kanan --}}
                     <div class="org-event-actions">
                         @if($event->status === 'draft')
                             <form action="{{ route('organizer.events.submit', $event->id) }}" method="POST"

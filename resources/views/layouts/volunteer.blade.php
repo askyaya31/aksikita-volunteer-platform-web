@@ -601,7 +601,7 @@
                 <h3 class="ak-footer__col-title">Dukungan</h3>
                 <ul class="ak-footer__col-links">
                     <li><a href="#">Pusat Bantuan</a></li>
-                    <li><a href="#">Panduan Relawan</a></li>
+                    <li><a href="{{ route('panduan.organisasi') }}" class="org-footer-link">Panduan Relawan</a></li>
                 </ul>
             </div>
         </div>

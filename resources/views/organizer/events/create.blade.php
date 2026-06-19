@@ -1,485 +1,380 @@
 @extends('layouts.organizer')
-@section('title', 'Buat Event Baru')
+@section('title', 'Buat Kegiatan')
 
 @push('styles')
 <style>
-    /* ─── PAGE ───────────────────────────────────────────────────── */
-    .cr-page {
-        max-width: 780px;
-        margin-inline: auto;
-        padding: 32px 24px 64px;
+    :root {
+        --color-navy: #1c3d72;
+        --color-blue: #3b82f6;
+        --color-blue-ghost: #eff6ff;
+        --color-blue-mid: #bfdbfe;
+        --color-ink: #1f2937;
+        --color-ink-muted: #6b7280;
+        --color-surface: #ffffff;
+        --color-border: #e5e7eb;
+        --color-bg: #f8fafc;
+        --color-danger: #ef4444;
+        --radius-sm: 8px;
+        --radius-md: 16px;
+        --radius-full: 9999px;
     }
 
-    /* ─── HEADER ─────────────────────────────────────────────────── */
-    .cr-title {
-        font-family: 'Sora', sans-serif;
+    html {
+        scroll-behavior: smooth;
+    }
+
+    .ef-page {
+        max-width: 860px;
+        margin-inline: auto;
+        padding-block: 20px 64px;
+        font-family: "Inter", sans-serif;
+    }
+
+    .ef-heading {
         font-size: 1.5rem;
         font-weight: 700;
-        color: #0F2057;
+        color: var(--color-navy);
         letter-spacing: -0.02em;
-        margin-bottom: 4px;
+        margin-bottom: 6px;
     }
-    .cr-subtitle {
-        font-size: 0.8rem;
-        color: #3B82F6;
-        font-weight: 500;
-        margin-bottom: 28px;
-    }
-
-    /* ─── STEPPER ────────────────────────────────────────────────── */
-    .cr-stepper {
-        display: flex;
-        align-items: center;
-        gap: 0;
-        margin-bottom: 28px;
-        overflow-x: auto;
-        padding-bottom: 4px;
-    }
-    .cr-step {
-        display: flex;
-        align-items: center;
-        gap: 7px;
-        flex: 1;
-        position: relative;
-    }
-    .cr-step::after {
-        content: '';
-        flex: 1;
-        height: 1px;
-        background: #E5E7EB;
-        margin: 0 6px;
-    }
-    .cr-step:last-child::after { display: none; }
-
-    .cr-step__num {
-        width: 22px; height: 22px;
-        border-radius: 50%;
-        background: #E5E7EB;
-        color: #9CA3AF;
-        font-size: 0.65rem;
-        font-weight: 700;
-        display: flex; align-items: center; justify-content: center;
-        flex-shrink: 0;
-    }
-    .cr-step__label {
-        font-size: 0.62rem;
-        font-weight: 600;
-        color: #9CA3AF;
-        text-transform: uppercase;
-        letter-spacing: 0.06em;
-        white-space: nowrap;
-    }
-
-    /* ─── ERROR BANNER ───────────────────────────────────────────── */
-    .cr-errors {
-        background: #FFF5F5;
-        border: 1px solid #FECACA;
-        border-left: 3px solid #EF4444;
-        border-radius: 14px;
-        padding: 14px 16px;
-        margin-bottom: 20px;
-    }
-    .cr-errors__title { font-size: 0.8rem; font-weight: 700; color: #991B1B; margin-bottom: 8px; }
-    .cr-errors__item {
-        display: flex;
-        align-items: flex-start;
-        gap: 6px;
-        font-size: 0.78rem;
-        color: #B91C1C;
-        margin-bottom: 4px;
-    }
-
-    /* ─── SECTION CARD ───────────────────────────────────────────── */
-    .cr-card {
-        background: #FFFFFF;
-        border: 1px solid #E5E7EB;
-        border-radius: 16px;
-        padding: 24px 28px;
-        margin-bottom: 16px;
-    }
-    .cr-card-title {
-        font-family: 'Sora', sans-serif;
-        font-size: 0.8rem;
-        font-weight: 700;
-        color: #1F2937;
-        text-transform: uppercase;
-        letter-spacing: 0.06em;
-        padding-bottom: 14px;
-        border-bottom: 1px solid #F1F5F9;
-        margin-bottom: 20px;
-    }
-
-    /* ─── FORM ELEMENTS ──────────────────────────────────────────── */
-    .cr-field { margin-bottom: 18px; }
-    .cr-field:last-child { margin-bottom: 0; }
-
-    .cr-label {
-        display: block;
-        font-size: 0.82rem;
-        font-weight: 600;
-        color: #1F2937;
-        margin-bottom: 5px;
-    }
-    .cr-label-hint {
-        display: block;
-        font-size: 0.72rem;
-        color: #6B7280;
-        font-weight: 400;
-        margin-bottom: 7px;
-        margin-top: -2px;
-    }
-    .cr-required { color: #EF4444; }
-
-    .cr-input,
-    .cr-textarea {
-        width: 100%;
-        padding: 11px 16px;
-        border: 1.5px solid #E5E7EB;
-        border-radius: 10px;
-        font-family: 'Montserrat', sans-serif;
-        font-size: 0.85rem;
-        color: #1F2937;
-        background: #FFFFFF;
-        transition: border-color 0.15s, box-shadow 0.15s;
-        outline: none;
-    }
-    .cr-input::placeholder,
-    .cr-textarea::placeholder { color: #C4CADA; }
-    .cr-input:focus,
-    .cr-textarea:focus {
-        border-color: #3B82F6;
-        box-shadow: 0 0 0 3px rgba(59,130,246,0.1);
-    }
-    .cr-input.is-error,
-    .cr-textarea.is-error { border-color: #F87171; }
-    .cr-textarea { resize: none; line-height: 1.65; }
-
-    .cr-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-    .cr-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
-    @media (max-width: 560px) {
-        .cr-grid-2, .cr-grid-3 { grid-template-columns: 1fr; }
-    }
-
-    /* ─── CATEGORY PILLS ─────────────────────────────────────────── */
-    .cr-cat-wrap {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-    }
-    .cr-cat-pill {
-        display: inline-flex;
-        align-items: center;
-        gap: 5px;
-        padding: 6px 14px;
-        border-radius: 99px;
-        border: 1.5px solid #E5E7EB;
-        cursor: pointer;
-        transition: all 0.15s;
-        font-size: 0.78rem;
-        font-weight: 500;
-        color: #6B7280;
-        background: #FFFFFF;
-        user-select: none;
-    }
-    .cr-cat-pill:hover { border-color: #3B82F6; color: #1D4ED8; }
-    .cr-cat-pill input[type="checkbox"] { display: none; }
-    .cr-cat-pill__check {
-        width: 14px; height: 14px;
-        border-radius: 50%;
-        background: #0F2057;
-        display: none;
-        align-items: center;
-        justify-content: center;
-        flex-shrink: 0;
-    }
-    .cr-cat-pill:has(input:checked) {
-        border-color: #0F2057;
-        background: #0F2057;
-        color: #FFFFFF;
-        font-weight: 600;
-    }
-    .cr-cat-pill:has(input:checked) .cr-cat-pill__check { display: inline-flex; }
-
-    /* ─── POSTER UPLOAD ──────────────────────────────────────────── */
-    .cr-poster-drop {
-        border: 1.5px solid #E5E7EB;
-        border-radius: 10px;
-        padding: 36px 20px;
-        text-align: center;
-        cursor: pointer;
-        transition: border-color 0.15s, background 0.15s;
-        background: #FAFBFC;
-    }
-    .cr-poster-drop:hover { border-color: #3B82F6; background: #F8FBFF; }
-    .cr-poster-drop__link { font-size: 0.82rem; font-weight: 600; color: #1D4ED8; text-decoration: underline; text-underline-offset: 2px; }
-    .cr-poster-drop__hint { font-size: 0.72rem; color: #9CA3AF; margin-top: 4px; }
-    #cr-poster-preview { display: none; margin-bottom: 12px; }
-    #cr-poster-preview img { max-height: 160px; margin: 0 auto; border-radius: 10px; object-fit: cover; display: block; }
-
-    /* ─── ACTION BUTTONS ─────────────────────────────────────────── */
-    .cr-actions {
-        display: flex;
-        gap: 12px;
-        margin-top: 8px;
-    }
-    .cr-btn {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-        height: 46px;
-        padding: 0 24px;
-        border-radius: 10px;
-        font-family: 'Montserrat', sans-serif;
+    .ef-subheading {
         font-size: 0.875rem;
-        font-weight: 600;
-        cursor: pointer;
+        color: var(--color-blue);
+        font-weight: 500;
+        margin-bottom: 32px;
+    }
+
+    /* Errors Alert */
+    .ef-errors {
+        background: #fff5f5;
+        border: 1px solid #fecaca;
+        border-radius: var(--radius-sm);
+        padding: 16px;
+        margin-bottom: 32px;
+    }
+    .ef-errors__title { font-size: 0.875rem; font-weight: 600; color: #991b1b; margin-bottom: 8px; }
+    .ef-errors__list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 4px; }
+    .ef-errors__item { font-size: 0.8125rem; color: #b91c1c; display: flex; align-items: flex-start; gap: 6px; }
+
+    /* Stepper UI */
+    .ef-steps {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 40px;
+    }
+    .ef-step {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: transparent;
         text-decoration: none;
-        transition: all 0.15s;
-        border: none;
     }
-    .cr-btn--primary {
-        flex: 1;
-        background: #0F2057;
-        color: #FFFFFF;
+    .ef-step__num {
+        width: 28px; height: 28px; border-radius: 50%;
+        background: var(--color-border); color: var(--color-ink-muted);
+        font-size: 0.75rem; font-weight: 700;
+        display: flex; align-items: center; justify-content: center;
     }
-    .cr-btn--primary:hover { background: #1a3070; color: #FFFFFF; }
-    .cr-btn--cancel {
-        background: #EF4444;
-        color: #FFFFFF;
-        padding: 0 32px;
+    .ef-step__label {
+        font-size: 0.8125rem; color: var(--color-ink-muted); font-weight: 600;
+        text-transform: uppercase; letter-spacing: 0.05em;
     }
-    .cr-btn--cancel:hover { background: #DC2626; color: #FFFFFF; }
+    .ef-step-sep { flex-grow: 1; height: 1px; background: var(--color-border); margin: 0 16px; }
+
+    /* Form Cards */
+    .ef-card {
+        background: var(--color-surface); border: 1px solid var(--color-border);
+        border-radius: var(--radius-md); padding: 28px 32px; margin-bottom: 24px;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.02); scroll-margin-top: 24px;
+    }
+    .ef-section-label { font-size: 0.8125rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-ink); margin-bottom: 20px; border-b: 1px solid var(--color-border); padding-bottom: 12px; }
+    .ef-label { display: block; font-size: 0.875rem; font-weight: 600; color: var(--color-ink); margin-bottom: 8px; }
+    .ef-hint { font-size: 0.8125rem; color: var(--color-ink-muted); margin-bottom: 8px; margin-top: -4px; }
+
+    /* Inputs */
+    .ef-input {
+        width: 100%; height: 44px; padding: 0 14px; font-size: 0.875rem;
+        color: var(--color-ink); background: var(--color-surface); border: 1px solid var(--color-border);
+        border-radius: var(--radius-sm); outline: none; transition: all 0.2s ease;
+    }
+    .ef-input:focus { border-color: var(--color-blue); box-shadow: 0 0 0 3px rgba(59,130,246,0.1); }
+    textarea.ef-input { height: auto; padding: 12px 14px; resize: vertical; line-height: 1.6; }
+
+    .ef-fields { display: flex; flex-direction: column; gap: 20px; }
+    .ef-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .ef-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+
+    @media (max-width: 640px) {
+        .ef-row-2, .ef-row-3 { grid-template-columns: 1fr; }
+        .ef-steps { flex-direction: column; align-items: flex-start; gap: 12px; }
+        .ef-step-sep { display: none; }
+    }
+
+    /* Categories */
+    .ef-categories { display: flex; flex-wrap: wrap; gap: 10px; }
+    .ef-cat-chip {
+        display: flex; align-items: center; gap: 8px; padding: 8px 16px;
+        border: 1px solid var(--color-border); border-radius: var(--radius-full);
+        cursor: pointer; font-size: 0.875rem; font-weight: 500;
+        color: var(--color-ink); background: var(--color-surface);
+        transition: all 0.2s ease; user-select: none;
+    }
+    .ef-cat-chip input[type="checkbox"] { position: absolute; opacity: 0; pointer-events: none; }
+    .ef-cat-chip:hover { border-color: var(--color-blue-mid); }
+    .ef-cat-chip:has(input:checked) { border-color: var(--color-navy); background: var(--color-navy); color: #fff; }
+
+    /* Poster Current UI */
+    .ef-poster-current {
+        display: flex; align-items: center; gap: 16px; padding: 12px;
+        border: 1px solid var(--color-border); border-radius: var(--radius-sm); background: var(--color-bg); margin-bottom: 16px;
+    }
+    .ef-poster-current img { width: 64px; height: 64px; object-fit: cover; border-radius: 6px; flex-shrink: 0; border: 1px solid var(--color-border); }
+    .ef-poster-current__label { font-size: 0.875rem; font-weight: 600; color: var(--color-ink); }
+    .ef-poster-current__sub { font-size: 0.8125rem; color: var(--color-ink-muted); }
+
+    /* Poster Upload Zone */
+    .ef-upload-zone {
+        border: 1px dashed var(--color-border); border-radius: var(--radius-sm);
+        padding: 24px 20px; text-align: center; cursor: pointer; transition: all 0.2s ease;
+    }
+    .ef-upload-zone:hover { border-color: var(--color-blue); background: var(--color-blue-ghost); }
+    .ef-upload-zone__text { font-size: 0.875rem; font-weight: 600; color: var(--color-ink); text-decoration: underline; }
+    .ef-upload-zone__meta { font-size: 0.8125rem; color: var(--color-ink-muted); margin-top: 4px; }
+
+    /* Actions */
+    .ef-btn-submit {
+        width: 100%; height: 48px; background: var(--color-navy); color: #fff;
+        border: none; border-radius: var(--radius-sm); font-size: 1rem; font-weight: 600;
+        cursor: pointer; display: flex; align-items: center; justify-content: center;
+        gap: 8px; transition: all 0.2s ease; margin-top: 16px;
+    }
+    .ef-btn-submit:hover { background: #152c55; box-shadow: 0 4px 12px rgba(28,61,114,0.2); }
 </style>
 @endpush
 
 @section('content')
+<div class="ef-page">
 
-<div class="cr-page">
-
-    {{-- Header --}}
-    <h1 class="cr-title">Buat Event Baru</h1>
-    <p class="cr-subtitle">Event akan masuk ke antrian review admin sebelum dipublikasikan.</p>
-
-    {{-- Stepper --}}
-    <div class="cr-stepper">
-        <div class="cr-step">
-            <div class="cr-step__num">1</div>
-            <span class="cr-step__label">Informasi Utama</span>
-        </div>
-        <div class="cr-step">
-            <div class="cr-step__num">2</div>
-            <span class="cr-step__label">Lokasi</span>
-        </div>
-        <div class="cr-step">
-            <div class="cr-step__num">3</div>
-            <span class="cr-step__label">Jadwal &amp; Kuota</span>
-        </div>
-        <div class="cr-step">
-            <div class="cr-step__num">4</div>
-            <span class="cr-step__label">Kategori</span>
-        </div>
-        <div class="cr-step">
-            <div class="cr-step__num">5</div>
-            <span class="cr-step__label">Narahubung &amp; Media</span>
-        </div>
+    <div class="reveal mb-6">
+        <h1 class="ef-heading">Edit Kegiatan</h1>
+        <p class="ef-subheading">Perubahan akan masuk ke antrian review admin sebelum dipublikasikan ulang.</p>
     </div>
 
-    {{-- Error banner --}}
+    <div class="ef-steps reveal">
+        <a href="#section-1" class="ef-step">
+            <div class="ef-step__num" style="background:var(--color-navy); color:#fff;">1</div>
+            <span class="ef-step__label" style="color:var(--color-navy);">Informasi Utama</span>
+        </a>
+        <div class="ef-step-sep"></div>
+        <a href="#section-2" class="ef-step">
+            <div class="ef-step__num">2</div>
+            <span class="ef-step__label">Lokasi</span>
+        </a>
+        <div class="ef-step-sep"></div>
+        <a href="#section-3" class="ef-step">
+            <div class="ef-step__num">3</div>
+            <span class="ef-step__label">Jadwal & Kuota</span>
+        </a>
+        <div class="ef-step-sep"></div>
+        <a href="#section-4" class="ef-step">
+            <div class="ef-step__num">4</div>
+            <span class="ef-step__label">Kategori</span>
+        </a>
+        <div class="ef-step-sep"></div>
+        <a href="#section-5" class="ef-step">
+            <div class="ef-step__num">5</div>
+            <span class="ef-step__label">Narahubung</span>
+        </a>
+    </div>
+
     @if($errors->any())
-        <div class="cr-errors">
-            <p class="cr-errors__title">Perbaiki kesalahan berikut:</p>
-            @foreach($errors->all() as $error)
-                <div class="cr-errors__item">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="flex-shrink:0;margin-top:1px">
-                        <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
-                    </svg>
-                    {{ $error }}
-                </div>
-            @endforeach
+        <div class="ef-errors reveal">
+            <p class="ef-errors__title">Perbaiki kesalahan berikut:</p>
+            <ul class="ef-errors__list">
+                @foreach($errors->all() as $error)
+                    <li class="ef-errors__item">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" style="flex-shrink:0; margin-top:2px;">
+                            <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><circle cx="12" cy="16" r="1" fill="currentColor"/>
+                        </svg>
+                        {{ $error }}
+                    </li>
+                @endforeach
+            </ul>
         </div>
     @endif
 
     <form action="{{ route('organizer.events.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
 
-        {{-- ── 1. Informasi Utama ── --}}
-        <div class="cr-card">
-            <p class="cr-card-title">Informasi Utama</p>
-
-            <div class="cr-field">
-                <label class="cr-label">Judul Event <span class="cr-required">*</span></label>
-                <input type="text" name="title" value="{{ old('title') }}"
-                       placeholder="Contoh: Bersih Pantai..."
-                       class="cr-input {{ $errors->has('title') ? 'is-error' : '' }}">
-            </div>
-
-            <div class="cr-field">
-                <label class="cr-label">Deskripsi <span class="cr-required">*</span></label>
-                <span class="cr-label-hint">Jelaskan tujuan, manfaat, dan gambaran kegiatan secara singkat.</span>
-                <textarea name="description" rows="5"
-                          placeholder="Ceritakan mengenai kegiatan ini, tujuannya, kegiatannya, dampak yang ingin dicapai."
-                          class="cr-textarea {{ $errors->has('description') ? 'is-error' : '' }}">{{ old('description') }}</textarea>
-            </div>
-
-            <div class="cr-field">
-                <label class="cr-label">Syarat Peserta</label>
-                <span class="cr-label-hint">Opsional. Isi jika ada ketentuan khusus untuk relawan yang bergabung.</span>
-                <textarea name="requirements" rows="3"
-                          placeholder="Contoh: Usia minimal 17 tahun. Membawa peralatan sendiri."
-                          class="cr-textarea">{{ old('requirements') }}</textarea>
-            </div>
-        </div>
-
-        {{-- ── 2. Lokasi ── --}}
-        <div class="cr-card">
-            <p class="cr-card-title">Lokasi</p>
-
-            <div class="cr-field">
-                <label class="cr-label">Nama Tempat <span class="cr-required">*</span></label>
-                <input type="text" name="location_name" value="{{ old('location_name') }}"
-                       placeholder="Contoh: Taman Nasional"
-                       class="cr-input {{ $errors->has('location_name') ? 'is-error' : '' }}">
-            </div>
-
-            <div class="cr-field">
-                <label class="cr-label">Alamat Lengkap</label>
-                <input type="text" name="location_address" value="{{ old('location_address') }}"
-                       placeholder="Jalan, Kelurahan, Kecamatan"
-                       class="cr-input">
-            </div>
-
-            <div class="cr-grid-2">
-                <div class="cr-field">
-                    <label class="cr-label">Kota <span class="cr-required">*</span></label>
-                    <input type="text" name="city" value="{{ old('city') }}"
-                           class="cr-input {{ $errors->has('city') ? 'is-error' : '' }}">
-                </div>
-                <div class="cr-field">
-                    <label class="cr-label">Provinsi <span class="cr-required">*</span></label>
-                    <input type="text" name="province" value="{{ old('province') }}"
-                           class="cr-input {{ $errors->has('province') ? 'is-error' : '' }}">
-                </div>
-            </div>
-        </div>
-
-        {{-- ── 3. Jadwal & Kuota ── --}}
-        <div class="cr-card">
-            <p class="cr-card-title">Jadwal &amp; Kuota</p>
-
-            <div class="cr-grid-2 cr-field">
+        <div class="ef-card reveal" id="section-1">
+            <h2 class="ef-section-label">1 — Informasi Utama</h2>
+            
+            <div class="ef-fields">
                 <div>
-                    <label class="cr-label">Tanggal Mulai <span class="cr-required">*</span></label>
-                    <input type="date" name="start_date" value="{{ old('start_date') }}"
-                           min="{{ date('Y-m-d') }}"
-                           class="cr-input {{ $errors->has('start_date') ? 'is-error' : '' }}">
+                    <label class="ef-label">Judul Event <span class="text-red-500">*</span></label>
+                    <input type="text" name="title" value="{{ old('title') }}" class="ef-input @error('title') border-red-400 @enderror">
                 </div>
-                <div>
-                    <label class="cr-label">Tanggal Selesai <span class="cr-required">*</span></label>
-                    <input type="date" name="end_date" value="{{ old('end_date') }}"
-                           class="cr-input {{ $errors->has('end_date') ? 'is-error' : '' }}">
-                </div>
-            </div>
 
-            <div class="cr-grid-3">
-                <div class="cr-field">
-                    <label class="cr-label">Waktu Mulai</label>
-                    <input type="time" name="start_time" value="{{ old('start_time') }}" class="cr-input">
+                <div>
+                    <label class="ef-label">Deskripsi <span class="text-red-500">*</span></label>
+                    <p class="ef-hint">Jelaskan tujuan, manfaat, dan gambaran kegiatan secara singkat.</p>
+                    <textarea name="description" rows="4" class="ef-input @error('description') border-red-400 @enderror">{{ old('description') }}</textarea>
                 </div>
-                <div class="cr-field">
-                    <label class="cr-label">Waktu Selesai</label>
-                    <input type="time" name="end_time" value="{{ old('end_time') }}" class="cr-input">
-                </div>
-                <div class="cr-field">
-                    <label class="cr-label">Kuota <span class="cr-required">*</span></label>
-                    <input type="number" name="quota" value="{{ old('quota', 30) }}" min="1"
-                           class="cr-input {{ $errors->has('quota') ? 'is-error' : '' }}">
+
+                <div>
+                    <label class="ef-label">Syarat Peserta</label>
+                    <p class="ef-hint">Opsional. Isi jika ada ketentuan khusus untuk relawan yang bergabung.</p>
+                    <textarea name="requirements" rows="3" class="ef-input">{{ old('requirements') }}</textarea>
                 </div>
             </div>
         </div>
 
-        {{-- ── 4. Kategori ── --}}
-        <div class="cr-card">
-            <p class="cr-card-title">Kategori</p>
-            <p style="font-size:0.78rem;color:#6B7280;margin-top:-12px;margin-bottom:16px;">Pilih satu atau lebih kategori yang sesuai dengan kegiatan ini.</p>
+        <div class="ef-card reveal" id="section-2">
+            <h2 class="ef-section-label">2 — Lokasi</h2>
+            
+            <div class="ef-fields">
+                <div>
+                    <label class="ef-label">Nama Tempat <span class="text-red-500">*</span></label>
+                    <input type="text" name="location_name" value="{{ old('location_name') }}" class="ef-input @error('location_name') border-red-400 @enderror">
+                </div>
 
-            <div class="cr-cat-wrap">
+                <div>
+                    <label class="ef-label">Alamat Lengkap</label>
+                    <input type="text" name="location_address" value="{{ old('location_address') }}" class="ef-input">
+                </div>
+
+                <div class="ef-row-2">
+                    <div>
+                        <label class="ef-label">Kota <span class="text-red-500">*</span></label>
+                        <input type="text" name="city" value="{{ old('city') }}" class="ef-input @error('city') border-red-400 @enderror">
+                    </div>
+                    <div>
+                        <label class="ef-label">Provinsi <span class="text-red-500">*</span></label>
+                        <input type="text" name="province" value="{{ old('province') }}" class="ef-input @error('province') border-red-400 @enderror">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="ef-card reveal" id="section-3">
+            <h2 class="ef-section-label">3 — Jadwal & Kuota</h2>
+            
+            <div class="ef-fields">
+                <div class="ef-row-2">
+                    <div>
+                        <label class="ef-label">Tanggal Mulai <span class="text-red-500">*</span></label>
+                        <input type="date" name="start_date" value="{{ old('start_date') }}" min="{{ date('Y-m-d') }}" class="ef-input @error('start_date') border-red-400 @enderror">
+                    </div>
+                    <div>
+                        <label class="ef-label">Tanggal Selesai <span class="text-red-500">*</span></label>
+                        <input type="date" name="end_date" value="{{ old('end_date') }}" class="ef-input @error('end_date') border-red-400 @enderror">
+                    </div>
+                </div>
+
+                <div class="ef-row-3">
+                    <div>
+                        <label class="ef-label">Waktu Mulai</label>
+                        <input type="time" name="start_time" value="{{ old('start_time') }}" class="ef-input">
+                    </div>
+                    <div>
+                        <label class="ef-label">Waktu Selesai</label>
+                        <input type="time" name="end_time" value="{{ old('end_time') }}" class="ef-input">
+                    </div>
+                    <div>
+                        <label class="ef-label">Kuota <span class="text-red-500">*</span></label>
+                        <input type="number" name="quota" value="{{ old('quota', 30) }}" min="1" class="ef-input @error('quota') border-red-400 @enderror">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="ef-card reveal" id="section-4">
+            <h2 class="ef-section-label" style="border:none; margin-bottom:4px;">4 — Kategori <span class="text-red-500">*</span></h2>
+            <p class="ef-hint" style="margin-bottom: 20px;">Pilih satu atau lebih kategori yang sesuai dengan kegiatan ini.</p>
+
+            <div class="ef-categories">
                 @foreach($categories as $cat)
-                    <label class="cr-cat-pill">
+                    <label class="ef-cat-chip">
                         <input type="checkbox" name="category_ids[]" value="{{ $cat->id }}"
                                {{ in_array($cat->id, old('category_ids', [])) ? 'checked' : '' }}>
-                        <span class="cr-cat-pill__check">
-                            <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
-                        </span>
-                        {{ $cat->name }}
+                        <span>{{ $cat->name }}</span>
                     </label>
                 @endforeach
             </div>
         </div>
 
-        {{-- ── 5. Narahubung & Media ── --}}
-        <div class="cr-card">
-            <p class="cr-card-title">Narahubung &amp; Media</p>
+        <div class="ef-card reveal" id="section-5">
+            <h2 class="ef-section-label">5 — Narahubung & Media</h2>
 
-            <div class="cr-grid-2 cr-field">
-                <div>
-                    <label class="cr-label">Nama Narahubung</label>
-                    <input type="text" name="contact_person" value="{{ old('contact_person') }}" class="cr-input">
+            <div class="ef-fields">
+                <div class="ef-row-2">
+                    <div>
+                        <label class="ef-label">Nama Narahubung</label>
+                        <input type="text" name="contact_person" value="{{ old('contact_person') }}" class="ef-input">
+                    </div>
+                    <div>
+                        <label class="ef-label">Nomor Telepon</label>
+                        <input type="text" name="contact_phone" value="{{ old('contact_phone') }}" placeholder="08xxxxxxxxxx" class="ef-input">
+                    </div>
                 </div>
-                <div>
-                    <label class="cr-label">Nomor Telepon</label>
-                    <input type="text" name="contact_phone" value="{{ old('contact_phone') }}"
-                           placeholder="08xxxxxxxxxx" class="cr-input">
-                </div>
-            </div>
 
-            <div class="cr-field">
-                <label class="cr-label">Poster Event</label>
-                <div class="cr-poster-drop" onclick="document.getElementById('cr-poster-input').click()">
-                    <div id="cr-poster-preview">
-                        <img id="cr-poster-img" src="" alt="Preview poster">
+                <div>
+                    <label class="ef-label">Poster Event</label>
+                    
+                    <div class="ef-poster-current">
+                        <div class="w-16 h-16 bg-slate-200 rounded-lg flex items-center justify-center border border-slate-300 overflow-hidden flex-shrink-0">
+                            <div id="poster-preview" class="hidden w-full h-full">
+                                <img id="poster-img" src="" alt="Preview" class="w-full h-full object-cover">
+                            </div>
+                            <div id="poster-placeholder-icon" class="w-full h-full opacity-30 bg-[radial-gradient(#000_20%,transparent_20%)] [background-size:8px_8px]"></div>
+                        </div>
+                        <div>
+                            <p class="ef-poster-current__label">Poster saat ini.</p>
+                            <p class="ef-poster-current__sub">Upload file baru untuk ganti</p>
+                        </div>
                     </div>
-                    <div id="cr-poster-placeholder">
-                        <p class="cr-poster-drop__link">Klik untuk ganti poster.</p>
-                        <p class="cr-poster-drop__hint">JPG, PNG, WEBP maks 2MB</p>
+
+                    <div class="ef-upload-zone" onclick="document.getElementById('poster-input').click()">
+                        <span class="ef-upload-zone__text">Klik untuk ganti poster.</span>
+                        <p class="ef-upload-zone__meta">JPG, PNG, WEBP maks 2MB</p>
+                        
+                        <input type="file" id="poster-input" name="poster"
+                               accept="image/jpg,image/jpeg,image/png,image/webp"
+                               class="hidden"
+                               onchange="previewPoster(this)">
                     </div>
-                    <input type="file" id="cr-poster-input" name="poster"
-                           accept="image/jpg,image/jpeg,image/png,image/webp"
-                           style="display:none;"
-                           onchange="crPreviewPoster(this)">
                 </div>
             </div>
         </div>
 
-        {{-- ── Actions ── --}}
-        <div class="cr-actions">
-            <button type="submit" class="cr-btn cr-btn--primary">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-                    <rect x="3" y="3" width="18" height="18" rx="2"/><polyline points="9 9 12 6 15 9"/><line x1="12" y1="6" x2="12" y2="18"/>
+        <div class="reveal pt-2">
+            <button type="submit" class="ef-btn-submit">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                    <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                    <polyline points="7 3 7 8 15 8"></polyline>
                 </svg>
-                Buat Event &amp; Ajukan Review
+                Simpan Draft
             </button>
-            <a href="{{ route('organizer.events') }}" class="cr-btn cr-btn--cancel">Batal</a>
         </div>
-
     </form>
 </div>
 
 <script>
-function crPreviewPoster(input) {
-    const preview     = document.getElementById('cr-poster-preview');
-    const placeholder = document.getElementById('cr-poster-placeholder');
-    const img         = document.getElementById('cr-poster-img');
+function previewPoster(input) {
+    const preview = document.getElementById('poster-preview');
+    const placeholderIcon = document.getElementById('poster-placeholder-icon');
+    const img = document.getElementById('poster-img');
     if (input.files && input.files[0]) {
         const reader = new FileReader();
         reader.onload = e => {
             img.src = e.target.result;
-            preview.style.display = 'block';
-            placeholder.style.display = 'none';
+            preview.classList.remove('hidden');
+            placeholderIcon.classList.add('hidden');
         };
         reader.readAsDataURL(input.files[0]);
     }
 }
 </script>
-
 @endsection
