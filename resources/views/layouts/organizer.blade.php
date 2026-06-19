@@ -138,6 +138,70 @@
             background: #DCE4EC;
         }
 
+        /* ─── DROPDOWN PROFIL (Lihat Profil & Logout) ──────────────────── */
+        .org-profile-dropdown {
+            position: relative;
+        }
+        .org-profile-dropdown-menu {
+            position: absolute;
+            top: calc(100% + 10px);
+            right: 0;
+            min-width: 200px;
+            background: #FFFFFF;
+            border: 1.5px solid #EAEFF5;
+            border-radius: 14px;
+            box-shadow: 0 12px 28px rgba(15, 32, 87, 0.12);
+            padding: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-6px);
+            transition: opacity 0.15s ease, transform 0.15s ease, visibility 0.15s ease;
+            z-index: 200;
+        }
+        .org-profile-dropdown.open .org-profile-dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        .org-profile-dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            padding: 10px 12px;
+            border-radius: 10px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #1F2937;
+            text-decoration: none;
+            background: none;
+            border: none;
+            text-align: left;
+            cursor: pointer;
+            transition: background 0.15s ease;
+        }
+        .org-profile-dropdown-item:hover {
+            background: #F3F4F6;
+        }
+        .org-profile-dropdown-item--danger {
+            color: #EF4444;
+        }
+        .org-profile-dropdown-item--danger:hover {
+            background: #FEF2F2;
+        }
+        .org-profile-dropdown-divider {
+            height: 1px;
+            background: #EEF0F6;
+            margin: 4px 4px;
+        }
+        .org-profile-dropdown-logout-form {
+            width: 100%;
+        }
+
         /* ─── MAIN CONTENT ──────────────────────────────────────────────── */
         .org-main {
             flex: 1;
@@ -160,11 +224,18 @@
         .org-footer-brand {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
             font-family: 'Sora', sans-serif;
             font-size: 1.4rem;
             font-weight: 700;
             margin-bottom: 1rem;
+        }
+        .org-footer-logo {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            object-fit: cover;
+            flex-shrink: 0;
         }
         .org-footer-desc {
             font-size: 0.875rem;
@@ -198,8 +269,9 @@
             border-top: 1px solid rgba(255, 255, 255, 0.1);
             padding-top: 1.5rem;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 14px;
             font-size: 0.825rem;
             color: rgba(255, 255, 255, 0.5);
         }
@@ -218,6 +290,12 @@
         }
         .org-social-icon:hover {
             background: rgba(255, 255, 255, 0.25);
+        }
+        .org-social-icon--email {
+            background: #FFFFFF;
+        }
+        .org-social-icon--email:hover {
+            background: #F3F4F6;
         }
 
         @media (max-width: 768px) {
@@ -260,17 +338,38 @@
                         <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0"/>
                     </svg>
                 </a>
-                <a href="{{ route('organizer.profile') }}" class="org-profile-pill">
-                    <div class="org-avatar-placeholder">
-                        @if(isset($org) && $org->logo)
-                            <img src="{{ asset('storage/' . $org->logo) }}" alt="{{ $org->organization_name }}" style="width:100%; height:100%; object-fit:cover; border-radius:50%;">
-                        @else
-                            {{-- Placeholder lingkaran abu-abu jika belum upload logo --}}
-                            <div style="width:100%; height:100%; background:#DCE4EC; border-radius:50%;"></div>
-                        @endif
+                <div class="org-profile-dropdown" id="orgProfileDropdown">
+                    <a href="{{ route('organizer.profile') }}" class="org-profile-pill" id="orgProfileTrigger">
+                        <div class="org-avatar-placeholder">
+                            @if(isset($org) && $org->logo)
+                                <img src="{{ asset('storage/' . $org->logo) }}" alt="{{ $org->organization_name }}" style="width:100%; height:100%; object-fit:cover; border-radius:50%;">
+                            @else
+                                {{-- Placeholder lingkaran abu-abu jika belum upload logo --}}
+                                <div style="width:100%; height:100%; background:#DCE4EC; border-radius:50%;"></div>
+                            @endif
+                        </div>
+                        <span>{{ $org->organization_name ?? 'Organisasi' }}</span>
+                    </a>
+
+                    <div class="org-profile-dropdown-menu" id="orgProfileMenu">
+                        <a href="{{ route('organizer.profile') }}" class="org-profile-dropdown-item">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/>
+                            </svg>
+                            Lihat Profil
+                        </a>
+                        <div class="org-profile-dropdown-divider"></div>
+                        <form action="{{ route('logout') }}" method="POST" class="org-profile-dropdown-logout-form">
+                            @csrf
+                            <button type="submit" class="org-profile-dropdown-item org-profile-dropdown-item--danger">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
+                                </svg>
+                                Logout
+                            </button>
+                        </form>
                     </div>
-                    <span>{{ $org->organization_name ?? 'Organisasi' }}</span>
-                </a>
+                </div>
             </div>
         </div>
     </nav>
@@ -284,25 +383,26 @@
             <div class="org-footer-grid">
                 <div>
                     <div class="org-footer-brand">
+                        <img src="{{ asset('images/logo_aksikita.png') }}" alt="Logo AksiKita" class="org-footer-logo">
                         <span>AksiKita</span>
                     </div>
                     <p class="org-footer-desc">
-                        Lorem ipsum is a jumbled, standard paragraph that begins with "Lorem ipsum dolor sit amet, consectetur adipisicing elit".
+                        Menghubungkan relawan dengan organisasi sosial di seluruh Indonesia untuk menciptakan dampak nyata.
                     </p>
                 </div>
                 <div>
                     <h4 class="org-footer-title">Platform</h4>
                     <ul class="org-footer-links">
-                        <li><a href="#" class="org-footer-link">Tentang Kami</a></li>
-                        <li><a href="#" class="org-footer-link">Cara Kerja</a></li>
-                        <li><a href="#" class="org-footer-link">Masuk sebagai Relawan</a></li>
+                        <li><a href="{{ route('home') }}#tentang" class="org-footer-link">Tentang Kami</a></li>
+                        <li><a href="{{ route('home') }}#cara-kerja" class="org-footer-link">Cara Kerja</a></li>
+                        <li><a href="{{ route('register.volunteer') }}" class="org-footer-link">Masuk sebagai Relawan</a></li>
                     </ul>
                 </div>
                 <div>
                     <h4 class="org-footer-title">Dukungan</h4>
                     <ul class="org-footer-links">
                         <li><a href="#" class="org-footer-link">Pusat Bantuan</a></li>
-                        <li><a href="#" class="org-footer-link">Panduan Organisasi</a></li>
+                        <li><a href="{{ route('panduan.organisasi') }}" class="org-footer-link">Panduan Organisasi</a></li>
                     </ul>
                 </div>
             </div>
@@ -310,14 +410,46 @@
             <div class="org-footer-bottom">
                 <p>&copy; 2026 AksiKita. Hak Cipta Dilindungi.</p>
                 <div class="org-footer-socials">
-                    <a href="#" class="org-social-icon">M</a>
-                    <a href="#" class="org-social-icon">W</a>
-                    <a href="#" class="org-social-icon">I</a>
+                    <a href="mailto:aksikita.support@gmail.com" class="org-social-icon org-social-icon--email" title="Email Kami">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="5" width="18" height="14" rx="2" stroke="#9AA0A6"/>
+                            <path d="M3.5 6.5L12 13L20.5 6.5" stroke="#EA4335"/>
+                            <path d="M3 7.2V17a1 1 0 001 1h3" stroke="#4285F4"/>
+                            <path d="M21 7.2V17a1 1 0 01-1 1h-3" stroke="#34A853"/>
+                            <path d="M7 18h10" stroke="#FBBC05"/>
+                        </svg>
+                    </a>
                 </div>
             </div>
         </div>
     </footer>
 
     @stack('scripts')
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var dropdown = document.getElementById('orgProfileDropdown');
+            var trigger  = document.getElementById('orgProfileTrigger');
+
+            if (dropdown && trigger) {
+                trigger.addEventListener('click', function (e) {
+                    e.preventDefault(); // cegah navigasi langsung, buka dropdown dulu
+                    dropdown.classList.toggle('open');
+                });
+
+                document.addEventListener('click', function (e) {
+                    if (!dropdown.contains(e.target)) {
+                        dropdown.classList.remove('open');
+                    }
+                });
+
+                document.addEventListener('keydown', function (e) {
+                    if (e.key === 'Escape') {
+                        dropdown.classList.remove('open');
+                    }
+                });
+            }
+        });
+    </script>
 </body>
 </html>
