@@ -15,7 +15,7 @@ class DashboardController extends Controller
     {
         $user = User::with('volunteerProfile')->find(session('user_id'));
         $city = $user->volunteerProfile?->city;
-         $userId = session('user_id');
+        $userId = session('user_id');
 
         $nearbyEvents = Event::with(['organization', 'categories'])
             ->where('status', 'published')
