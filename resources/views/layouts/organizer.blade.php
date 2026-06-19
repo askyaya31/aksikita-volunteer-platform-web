@@ -13,7 +13,6 @@
     @stack('styles')
 
     <style>
-        /* ─── RESET & FONTS ──────────────────────────────────────────────── */
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         
         body {
@@ -23,10 +22,9 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            padding-top: 70px; /* Jarak agar tidak tertutup navbar fixed */
+            padding-top: 70px; 
         }
 
-        /* ─── CONTAINER ────────────────────────────────────────────────── */
         .ak-container {
             width: 100%;
             max-width: 1200px;
@@ -34,7 +32,6 @@
             padding: 0 24px;
         }
 
-        /* ─── NAVBAR (Sora Font) ───────────────────────────────────────── */
         .org-navbar {
             position: fixed;
             top: 0; left: 0; right: 0;
@@ -66,7 +63,7 @@
             width: auto;
         }
 
-        /* Navigasi Menu Tengah */
+   
         .org-nav-menu {
             display: flex;
             align-items: center;
@@ -87,7 +84,6 @@
             font-weight: 600;
         }
 
-        /* Navigasi Kanan (Aksi & Profil) */
         .org-nav-actions {
             display: flex;
             align-items: center;
@@ -110,8 +106,6 @@
             background: #F3F4F6;
             border-color: #CBD5E1;
         }
-
-        /* Pill Profile Nama Organisasi */
         .org-profile-pill {
             display: flex;
             align-items: center;
@@ -138,13 +132,10 @@
             background: #DCE4EC;
         }
 
-        /* ─── MAIN CONTENT ──────────────────────────────────────────────── */
         .org-main {
             flex: 1;
             width: 100%;
         }
-
-        /* ─── FOOTER (Monokrom Biru) ────────────────────────────────────── */
         .org-footer {
             background: #0F2057;
             color: #FFFFFF;
@@ -221,7 +212,7 @@
         }
 
         @media (max-width: 768px) {
-            .org-nav-menu { display: none; } /* Hambuger menu bisa ditambahkan nanti */
+            .org-nav-menu { display: none; } 
             .org-footer-grid { grid-template-columns: 1fr; gap: 32px; }
         }
     </style>
@@ -287,7 +278,7 @@
                         <span>AksiKita</span>
                     </div>
                     <p class="org-footer-desc">
-                        Lorem ipsum is a jumbled, standard paragraph that begins with "Lorem ipsum dolor sit amet, consectetur adipisicing elit".
+                        Permudah pengelolaan program sosial dan jangkau ribuan relawan berdedikasi di Indonesia. Bersama AksiKita, mari perluas dampak positif dan gerakkan aksi kebaikan dengan lebih efektif.    
                     </p>
                 </div>
                 <div>
@@ -310,9 +301,9 @@
             <div class="org-footer-bottom">
                 <p>&copy; 2026 AksiKita. Hak Cipta Dilindungi.</p>
                 <div class="org-footer-socials">
-                    <a href="#" class="org-social-icon">M</a>
-                    <a href="#" class="org-social-icon">W</a>
-                    <a href="#" class="org-social-icon">I</a>
+                    <a href="mailto:aksikita.support@gmail.com" class="org-social-icon" title="Email">M</a>
+                    <a href="https://wa.me/6281225443229" target="_blank" rel="noopener" class="org-social-icon" title="WhatsApp">W</a>
+                    <a href="https://instagram.com/aksikita__id" target="_blank" rel="noopener" class="org-social-icon" title="Instagram">I</a>
                 </div>
             </div>
         </div>

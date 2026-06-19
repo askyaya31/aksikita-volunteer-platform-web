@@ -53,7 +53,13 @@
                 <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
                 {{ $event->remainingQuota() }} kuota
             </span>
-            <a href="{{ route('volunteer.events.show', $event->slug) }}" class="ecard-btn">Lihat</a>
+        <a href="{{ route('volunteer.events.show', $event->slug) }}" 
+            class="ecard-btn"
+            style="background: #0F2057 !important; color: #ffffff !important; border: 2px solid #0F2057 !important; transition: all 0.2s ease-in-out !important;"
+            onmouseover="this.style.setProperty('background', '#ffffff', 'important'); this.style.setProperty('color', '#0F2057', 'important');"
+            onmouseout="this.style.setProperty('background', '#0F2057', 'important'); this.style.setProperty('color', '#ffffff', 'important');">
+            Lihat
+        </a>
         </div>
     </div>
 </div>

@@ -11,6 +11,43 @@
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @stack('styles')
+
+    <style>
+        .ak-footer {
+            background: #0F2057 !important;
+            color: #ffffff !important;
+            padding: 48px 24px 32px;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        .ak-footer__brand {
+            color: #ffffff !important;
+            font-weight: 700;
+            font-size: 1.4rem;
+        }
+        .ak-footer__tagline {
+            color: rgba(255, 255, 255, 0.7) !important;
+            font-size: 0.875rem;
+            line-height: 1.6;
+        }
+        .ak-footer__heading {
+            color: #ffffff !important;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+        .ak-footer__links a {
+            color: rgba(255, 255, 255, 0.7) !important;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .ak-footer__links a:hover {
+            color: #ffffff !important;
+            text-decoration: underline;
+        }
+        .ak-footer__bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+            color: rgba(255, 255, 255, 0.5) !important;
+        }
+    </style>
 </head>
 <body class="ak-fadein">
     <nav class="ak-navbar" id="guestNavbar">
@@ -18,11 +55,7 @@
             <div class="ak-navbar__inner">
 
                 <a href="{{ route('home') }}" class="ak-logo">
-                    <span class="ak-logo__mark" aria-hidden="true">
-                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15v-4H7l5-8v4h4l-5 8z"/>
-                        </svg>
-                    </span>
+                    <img src="{{ asset('images/logo_aksikita.png') }}" alt="Logo AksiKita" style="height: 36px; width: auto;">
                     AksiKita
                 </a>
                 <div class="ak-nav-links-desktop" style="display: flex; align-items: center; justify-content: center; gap: 4px; margin-left: 8px; flex: 1;">
@@ -121,17 +154,20 @@
         <div class="ak-container">
             <div style="display:grid; grid-template-columns: 2fr 1fr 1fr; gap:48px; padding-bottom:8px;">
                 <div>
-                    <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
-                        <span class="ak-logo__mark" aria-hidden="true">
-                            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15v-4H7l5-8v4h4l-5 8z"/>
-                            </svg>
-                        </span>
+                    <div style="display:flex; align-items:center; gap:9px; margin-bottom:12px;">
+                        <img src="{{ asset('images/logo_aksikita.png') }}" alt="Logo AksiKita" style="height: 36px; width: auto;">
                         <span class="ak-footer__brand">AksiKita</span>
                     </div>
-                    <p class="ak-footer__tagline" style="text-align:justify;">
-                        Menghubungkan relawan dengan organisasi sosial di seluruh Indonesia untuk menciptakan dampak nyata.
+                    <p class="ak-footer__tagline" style="text-align:justify; margin-bottom: 16px;">
+                        Permudah pengelolaan program sosial dan jangkau ribuan relawan berdedikasi di Indonesia. Bersama AksiKita, mari perluas dampak positif dan gerakkan aksi kebaikan dengan lebih efektif.
                     </p>
+                    <div style="display: flex; gap: 12px; align-items: center; font-size: 0.85rem;">
+                        <a href="mailto:aksikita.support@gmail.com" style="color: rgba(255,255,255,0.7); text-decoration: none;">aksikita.support@gmail.com</a>
+                        <span style="color: rgba(255,255,255,0.4)">|</span>
+                        <a href="https://wa.me/6281225443229" target="_blank" rel="noopener" style="color: rgba(255,255,255,0.7); text-decoration: none;">+62 812-2544-3229</a>
+                        <span style="color: rgba(255,255,255,0.4)">|</span>
+                        <a href="https://instagram.com/aksikita__id" target="_blank" rel="noopener" style="color: rgba(255,255,255,0.7); text-decoration: none;">@aksikita__id</a>
+                    </div>
                 </div>
 
                 <div>
@@ -148,7 +184,7 @@
                     <div class="ak-footer__heading">Informasi</div>
                     <ul class="ak-footer__links">
                         <li><a href="{{ route('home') }}#tentang">Tentang Kami</a></li>
-                        <li><a href="mailto:info@aksikita.id">Hubungi Kami</a></li>
+                        <li><a href="mailto:aksikita.support@gmail.com">Hubungi Kami</a></li>
                     </ul>
                 </div>
 

@@ -3,7 +3,6 @@
 
 @push('styles')
 <style>
-/* ── Background gelap meluas dari hero sampai sebelum footer ── */
 .sched-page-bg {
     background: linear-gradient(135deg, #0F2057 0%, #1A3575 60%, #2A4A9C 100%);
     padding-bottom: 3.5rem;
@@ -13,9 +12,13 @@
     padding: 2rem 0 3.5rem;
 }
 .sched-hero-title {
-    font-family: 'League Spartan', serif;
+    font-family: 'Plus Jakarta Sans', sans-serif; 
     font-size: 24px; font-weight: 700; color: #fff;
     margin-bottom: 4px;
+}
+.cal-month-label {
+    font-family: 'Plus Jakarta Sans', sans-serif; 
+    font-size: 15px; font-weight: 700; color: #0F2057;
 }
 .sched-hero-sub { font-size: 13.5px; color: rgba(255,255,255,0.6); }
 
@@ -217,16 +220,45 @@
 .sched-badge.attended  { background: #EEF3FF; color: #1A3575; }
 
 .sched-empty {
-    text-align: center; padding: 3rem 1rem; color: rgba(255,255,255,0.6);
+    text-align: center; 
+    padding: 4rem 1rem; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px; 
 }
-.sched-empty svg { margin-bottom: 12px; opacity: 0.45; }
-.sched-empty p { font-size: 14px; }
+
+.sched-empty p {
+    color: #ffffff !important;
+    font-size: 14.5px;
+    font-weight: 500;
+    margin: 0 !important;
+}
+
+.sched-empty svg { 
+    stroke: #ffffff !important; 
+    opacity: 0.9 !important;    
+    margin-bottom: 0 !important;
+}
+
 .sched-empty a {
-    display: inline-flex; align-items: center; gap: 6px;
-    margin-top: 14px; padding: 9px 20px;
-    background: #fff; color: #0F2057;
-    border-radius: 999px; font-size: 13px; font-weight: 600;
+    display: inline-flex; 
+    align-items: center; 
+    gap: 6px;
+    padding: 10px 24px;
+    background: #ffffff; 
+    color: #0F2057;
+    border-radius: 999px; 
+    font-size: 13px; 
+    font-weight: 700;
     text-decoration: none;
+    margin-top: 0 !important; 
+    transition: transform 0.2s ease;
+}
+
+.sched-empty a:hover {
+    transform: scale(1.03);
 }
 </style>
 @endpush
@@ -377,13 +409,13 @@
                 </div>
 
             @empty
-                <div class="sched-empty">
-                    <svg width="48" height="48" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                    </svg>
-                    <p style="color: white;">Belum ada jadwal kegiatan mendatang.</p>
-                    <a href="{{ route('volunteer.events') }}">Cari Kegiatan →</a>
-                </div>
+        <div class="sched-empty">
+            <svg width="48" height="48" fill="none" viewBox="0 0 24 24" stroke="#ffffff" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+            </svg>
+            <p>Belum ada jadwal kegiatan mendatang.</p>
+            <a href="{{ route('volunteer.events') }}">Cari Kegiatan</a> 
+        </div>
             @endforelse
         </div>
 
@@ -429,7 +461,7 @@
 
             @empty
                 <div class="sched-empty">
-                    <svg width="48" height="48" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                    <svg width="48" height="48" fill="none" viewBox="0 0 24 24" stroke="#ffffff" stroke-width="1.5">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
                     </svg>
                     <p style="color: white;">Belum ada riwayat kegiatan yang selesai.</p>

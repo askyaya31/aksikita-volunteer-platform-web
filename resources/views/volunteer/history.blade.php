@@ -3,8 +3,21 @@
 
 @push('styles')
 <style>
-.history-wrap { max-width: 760px; margin: 0 auto; }
+.history-wrap { 
+    max-width: 900px; 
+    margin: 0 auto; 
+    padding: 2rem 1.5rem; 
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
 
+.history-tab--active .history-tab__dot {
+    opacity: 1 !important;
+}
+
+.history-tab-cancelled-active {
+    background: #EF4444 !important;
+    box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2);
+}
 .history-head {
     margin-bottom: 24px;
 }
@@ -43,11 +56,6 @@
     transition: all 0.18s;
     color: var(--color-text-muted);
 }
-.history-tab--active {
-    background: var(--color-canvas);
-    color: var(--color-brand-700);
-    box-shadow: 0 1px 4px rgba(15,23,42,.08), 0 0 0 1px var(--color-border);
-}
 .history-tab:not(.history-tab--active):hover {
     color: var(--color-text-primary);
     background: rgba(255,255,255,0.6);
@@ -57,7 +65,6 @@
     border-radius: 50%;
 }
 
-/* ── Card: polos, full width, tanpa accent border kiri ── */
 .history-card {
     background: var(--color-canvas);
     border: 1px solid var(--color-border);
@@ -139,7 +146,6 @@
     gap: 4px;
 }
 
-/* ── Right column: badge di atas (kanan-atas), tanggal di bawahnya ── */
 .history-card__right {
     display: flex;
     flex-direction: column;
@@ -161,10 +167,10 @@
     line-height: 1;
     color: #fff;
 }
-.history-badge--confirmed  { background: #10B981; } /* hijau */
-.history-badge--pending    { background: #F59E0B; } /* kuning */
-.history-badge--attended   { background: #10B981; } /* hijau juga, dianggap selesai/oke */
-.history-badge--cancelled  { background: #EF4444; } /* merah */
+.history-badge--confirmed  { background: #10B981; } 
+.history-badge--pending    { background: #F59E0B; } 
+.history-badge--attended   { background: #10B981; } 
+.history-badge--cancelled  { background: #EF4444; } 
 
 .history-card__date {
     font-size: 0.75rem;
@@ -220,18 +226,22 @@
         <p class="history-head__sub">Semua kegiatan yang pernah kamu daftarkan.</p>
     </div>
 
-    <div class="history-tabs">
-        <a href="{{ route('volunteer.history', ['tab' => 'aktif']) }}"
-           class="history-tab {{ $tab === 'aktif' ? 'history-tab--active' : '' }}">
-            <span class="history-tab__dot" style="{{ $tab === 'aktif' ? 'background:#10B981' : 'background:var(--color-border)' }}"></span>
-            Aktif
-        </a>
-        <a href="{{ route('volunteer.history', ['tab' => 'dibatalkan']) }}"
-           class="history-tab {{ $tab === 'dibatalkan' ? 'history-tab--active' : '' }}">
-            <span class="history-tab__dot" style="{{ $tab === 'dibatalkan' ? 'background:var(--color-brand-600)' : 'background:var(--color-border)' }}"></span>
-            Dibatalkan
-        </a>
-    </div>
+   <div class="history-tabs">
+    <a href="{{ route('volunteer.history', ['tab' => 'aktif']) }}"
+       class="history-tab {{ $tab === 'aktif' ? 'history-tab--active' : '' }}">
+        <span class="history-tab__dot" 
+              style="{{ $tab === 'aktif' ? 'background:#10B981;' : 'background:var(--color-border);' }}">
+        </span>
+        Aktif
+    </a>
+    <a href="{{ route('volunteer.history', ['tab' => 'dibatalkan']) }}"
+       class="history-tab {{ $tab === 'dibatalkan' ? 'history-tab--active' : '' }}">
+        <span class="history-tab__dot {{ $tab === 'dibatalkan' ? 'history-tab-cancelled-active' : '' }}" 
+              style="{{ $tab !== 'dibatalkan' ? 'background:var(--color-border);' : '' }}">
+        </span>
+        Dibatalkan
+    </a>
+</div>
 
     @forelse($registrations as $reg)
     @php

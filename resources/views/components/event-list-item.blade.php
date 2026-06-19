@@ -73,13 +73,13 @@
                     {{ $event->remainingQuota() }} kuota
                 </span>
             @endif
-
-            <a href="{{ route('volunteer.events.show', $event->slug) }}"
-               style="padding:7px 22px; border-radius:9999px; font-size:12.5px; font-weight:700; background:#0F2057; color:#fff; text-decoration:none; transition:background .15s; display:inline-block;"
-               onmouseover="this.style.background='#1A3575'"
-               onmouseout="this.style.background='#0F2057'">
-                Lihat
-            </a>
+            
+        <a href="{{ route('volunteer.events.show', $event->slug) }}"
+            style="padding: 7px 22px; border-radius: 9999px; font-size: 12.5px; font-weight: 700; background: #0F2057 !important; color: #ffffff !important; border: 2px solid #0F2057 !important; text-decoration: none; transition: all .2s ease-in-out; display: inline-block;"
+            onmouseover="this.style.setProperty('background', '#ffffff', 'important'); this.style.setProperty('color', '#0F2057', 'important');"
+            onmouseout="this.style.setProperty('background', '#0F2057', 'important'); this.style.setProperty('color', '#ffffff', 'important');">
+            Lihat
+        </a>
         </div>
     </div>
 </div>
