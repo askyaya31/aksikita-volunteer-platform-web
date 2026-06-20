@@ -9,7 +9,7 @@
     ];
     $firstCat  = $event->categories->first();
     $slug      = $firstCat?->slug ?? 'default';
-    $palette   = $catColors[$slug] ?? ['bg' => '#E2E8F0', 'bg2' => '#CBD5E1']; // Default abu-abu
+    $palette   = $catColors[$slug] ?? ['bg' => '#E2E8F0', 'bg2' => '#CBD5E1'];
 @endphp
 
 <div class="ecard">

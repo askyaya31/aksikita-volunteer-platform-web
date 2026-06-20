@@ -44,7 +44,6 @@
         margin-bottom: 32px;
     }
 
-    /* Errors Alert */
     .ef-errors {
         background: #fff5f5;
         border: 1px solid #fecaca;
@@ -56,7 +55,6 @@
     .ef-errors__list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 4px; }
     .ef-errors__item { font-size: 0.8125rem; color: #b91c1c; display: flex; align-items: flex-start; gap: 6px; }
 
-    /* Stepper UI */
     .ef-steps {
         display: flex;
         align-items: center;
@@ -82,7 +80,6 @@
     }
     .ef-step-sep { flex-grow: 1; height: 1px; background: var(--color-border); margin: 0 16px; }
 
-    /* Form Cards */
     .ef-card {
         background: var(--color-surface); border: 1px solid var(--color-border);
         border-radius: var(--radius-md); padding: 28px 32px; margin-bottom: 24px;
@@ -91,8 +88,6 @@
     .ef-section-label { font-size: 0.8125rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-ink); margin-bottom: 20px; border-b: 1px solid var(--color-border); padding-bottom: 12px; }
     .ef-label { display: block; font-size: 0.875rem; font-weight: 600; color: var(--color-ink); margin-bottom: 8px; }
     .ef-hint { font-size: 0.8125rem; color: var(--color-ink-muted); margin-bottom: 8px; margin-top: -4px; }
-
-    /* Inputs */
     .ef-input {
         width: 100%; height: 44px; padding: 0 14px; font-size: 0.875rem;
         color: var(--color-ink); background: var(--color-surface); border: 1px solid var(--color-border);
@@ -111,7 +106,6 @@
         .ef-step-sep { display: none; }
     }
 
-    /* Categories */
     .ef-categories { display: flex; flex-wrap: wrap; gap: 10px; }
     .ef-cat-chip {
         display: flex; align-items: center; gap: 8px; padding: 8px 16px;
@@ -124,7 +118,6 @@
     .ef-cat-chip:hover { border-color: var(--color-blue-mid); }
     .ef-cat-chip:has(input:checked) { border-color: var(--color-navy); background: var(--color-navy); color: #fff; }
 
-    /* Poster Current UI */
     .ef-poster-current {
         display: flex; align-items: center; gap: 16px; padding: 12px;
         border: 1px solid var(--color-border); border-radius: var(--radius-sm); background: var(--color-bg); margin-bottom: 16px;
@@ -133,7 +126,6 @@
     .ef-poster-current__label { font-size: 0.875rem; font-weight: 600; color: var(--color-ink); }
     .ef-poster-current__sub { font-size: 0.8125rem; color: var(--color-ink-muted); }
 
-    /* Poster Upload Zone */
     .ef-upload-zone {
         border: 1px dashed var(--color-border); border-radius: var(--radius-sm);
         padding: 24px 20px; text-align: center; cursor: pointer; transition: all 0.2s ease;
@@ -141,8 +133,6 @@
     .ef-upload-zone:hover { border-color: var(--color-blue); background: var(--color-blue-ghost); }
     .ef-upload-zone__text { font-size: 0.875rem; font-weight: 600; color: var(--color-ink); text-decoration: underline; }
     .ef-upload-zone__meta { font-size: 0.8125rem; color: var(--color-ink-muted); margin-top: 4px; }
-
-    /* Actions */
     .ef-btn-submit {
         width: 100%; height: 48px; background: var(--color-navy); color: #fff;
         border: none; border-radius: var(--radius-sm); font-size: 1rem; font-weight: 600;

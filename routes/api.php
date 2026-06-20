@@ -25,6 +25,7 @@ use App\Http\Controllers\Api\Volunteer\ChatController as VolChatController;
 use App\Http\Controllers\Api\Volunteer\ScheduleController as VolScheduleController;
 use App\Http\Controllers\Api\Volunteer\RecommendationController as VolRecommendationController;
 use App\Http\Controllers\Api\Organization\ChatController as OrgChatController;
+use App\Http\Controllers\Api\Organization\ScheduleController as OrgScheduleController;
 
 Route::prefix('v1')->group(function () {
     Route::prefix('auth')->group(function () {
@@ -89,6 +90,7 @@ Route::prefix('v1')->group(function () {
                 Route::get('chats/{roomId}/messages',     [OrgChatController::class, 'messages']);
                 Route::post('chats/{roomId}/messages',    [OrgChatController::class, 'send']);
                 Route::get('chats/{roomId}/poll',         [OrgChatController::class, 'poll']);
+                Route::get('schedule',                    [OrgScheduleController::class, 'index']);
             });
         });
 

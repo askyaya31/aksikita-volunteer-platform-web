@@ -3,7 +3,7 @@
 
 @push('styles')
 <style>
-/* ── Layout utama: dua kolom ── */
+
 .auth-register-wrap {
     min-height: calc(100vh - var(--spacing-navbar));
     display: flex;
@@ -11,7 +11,6 @@
     background: var(--color-bg);
 }
 
-/* ── Panel kiri: branding ── */
 .auth-brand-panel {
     display: none;
     flex-direction: column;
@@ -80,7 +79,6 @@
     margin-bottom: 0;
 }
 
-/* ── Panel kanan: form ── */
 .auth-form-panel {
     flex: 1;
     display: flex;
@@ -90,7 +88,6 @@
     overflow-y: auto;
 }
 
-/* ── Box form ── */
 .auth-register-box {
     width: 100%;
     max-width: 560px;
@@ -254,7 +251,6 @@
 .ak-char-counter.warn { color: #D97706; }
 .ak-char-counter.over { color: var(--color-danger); }
 
-/* ── Responsive ── */
 @media (min-width: 900px) {
     .auth-brand-panel { display: flex; }
     .auth-register-header__back { display: none; }
@@ -274,8 +270,6 @@
 
 @section('content')
 <div class="auth-register-wrap">
-
-    {{-- Panel kiri: branding (tampil di layar ≥900px) --}}
     <aside class="auth-brand-panel" aria-hidden="true">
         <img
             src="{{ asset('images/logo_aksikita.png') }}"
@@ -287,8 +281,6 @@
             Platform penghubung organisasi sosial dengan relawan terbaik di seluruh Indonesia.
         </p>
     </aside>
-
-    {{-- Panel kanan: form registrasi organisasi --}}
     <div class="auth-form-panel">
         <div class="auth-register-box">
 

@@ -2,305 +2,407 @@
 @section('title', 'Dashboard Organizer')
 
 @push('styles')
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-    /* Import Font Utama */
-    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Sora:wght@400;600;700&display=swap');
-
     :root {
-        --color-navy: #0F2057;
-        --color-blue-primary: #0066FF;
-        --color-ink-muted: #6B7280;
-        --color-border-soft: #EEF0F6;
-        --color-bg: #F9FAFB;
+        --navy:        #0F2057;
+        --blue:        #0066FF;
+        --blue-mid:    #4D8DFF;
+        --blue-light:  #93C5FD;
+        --blue-pale:   #DCE9FF;
+        --sky-50:      #F6F9FF;
+        --ink:         #1F2937;
+        --ink-muted:   #6B7280;
+        --border-soft: #EEF0F6;
+        --font-display:'Plus Jakarta Sans', sans-serif;
+        --font-body:   'Inter', sans-serif;
     }
 
-    /* FONT UTAMA HEADER & SUBTITLE: SORA */
-    body, h1, h2, h3, .font-sora,
-    .org-hero-greeting, .org-hero-name, .org-section-title, .org-section-sub, .ak-empty-state-text {
-        font-family: 'Sora', sans-serif !important;
-    }
+    .ak-container, body { font-family: var(--font-body); }
+    .org-hero-name, .org-section-title, .org-stat-num,
+    .org-event-title, .org-hero-card-name { font-family: var(--font-display); }
 
-    /* FONT DI DALAM CARD: MONTSERRAT */
-    .org-stat-card, .org-stat-card *, 
-    .org-event-row, .org-event-row *,
-    .org-section-link {
-        font-family: 'Montserrat', sans-serif !important;
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(16px); }
+        to   { opacity: 1; transform: none; }
     }
-
-    /* Area Hero Solid Biru Pekat */
+    @keyframes pulseDot {
+        0%,100% { box-shadow: 0 0 0 2px rgba(220,233,255,0.35); }
+        50%      { box-shadow: 0 0 0 6px rgba(220,233,255,0.12); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+        * { animation: none !important; transition: none !important; }
+    }
     .org-hero {
-        background: #0F2057;
-        padding: 3.5rem 0 5.5rem;
+        background: linear-gradient(125deg, var(--navy) 0%, var(--blue) 65%, var(--blue-mid) 100%);
+        padding: 3rem 0 5.5rem;
         position: relative;
         overflow: hidden;
+        border-radius: 0 0 28px 28px;
     }
-
-    /* Pola Dot Transparan Sebelah Kanan */
     .org-hero::after {
         content: '';
         position: absolute;
-        top: 20px;
-        right: 40px;
-        width: 320px;
-        height: 260px;
-        background-image: radial-gradient(rgba(255, 255, 255, 0.12) 1.5px, transparent 1.5px);
-        background-size: 14px 14px;
+        width: 320px; height: 320px;
         border-radius: 50%;
+        background: radial-gradient(circle, rgba(220,233,255,0.22) 0%, transparent 70%);
+        top: -110px; right: -70px;
         pointer-events: none;
     }
+    .org-hero-inner {
+        position: relative; z-index: 1;
+        display: flex; align-items: center; justify-content: space-between;
+        gap: 2rem; flex-wrap: wrap;
+    }
+    .org-hero-left { flex: 1; min-width: 240px; }
 
-    /* Struktur Vertikal Hero (Sapaan -> Nama Org -> Tombol) */
-    .org-hero-inner-vertical {
-        position: relative; 
-        z-index: 1;
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 14px;
+    .org-hero-eyebrow {
+        display: inline-flex; align-items: center; gap: 7px;
+        font-size: 12px; font-weight: 600;
+        color: rgba(255,255,255,0.62);
+        letter-spacing: 0.08em; text-transform: uppercase;
+        margin-bottom: 12px;
     }
-    .org-hero-greeting {
-        font-size: 14px; font-weight: 400;
-        color: rgba(255,255,255,0.7);
-        margin: 0;
+    .org-hero-eyebrow-dot {
+        width: 6px; height: 6px; border-radius: 50%;
+        background: var(--blue-pale);
+        animation: pulseDot 2.2s ease-in-out infinite;
     }
+
+    .org-hero-greeting { font-size: 14px; font-weight: 400; color: rgba(255,255,255,0.65); margin: 0 0 2px; }
     .org-hero-name {
-        font-size: 32px; font-weight: 700;
-        color: #fff; line-height: 1.2; 
-        margin: 0 0 4px 0;
+        font-size: clamp(1.7rem, 3.2vw, 2.3rem); font-weight: 800;
+        color: #fff; line-height: 1.2; margin: 0 0 18px;
+        letter-spacing: -0.02em;
+        max-width: 480px;
     }
 
-    /* Tombol Tambah Event Putih Oval Lonjong */
+    .org-hero-actions { display: flex; gap: 10px; flex-wrap: wrap; }
     .org-hero-cta {
         display: inline-flex; align-items: center; gap: 8px;
-        padding: 10px 24px;
-        background: #FFFFFF; 
-        color: var(--color-navy);
+        padding: 11px 24px;
+        background: #FFFFFF; color: var(--navy);
         border-radius: 999px;
-        font-size: 13px; font-weight: 600;
+        font-size: 13.5px; font-weight: 700;
         text-decoration: none;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.12);
         transition: all 0.2s ease;
     }
-    .org-hero-cta:hover { 
-        background: #F3F4F6; 
-        transform: translateY(-1px);
-        color: var(--color-navy);
+    .org-hero-cta:hover { background: var(--blue-pale); transform: translateY(-1px); color: var(--navy); }
+    .org-hero-cta--ghost {
+        background: rgba(255,255,255,0.1);
+        border: 1.5px solid rgba(255,255,255,0.3);
+        color: rgba(255,255,255,0.92);
+        box-shadow: none;
+    }
+    .org-hero-cta--ghost:hover { background: rgba(255,255,255,0.2); border-color: rgba(255,255,255,0.5); color: #fff; }
+    .org-hero-card {
+        flex-shrink: 0;
+        background: rgba(255,255,255,0.1);
+        backdrop-filter: blur(14px);
+        border: 1px solid rgba(255,255,255,0.22);
+        border-radius: 22px;
+        padding: 22px 26px;
+        display: flex; flex-direction: column; align-items: center; gap: 12px;
+        min-width: 200px;
+        box-shadow: 0 18px 40px rgba(8,16,45,0.22);
+    }
+    .org-hero-avatar {
+        width: 72px; height: 72px; border-radius: 18px;
+        background: linear-gradient(140deg, var(--blue-light), var(--blue-mid));
+        border: 3px solid rgba(255,255,255,0.3);
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.7rem; font-weight: 800; color: #fff;
+        overflow: hidden; flex-shrink: 0;
+    }
+    .org-hero-avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .org-hero-card-name {
+        font-size: 13px; font-weight: 700; color: #fff;
+        text-align: center; line-height: 1.3;
+        max-width: 160px;
+        display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+    }
+    .org-hero-card-stats { display: flex; gap: 12px; width: 100%; }
+    .org-hero-card-stat {
+        flex: 1; text-align: center; padding: 9px 6px;
+        background: rgba(255,255,255,0.08);
+        border-radius: 12px; border: 1px solid rgba(255,255,255,0.14);
+    }
+    .org-hero-card-stat-val { font-family: var(--font-display); font-size: 1.3rem; font-weight: 800; color: #fff; line-height: 1; }
+    .org-hero-card-stat-lbl { font-size: 9.5px; color: rgba(255,255,255,0.55); font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; margin-top: 3px; }
+    .org-stats-wrap { margin-top: -56px; position: relative; z-index: 10; margin-bottom: 2.5rem; }
+    .org-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.25rem; }
+    .org-stat-card {
+        background: #fff; border-radius: 18px;
+        padding: 1.2rem 1.4rem;
+        box-shadow: 0 10px 28px rgba(15,32,87,0.08);
+        border: 1px solid var(--border-soft);
+        border-left: 3px solid var(--stat-accent, var(--navy));
+        opacity: 0; animation: fadeInUp 0.5s ease forwards;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .org-stat-card:hover { transform: translateY(-3px); box-shadow: 0 16px 34px rgba(15,32,87,0.13); }
+    .org-stat-card:nth-child(1) { animation-delay: 0.05s; --stat-accent: var(--blue); }
+    .org-stat-card:nth-child(2) { animation-delay: 0.12s; --stat-accent: #D97706; }
+    .org-stat-card:nth-child(3) { animation-delay: 0.19s; --stat-accent: #059669; }
+    .org-stat-card:nth-child(4) { animation-delay: 0.26s; --stat-accent: #7C3AED; }
+
+    .org-stat-num { font-size: 1.8rem; font-weight: 800; color: var(--navy); line-height: 1.1; }
+    .org-stat-label {
+        font-size: 0.74rem; font-weight: 600; color: var(--ink-muted); margin-top: 4px;
+        text-transform: uppercase; letter-spacing: 0.04em;
     }
 
-    /* Stat Cards Susunan Row */
-    .org-stats-wrap {
-        margin-top: -48px;
-        position: relative; z-index: 10;
-        margin-bottom: 2.5rem;
+    @media (max-width: 960px) { .org-stats { grid-template-columns: repeat(2, 1fr); } }
+    .ak-card-flat {
+        background: #FFFFFF; border: 1px solid var(--border-soft);
+        border-radius: 28px; padding: 2.25rem 2rem;
+        opacity: 0; animation: fadeInUp 0.5s ease forwards; animation-delay: 0.3s;
     }
-    .org-stats {
+    .org-section-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 1.75rem; }
+    .org-section-title { font-size: 1.3rem; font-weight: 700; color: var(--ink); margin-bottom: 4px; }
+    .org-section-sub   { font-size: 0.85rem; color: var(--ink-muted); }
+
+    .org-section-link {
+        font-size: 0.85rem; font-weight: 600; color: var(--ink);
+        text-decoration: none; display: flex; align-items: center; gap: 8px;
+        border: 1.5px solid var(--blue-light);
+        padding: 8px 20px; border-radius: 999px;
+        transition: all 0.2s; flex-shrink: 0; white-space: nowrap;
+    }
+    .org-section-link:hover { background: var(--sky-50); border-color: var(--blue); color: var(--navy); }
+    .org-recent-grid {
         display: grid;
-        grid-template-columns: repeat(4, 1fr);
+        grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
         gap: 1.25rem;
     }
-    .org-stat-card {
-        background: #fff;
-        border-radius: 24px;
-        padding: 1.25rem 1.5rem;
-        box-shadow: 0 8px 24px rgba(15,32,87,0.08);
-        display: flex; align-items: center; gap: 14px;
-        border: 1.5px solid #EEF0F6;
-    }
-    .org-stat-icon {
-        width: 44px; height: 44px; flex-shrink: 0;
-        border-radius: 50%;
-        background: #F0F4FA; 
-        color: var(--color-navy);
-        display: flex; align-items: center; justify-content: center;
-    }
-    .org-stat-num {
-        font-size: 1.8rem; font-weight: 700;
-        color: var(--color-navy); line-height: 1.1;
-    }
-    .org-stat-label {
-        font-size: 0.85rem; font-weight: 600; color: var(--color-navy); margin-top: 2px;
-    }
 
-    @media (max-width: 960px) {
-        .org-stats { grid-template-columns: repeat(2, 1fr); }
-    }
-
-    /* Bingkai Luar Utama Event Terbaru */
-    .ak-card-flat {
+    .org-event-card {
         background: #FFFFFF;
-        border: 1.5px solid #B0C4DE;
-        border-radius: 32px;
-        padding: 2.5rem 2rem;
-    }
-    .org-section-header {
-        display: flex; align-items: center; justify-content: space-between;
-        gap: 12px; margin-bottom: 2rem;
-    }
-    .org-section-title { font-size: 1.35rem; font-weight: 600; color: #1F2937; margin-bottom: 4px; }
-    .org-section-sub   { font-size: 0.85rem; color: var(--color-ink-muted); }
-
-    /* Tombol Lihat Semua Kapsul */
-    .org-section-link {
-        font-size: 0.85rem; font-weight: 500; color: #1F2937;
-        text-decoration: none; display: flex; align-items: center; gap: 8px;
-        border: 1.5px solid #B0C4DE;
-        padding: 8px 22px; border-radius: 999px;
-        transition: all 0.2s;
-    }
-    .org-section-link:hover { background: var(--color-bg); }
-
-    /* Kotak Baris List Event Mandiri */
-    .org-event-row {
-        display: flex; align-items: center; gap: 16px;
-        padding: 1.25rem 1.5rem;
-        background: #FFFFFF;
-        border: 1.5px solid #DCE4EC;
+        border: 1px solid var(--border-soft);
         border-radius: 20px;
-        margin-bottom: 1.25rem;
-        box-shadow: 0 8px 20px rgba(15, 32, 87, 0.06);
+        overflow: hidden;
+        display: flex; flex-direction: column;
+        text-decoration: none;
+        box-shadow: 0 2px 10px rgba(15,32,87,0.05);
+        transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s;
     }
-    .org-event-row:last-child { margin-bottom: 0; }
+    .org-event-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 18px 38px rgba(15,32,87,0.16);
+        border-color: var(--blue-light);
+    }
 
-    .org-event-thumb {
-        width: 48px; height: 48px; flex-shrink: 0;
-        border-radius: 12px; overflow: hidden;
-        background: #F0F4FA;
+    .org-event-card__media {
+        position: relative;
+        height: 132px;
+        overflow: hidden;
         display: flex; align-items: center; justify-content: center;
     }
-    .org-event-thumb img { width: 100%; height: 100%; object-fit: cover; }
-    .org-event-title { font-size: 1rem; font-weight: 700; color: #000000; margin-bottom: 4px; }
-    .org-event-meta  { font-size: 0.85rem; color: var(--color-ink-muted); font-weight: 500; }
+    .org-event-card__media img {
+        position: absolute; inset: 0;
+        width: 100%; height: 100%; object-fit: cover;
+        transition: transform 0.5s ease;
+    }
+    .org-event-card:hover .org-event-card__media img { transform: scale(1.08); }
+    .org-event-card__media-icon {
+        position: relative; z-index: 1;
+        font-family: var(--font-display);
+        font-size: 2.6rem; font-weight: 800;
+        color: rgba(255,255,255,0.32);
+        letter-spacing: -0.02em;
+    }
 
-    /* Desain Status Warna Hijau Cerah */
     .status-badge {
-        font-size: 0.75rem; font-weight: 600;
-        padding: 6px 16px; border-radius: 999px;
-        background-color: #38EF7D; 
-        color: #FFFFFF;
-        text-transform: uppercase;
-        white-space: nowrap; flex-shrink: 0;
+        font-size: 0.68rem; font-weight: 700;
+        padding: 5px 13px; border-radius: 999px;
+        background-color: #10B981; color: #FFFFFF;
+        text-transform: uppercase; letter-spacing: 0.03em;
+        white-space: nowrap;
+        position: absolute; top: 10px; left: 10px; z-index: 2;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.18);
     }
-
-    /* Warna Kustom Berdasarkan Kebutuhan UX */
-    .status-badge.ux-danger { background-color: #EF4444; }   /* Merah untuk Ditolak/Batal */
-    .status-badge.ux-warning { background-color: #F59E0B; }  /* Amber untuk Pending/Review */
-    .status-badge.ux-neutral { background-color: #6B7280; }  /* Abu-abu untuk Draft */
-
-    /* Tombol Detail Solid Navy */
-    .org-event-detail {
-        font-size: 0.8rem; font-weight: 600;
-        padding: 6px 20px; border-radius: 999px;
-        background-color: #0F2057;
-        color: #FFFFFF !important;
-        text-decoration: none;
-        margin-left: 12px;
-    }
-
-    /* Tampilan Centered Kosong (image_d3a4dc.png) */
-    .ak-empty-state {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        padding: 80px 24px;
+    .status-badge.ux-danger   { background-color: #EF4444; }
+    .status-badge.ux-warning  { background-color: #F59E0B; }
+    .status-badge.ux-neutral  { background-color: #6B7280; }
+    .org-event-card__date {
+        position: absolute; top: 10px; right: 10px; z-index: 2;
+        background: rgba(255,255,255,0.95);
+        backdrop-filter: blur(4px);
+        border-radius: 10px;
+        padding: 5px 9px;
         text-align: center;
+        min-width: 38px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.16);
     }
-    .ak-empty-state-text {
-        font-size: 1.25rem;
-        color: #000000;
-        font-weight: 400;
-        margin-bottom: 1.5rem;
+    .org-event-card__date-d { font-size: 0.95rem; font-weight: 800; color: var(--navy); line-height: 1; }
+    .org-event-card__date-m { font-size: 8px; font-weight: 700; color: var(--ink-muted); text-transform: uppercase; letter-spacing: 0.04em; }
+
+    .org-event-card__body {
+        padding: 14px 16px 0;
+        display: flex; flex-direction: column; gap: 8px; flex: 1;
     }
+
+    .org-event-card__cats { display: flex; gap: 5px; flex-wrap: wrap; }
+    .org-event-card__cat {
+        font-size: 9.5px; font-weight: 700;
+        padding: 3px 10px; border-radius: 999px;
+        background: var(--sky-50); color: var(--navy);
+        border: 1px solid var(--blue-pale);
+        text-transform: uppercase; letter-spacing: 0.03em;
+    }
+
+    .org-event-title {
+        font-size: 0.96rem; font-weight: 700; color: var(--ink); line-height: 1.35;
+        display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+    }
+    .org-event-meta-item {
+        display: flex; align-items: center; gap: 5px;
+        font-size: 0.78rem; color: var(--ink-muted); font-weight: 500;
+    }
+
+    .org-event-card__quota { margin-top: 2px; }
+    .org-event-card__quota-row {
+        display: flex; align-items: center; justify-content: space-between;
+        font-size: 0.74rem; font-weight: 600; color: var(--ink-muted);
+        margin-bottom: 4px;
+    }
+    .org-event-card__quota-row strong { color: var(--navy); font-weight: 700; }
+    .org-event-card__quota-bar {
+        height: 5px; background: var(--sky-50); border-radius: 999px; overflow: hidden;
+    }
+    .org-event-card__quota-fill {
+        height: 100%; border-radius: 999px;
+        background: linear-gradient(90deg, var(--navy), var(--blue));
+    }
+    .org-event-card__quota-fill.is-full { background: linear-gradient(90deg, #B45309, #F59E0B); }
+
+    .org-event-card__footer {
+        display: flex; align-items: center; justify-content: flex-end;
+        padding: 12px 16px 16px; margin-top: auto;
+    }
+    .org-event-detail {
+        font-size: 0.78rem; font-weight: 700;
+        padding: 7px 18px; border-radius: 999px;
+        background-color: var(--navy); color: #FFFFFF !important;
+        text-decoration: none;
+        display: inline-flex; align-items: center; gap: 5px;
+        transition: background 0.18s, transform 0.18s, gap 0.18s;
+    }
+    .org-event-card:hover .org-event-detail { background: var(--blue); gap: 8px; }
+    .ak-empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 64px 24px; text-align: center; }
+    .ak-empty-state-icon {
+        width: 64px; height: 64px; border-radius: 18px;
+        background: var(--sky-50); border: 1px solid var(--border-soft);
+        display: flex; align-items: center; justify-content: center;
+        color: var(--blue); margin-bottom: 18px;
+    }
+    .ak-empty-state-text { font-size: 1.05rem; color: var(--ink); font-weight: 500; margin-bottom: 1.5rem; }
     .btn-empty-add {
         display: inline-flex; align-items: center; gap: 8px;
-        padding: 10px 24px; border: 1.5px solid #000000;
-        color: #000000; font-weight: 500; font-size: 0.85rem;
+        padding: 11px 26px; background: var(--navy);
+        color: #fff; font-weight: 700; font-size: 0.85rem;
         border-radius: 999px; text-decoration: none;
-        font-family: 'Montserrat', sans-serif;
+        transition: background 0.18s, transform 0.18s;
+    }
+    .btn-empty-add:hover { background: var(--blue); transform: translateY(-1px); color: #fff; }
+
+    @media (max-width: 640px) {
+        .org-hero-card { display: none; }
+        .org-hero-inner { flex-direction: column; align-items: flex-start; }
+        .org-recent-grid { grid-template-columns: 1fr; }
     }
 </style>
 @endpush
 
 @section('content')
 
-{{-- Bagian Atas / Hero --}}
+@php
+    $orgInitial = strtoupper(substr($org->organization_name ?? 'O', 0, 1));
+@endphp
+
 <section class="org-hero">
-    <div class="ak-container">
-        {{-- LOGIKA FIXED: Tombol Tambah Event ditaruh pas di bawah Sapaan Nama Organisasi --}}
-        <div class="org-hero-inner-vertical">
+    <div class="ak-container org-hero-inner">
+
+        <div class="org-hero-left">
+            <div class="org-hero-eyebrow">
+                Dashboard Organisasi
+            </div>
             <p class="org-hero-greeting">Selamat datang,</p>
             <h1 class="org-hero-name">{{ $org->organization_name }}</h1>
-            
-            <a href="{{ route('organizer.events.create') }}" class="org-hero-cta">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
-                    <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
-                </svg>
-                Buat Event
-            </a>
+
+            <div class="org-hero-actions">
+                <a href="{{ route('organizer.events.create') }}" class="org-hero-cta">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                        <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                    </svg>
+                    Buat Event
+                </a>
+                <a href="{{ route('organizer.events') }}" class="org-hero-cta org-hero-cta--ghost">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+                        <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/>
+                    </svg>
+                    Kelola Event
+                </a>
+            </div>
         </div>
+
+        <div class="org-hero-card">
+            <div class="org-hero-avatar">
+                @if($org->logo ?? false)
+                    <img src="{{ asset('storage/' . $org->logo) }}" alt="{{ $org->organization_name }}">
+                @else
+                    {{ $orgInitial }}
+                @endif
+            </div>
+            <div class="org-hero-card-name">{{ $org->organization_name }}</div>
+            <div class="org-hero-card-stats">
+                <div class="org-hero-card-stat">
+                    <div class="org-hero-card-stat-val" data-count="{{ $stats['published'] }}">0</div>
+                    <div class="org-hero-card-stat-lbl">Aktif</div>
+                </div>
+                <div class="org-hero-card-stat">
+                    <div class="org-hero-card-stat-val" data-count="{{ $stats['volunteers'] }}">0</div>
+                    <div class="org-hero-card-stat-lbl">Kandidat</div>
+                </div>
+            </div>
+        </div>
+
     </div>
 </section>
 
 <div class="ak-container">
-    {{-- Komponen Stat Cards --}}
     <div class="org-stats-wrap">
         <div class="org-stats">
             <div class="org-stat-card">
-                <div class="org-stat-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 0 0 2.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 0 0-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75 2.25 2.25 0 0 0-.1-.664m-5.8 0A2.251 2.251 0 0 1 13.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25ZM6.75 12h.008v.008H6.75V12Zm0 3h.008v.008H6.75V15Zm0 3h.008v.008H6.75V18Z" />
-                    </svg>
-                </div>
-                <div>
-                    <div class="org-stat-num">{{ $stats['total'] }}</div>
-                    <div class="org-stat-label">Total Event</div>
-                </div>
+                <div class="org-stat-num" data-count="{{ $stats['total'] }}">0</div>
+                <div class="org-stat-label">Total Event</div>
             </div>
             <div class="org-stat-card">
-                <div class="org-stat-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                    </svg>
-                </div>
-                <div>
-                    <div class="org-stat-num">{{ $stats['pending'] }}</div>
-                    <div class="org-stat-label">Menunggu Review</div>
-                </div>
+                <div class="org-stat-num" data-count="{{ $stats['pending'] }}">0</div>
+                <div class="org-stat-label">Menunggu Review</div>
             </div>
             <div class="org-stat-card">
-                <div class="org-stat-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 0 1-1.043 3.296 3.745 3.745 0 0 1-3.296 1.043A3.745 3.745 0 0 1 12 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 0 1-3.296-1.043 3.745 3.745 0 0 1-1.043-3.296A3.745 3.745 0 0 1 3 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 0 1 1.043-3.296 3.746 3.746 0 0 1 3.296-1.043A3.746 3.746 0 0 1 12 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 0 1 3.296 1.043 3.746 3.746 0 0 1 1.043 3.296A3.745 3.745 0 0 1 21 12Z" />
-                    </svg>
-                </div>
-                <div>
-                    <div class="org-stat-num">{{ $stats['published'] }}</div>
-                    <div class="org-stat-label">Event Aktif</div>
-                </div>
+                <div class="org-stat-num" data-count="{{ $stats['published'] }}">0</div>
+                <div class="org-stat-label">Event Aktif</div>
             </div>
             <div class="org-stat-card">
-                <div class="org-stat-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z" />
-                    </svg>
-                </div>
-                <div>
-                    <div class="org-stat-num">{{ $stats['volunteers'] }}</div>
-                    <div class="org-stat-label">Total Kandidat</div>
-                </div>
+                <div class="org-stat-num" data-count="{{ $stats['volunteers'] }}">0</div>
+                <div class="org-stat-label">Total Kandidat</div>
             </div>
         </div>
     </div>
 
     @php
-        /* Penyelarasan Map Class untuk Dinamisasi UX Status */
         $statusClasses = [
-            'published'      => '',                 /* Hijau Default (.status-badge) */
-            'pending_review' => 'ux-warning',       /* Kuning */
-            'rejected'       => 'ux-danger',        /* Merah */
-            'cancelled'      => 'ux-danger',        /* Merah */
-            'draft'          => 'ux-neutral',       /* Abu-abu */
-            'completed'      => 'ux-neutral',       /* Abu-abu */
+            'published'      => '',
+            'pending_review' => 'ux-warning',
+            'rejected'       => 'ux-danger',
+            'cancelled'      => 'ux-danger',
+            'draft'          => 'ux-neutral',
+            'completed'      => 'ux-neutral',
         ];
 
         $statusLabels = [
@@ -311,15 +413,20 @@
             'completed'      => 'Selesai',
             'cancelled'      => 'Batal',
         ];
+        $mediaGradients = [
+            'published'      => 'linear-gradient(135deg, #1D4ED8, #60A5FA)',
+            'pending_review' => 'linear-gradient(135deg, #B45309, #FBBF24)',
+            'rejected'       => 'linear-gradient(135deg, #991B1B, #F87171)',
+            'cancelled'      => 'linear-gradient(135deg, #991B1B, #F87171)',
+            'draft'          => 'linear-gradient(135deg, #4B5563, #9CA3AF)',
+            'completed'      => 'linear-gradient(135deg, #0F2057, #4D8DFF)',
+        ];
     @endphp
 
-    {{-- Panel Utama Event --}}
     <div class="ak-card-flat" style="margin-bottom: 4rem;">
-        
-        {{-- LOGIKA UTAMA: Cek apakah ada data event atau tidak --}}
+
         @if(count($recentEvents) > 0)
-            
-            {{-- TAMPILAN JIKA ADA EVENT (image_d3a87d.png) --}}
+
             <div class="org-section-header">
                 <div>
                     <p class="org-section-title">Event Terbaru</p>
@@ -333,33 +440,60 @@
                 </a>
             </div>
 
-            {{-- Render Data Secara Dinamis --}}
-            @foreach($recentEvents as $event)
-                <div class="org-event-row">
-                    <div class="org-event-thumb">
-                        @if($event->poster)
-                            <img src="{{ asset('storage/' . $event->poster) }}" alt="{{ $event->title }}">
-                        @endif
-                    </div>
-                    <div style="flex:1; min-width:0;">
-                        <p class="org-event-title">{{ $event->title }}</p>
-                        <p class="org-event-meta">{{ $event->city }}, {{ $event->start_date ? $event->start_date->format('d M Y') : 'Tanggal' }}</p>
-                    </div>
-                    
-                    {{-- Status Badge Dinamis --}}
-                    <span class="status-badge {{ $statusClasses[$event->status] ?? 'ux-neutral' }}">
-                        {{ $statusLabels[$event->status] ?? $event->status }}
-                    </span>
+            <div class="org-recent-grid">
+                @foreach($recentEvents as $event)
+                    @php
+                        $gradient = $mediaGradients[$event->status] ?? $mediaGradients['draft'];
+                    @endphp
+                    <a href="{{ route('organizer.events.show', $event->id) }}" class="org-event-card" style="animation: fadeInUp 0.5s ease forwards; animation-delay: {{ 0.35 + min($loop->index * 0.05, 0.3) }}s; opacity: 0;">
 
-                    {{-- Tombol Detail Dinamis --}}
-                    <a href="{{ route('organizer.events.show', $event->id) }}" class="org-event-detail">Detail</a>
-                </div>
-            @endforeach
+                        <div class="org-event-card__media" style="background: {{ $gradient }};">
+                            <span class="status-badge {{ $statusClasses[$event->status] ?? 'ux-neutral' }}">
+                                {{ $statusLabels[$event->status] ?? $event->status }}
+                            </span>
+
+                            @if($event->start_date)
+                                <div class="org-event-card__date">
+                                    <div class="org-event-card__date-d">{{ $event->start_date->format('d') }}</div>
+                                    <div class="org-event-card__date-m">{{ $event->start_date->translatedFormat('M') }}</div>
+                                </div>
+                            @endif
+
+                            @if($event->poster)
+                                <img src="{{ asset('storage/' . $event->poster) }}" alt="{{ $event->title }}">
+                            @else
+                                <svg class="org-event-card__media-icon" width="46" height="46" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.4">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                </svg>
+                            @endif
+                        </div>
+
+                        <div class="org-event-card__body">
+                            <p class="org-event-title">{{ $event->title }}</p>
+                            <span class="org-event-meta-item">
+                                <svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.3"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                                {{ $event->city }}
+                            </span>
+                        </div>
+
+                        <div class="org-event-card__footer">
+                            <span class="org-event-detail">
+                                Detail
+                                <svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+                            </span>
+                        </div>
+                    </a>
+                @endforeach
+            </div>
 
         @else
-            
-            {{-- TAMPILAN JIKA KOSONG (image_d3a4dc.png) --}}
+
             <div class="ak-empty-state">
+                <div class="ak-empty-state-icon">
+                    <svg width="26" height="26" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                    </svg>
+                </div>
                 <p class="ak-empty-state-text">Belum ada event yang terdaftar.</p>
                 <a href="{{ route('organizer.events.create') }}" class="btn-empty-add">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
@@ -375,3 +509,25 @@
 </div>
 
 @endsection
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const statEls = document.querySelectorAll('[data-count]');
+    statEls.forEach(el => {
+        const target = parseInt(el.dataset.count || '0', 10);
+        if (!target) { el.textContent = '0'; return; }
+        let current = 0;
+        const duration = 900;
+        const start = performance.now();
+        const step = (now) => {
+            const progress = Math.min((now - start) / duration, 1);
+            current = Math.round(target * (1 - Math.pow(1 - progress, 3)));
+            el.textContent = current;
+            if (progress < 1) requestAnimationFrame(step);
+        };
+        requestAnimationFrame(step);
+    });
+});
+</script>
+@endpush

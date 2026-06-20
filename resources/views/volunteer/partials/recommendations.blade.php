@@ -35,7 +35,6 @@
                onmouseout="this.style.boxShadow='none';
                            this.style.borderColor='var(--color-border)'">
 
-                {{-- Poster --}}
                 @if($event->poster)
                     <div style="height:140px; overflow:hidden; flex-shrink:0;">
                         <img src="{{ Storage::url($event->poster) }}"
@@ -54,11 +53,8 @@
                     </div>
                 @endif
 
-                {{-- Info --}}
                 <div style="padding:12px 14px; flex:1; display:flex;
                             flex-direction:column; gap:6px;">
-
-                    {{-- Kategori --}}
                     @if($event->categories->isNotEmpty())
                         <div style="display:flex; flex-wrap:wrap; gap:4px;">
                             @foreach($event->categories->take(2) as $cat)
@@ -73,7 +69,6 @@
                         </div>
                     @endif
 
-                    {{-- Judul --}}
                     <div style="font-size:0.9rem; font-weight:700; color:var(--color-navy);
                                 line-height:1.4; display:-webkit-box;
                                 -webkit-line-clamp:2; -webkit-box-orient:vertical;
@@ -81,7 +76,6 @@
                         {{ $event->title }}
                     </div>
 
-                    {{-- Tanggal & Kota --}}
                     <div style="font-size:0.75rem; color:var(--color-ink-muted);
                                 display:flex; align-items:center; gap:10px; flex-wrap:wrap;
                                 margin-top:auto;">

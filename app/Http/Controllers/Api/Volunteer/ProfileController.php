@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Api\Volunteer;
 
 use App\Http\Controllers\Controller;
@@ -38,20 +39,24 @@ class ProfileController extends Controller
         $user    = $request->user();
         $profile = $user->volunteerProfile;
 
-        $userData = $request->only(['name', 'phone']);
-        if ($request->hasFile('avatar')) {
-            if ($user->avatar) {
-                Storage::disk('public')->delete($user->avatar);
-            }
-            $userData['avatar'] = $request->file('avatar')->store('avatars', 'public');
-        }
-        if (!empty(array_filter($userData, fn($v) => $v !== null))) {
+        // Update user table (name, phone only)
+        $userData = array_filter($request->only(['name', 'phone']), fn($v) => $v !== null);
+        if (!empty($userData)) {
             $user->update($userData);
         }
+
         $profileData = $request->only([
             'date_of_birth', 'gender', 'bio',
             'skills', 'interests', 'city', 'province',
         ]);
+
+        if ($request->hasFile('avatar')) {
+            if ($profile->avatar) {
+                Storage::disk('public')->delete($profile->avatar);
+            }
+            $profileData['avatar'] = $request->file('avatar')->store('avatars', 'public');
+        }
+
         if (!empty($profileData)) {
             $profile->update($profileData);
         }

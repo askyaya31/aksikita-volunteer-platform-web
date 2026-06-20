@@ -56,7 +56,13 @@ class ProfileController extends Controller
         }
 
         $profile->update($data);
-        session(['user_name' => $user->name]);
+
+        $newAvatar = $profile->fresh()->avatar;
+
+        session([
+            'user_name'   => $user->name,
+            'user_avatar' => $profile->fresh()->avatar, 
+        ]);
 
         return back()->with('success', 'Profil berhasil diperbarui.');
     }

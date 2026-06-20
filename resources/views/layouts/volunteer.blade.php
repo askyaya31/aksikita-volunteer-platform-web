@@ -407,7 +407,14 @@
                 <div class="ak-user-menu" id="volUserMenu">
                     <button class="ak-user-pill" id="volUserTrigger"
                             aria-haspopup="true" aria-expanded="false">
-                        <span class="ak-user-avatar">
+                        <span class="ak-user-avatar" style="overflow:hidden; padding:0;">
+                            @if(session('user_avatar'))
+                                <img src="{{ Storage::url(session('user_avatar')) }}"
+                                    alt="{{ session('user_name') }}"
+                                    style="width:100%; height:100%; object-fit:cover; border-radius:50%;">
+                            @else
+                                {{ strtoupper(substr(session('user_name', 'U'), 0, 1)) }}
+                            @endif
                         </span>
                         <span class="ak-user-pill__name">
                             {{ session('user_name', 'Nama Relawan..') }}
@@ -423,17 +430,6 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
                             </svg>
                             Profil Saya
-                        </a>
-                        <a href="{{ route('volunteer.notifications') }}" class="ak-dropdown-item" role="menuitem">
-                            <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
-                            </svg>
-                            Notifikasi
-                            @if(session('unread_count', 0) > 0)
-                                <span class="ak-badge ak-badge-danger" style="margin-left:auto;font-size:10px;">
-                                    {{ session('unread_count') }}
-                                </span>
-                            @endif
                         </a>
                         <a href="{{ route('volunteer.liked-events') }}" class="ak-dropdown-item" role="menuitem">
                             <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -470,8 +466,14 @@
 
     <div class="ak-mobile-menu" id="volMobileMenu" aria-hidden="true">
         <div style="display:flex;align-items:center;gap:12px;padding:4px 4px 16px;border-bottom:1px solid #e5e7eb;margin-bottom:12px;">
-            <span class="ak-user-avatar" style="width:40px;height:40px;font-size:15px;flex-shrink:0;">
-                {{ strtoupper(substr(session('user_name', 'U'), 0, 1)) }}
+            <span class="ak-user-avatar" style="width:40px;height:40px;font-size:15px;flex-shrink:0;overflow:hidden;padding:0;">
+                @if(session('user_avatar'))
+                    <img src="{{ Storage::url(session('user_avatar')) }}"
+                        alt="{{ session('user_name') }}"
+                        style="width:100%;height:100%;object-fit:cover;border-radius:50%;">
+                @else
+                    {{ strtoupper(substr(session('user_name', 'U'), 0, 1)) }}
+                @endif
             </span>
             <div>
                 <div style="font-weight:600;font-size:.9rem;color:#111827;">{{ session('user_name', 'Volunteer') }}</div>

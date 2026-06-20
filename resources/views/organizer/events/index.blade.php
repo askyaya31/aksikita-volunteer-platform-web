@@ -3,7 +3,6 @@
 
 @push('styles')
 <style>
-    /* Mengimpor Font Utama */
     @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Sora:wght@400;600;700&display=swap');
 
     :root {
@@ -14,26 +13,19 @@
         --color-bg: #F9FAFB;
     }
 
-    /* FONT UTAMA HEADER, TABS, & SUBTITLE: SORA */
     body, h1, h2, h3, .font-sora,
     .org-page-hero-title, .org-page-hero-sub, .org-tab, .ak-empty-state h3 {
         font-family: 'Sora', sans-serif !important;
     }
-
-    /* FONT DI DALAM COMPONENT CARD & BADGES: MONTSERRAT */
     .org-event-card, .org-event-card *, .ak-badge, .ak-btn {
         font-family: 'Montserrat', sans-serif !important;
     }
-
-    /* Area Hero Solid Biru Pekat (Menyamai Beranda) */
     .org-page-hero {
         background: #0F2057;
         padding: 3rem 0;
         position: relative;
         overflow: hidden;
     }
-
-    /* Pola Dot Transparan Sisi Kanan */
     .org-page-hero::after {
         content: '';
         position: absolute;
@@ -47,7 +39,6 @@
         pointer-events: none;
     }
 
-    /* Struktur Sejajar: Judul Kiri & Tombol Kanan */
     .org-page-hero-inner {
         position: relative; 
         z-index: 1;
@@ -64,8 +55,6 @@
         line-height: 1.2; 
         margin: 0;
     }
-
-    /* Tombol Buat Event Putih Oval Lonjong Berada DI SAMPING Judul */
     .org-hero-cta {
         display: inline-flex; 
         align-items: center; 
@@ -86,10 +75,6 @@
         transform: translateY(-1px);
         color: var(--color-navy);
     }
-
-    /* ===================================================================
-       NAVIGASI TABS — MENGGUNAKAN .is-active AGAR TIDAK BENTROK
-       =================================================================== */
     .org-tabs-wrap {
         background: #fff;
         border-bottom: 1.5px solid #EAEFF5;
@@ -105,11 +90,9 @@
         scrollbar-width: none;
     }
     .org-tabs::-webkit-scrollbar { display: none; }
-
-    /* Default semua tab: warna abu, weight normal (500), TIDAK underline */
     .org-tab {
-        position: relative;       /* wajib: jadi acuan posisi underline (::after) */
-        display: inline-block;    /* wajib: agar width:100% pada ::after akurat */
+        position: relative;       
+        display: inline-block;    
         padding: 18px 0;
         font-size: 0.875rem; 
         font-weight: 500;
@@ -119,12 +102,10 @@
         transition: color 0.2s ease;
     }
     .org-tab:hover { color: var(--color-navy); }
-
-    /* Garis underline disiapkan untuk SEMUA tab, tapi lebarnya 0 (tak terlihat) */
     .org-tab::after {
         content: '';
         position: absolute;
-        bottom: -1.5px; /* pas menempel border-bottom pembungkus */
+        bottom: -1.5px; 
         left: 0;
         width: 0;
         height: 3px;
@@ -132,18 +113,15 @@
         transition: width 0.2s ease;
     }
 
-    /* HANYA tab dengan class .is-active yang dapat warna gelap + bold */
     .org-tab.is-active { 
         color: var(--color-navy) !important; 
         font-weight: 600 !important; 
     }
 
-    /* HANYA tab .is-active yang underline-nya dilebarkan jadi 100% */
     .org-tab.is-active::after {
         width: 100% !important;
     }
 
-    /* Bingkai Luar Utama Area List Event */
     .ak-main-list-container {
         background: #FFFFFF;
         border: 1.5px solid #B0C4DE;
@@ -152,7 +130,6 @@
         margin-bottom: 3rem;
     }
 
-    /* Kartu Mandiri List Event */
     .org-event-card {
         background: #fff;
         border: 1.5px solid #DCE4EC;
@@ -170,7 +147,6 @@
         border-color: #A0B0D0;
     }
 
-    /* Kotak Thumbnail Poster */
     .org-event-poster {
         width: 58px; 
         height: 58px; 
@@ -186,7 +162,6 @@
     
     .org-event-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
     
-    /* Header di dalam Card untuk Status & Kategori */
     .org-event-card-header {
         display: flex;
         align-items: center;
@@ -217,7 +192,6 @@
     }
     .org-event-meta-item svg { color: var(--color-ink-muted); }
 
-    /* Desain Status Kapsul UX */
     .status-badge {
         font-size: 0.725rem; 
         font-weight: 600;
@@ -234,7 +208,6 @@
     .status-badge.ux-danger  { background-color: #EF4444; }  
     .status-badge.ux-neutral { background-color: #6B7280; }  
 
-    /* Desain Kapsul Kategori Biru */
     .category-badge {
         font-size: 0.725rem;
         font-weight: 600;
@@ -246,7 +219,6 @@
         flex-shrink: 0;
     }
 
-    /* Grup Tombol Aksi di Samping Kanan */
     .org-event-actions { 
         display: flex; 
         gap: 8px; 
@@ -309,8 +281,6 @@
         .org-event-card { flex-direction: column; align-items: flex-start; gap: 14px; }
         .org-event-actions { width: 100%; justify-content: flex-start; margin-top: 4px; }
     }
-
-    /* Centered Empty State */
     .ak-empty-state {
         display: flex; flex-direction: column; align-items: center; justify-content: center;
         padding: 60px 24px; text-align: center;
@@ -322,7 +292,6 @@
 
 @section('content')
 
-{{-- Bagian Jumbotron Atas --}}
 <section class="org-page-hero">
     <div class="ak-container">
         <div class="org-page-hero-inner">
@@ -344,7 +313,6 @@
     </div>
 </section>
 
-{{-- Navigasi Tabs Filter — Menggunakan class .is-active --}}
 <div class="org-tabs-wrap">
     <div class="ak-container">
         <nav class="org-tabs" aria-label="Filter event">
@@ -365,7 +333,6 @@
 </div>
 
 <div class="ak-container">
-    {{-- Container Box Utama Pembungkus Daftar Kegiatan --}}
     <div class="ak-main-list-container">
         <div style="display:flex; flex-direction:column; gap:16px;">
             
@@ -389,7 +356,6 @@
             @endphp
 
             @forelse($events as $event)
-                {{-- Box Kartu Kegiatan Mandiri --}}
                 <div class="org-event-card">
                     <div class="org-event-poster">
                         @if($event->poster)
@@ -402,7 +368,6 @@
                     </div>
 
                     <div class="org-event-body">
-                        {{-- Status Dan Kategori Di Atas Judul Event --}}
                         <div class="org-event-card-header">
                             <span class="status-badge {{ $statusClasses[$event->status] ?? 'ux-neutral' }}">
                                 {{ $statusLabels[$event->status] ?? $event->status }}
@@ -444,7 +409,6 @@
                         @endif
                     </div>
 
-                    {{-- Kontrol Aksi Sisi Kanan --}}
                     <div class="org-event-actions">
                         @if($event->status === 'draft')
                             <form action="{{ route('organizer.events.submit', $event->id) }}" method="POST"
@@ -462,7 +426,6 @@
                     </div>
                 </div>
             @empty
-                {{-- State Kosong Terpusat --}}
                 <div class="ak-empty-state">
                     <h3>Belum ada event di kategori ini</h3>
                     <p>
@@ -482,7 +445,6 @@
         </div>
     </div>
 
-    {{-- Navigasi Halaman Pagination --}}
     @if($events->hasPages())
         <div class="ak-pagination" style="margin-top: 1.5rem; display: flex; justify-content: center;">
             {{ $events->appends(['tab' => $tab])->links() }}

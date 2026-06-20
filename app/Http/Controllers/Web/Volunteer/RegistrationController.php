@@ -94,18 +94,18 @@ class RegistrationController extends Controller
         $tab = $request->get('tab', 'aktif');
 
         if ($tab === 'aktif') {
-    $registrations = Registration::with(['event.organization', 'event.categories'])
-        ->where('user_id', session('user_id'))
-        ->whereIn('status', ['pending', 'confirmed', 'attended'])   
-        ->latest()
-        ->paginate(10);
-} else {
-    $registrations = Registration::with(['event.organization', 'event.categories'])
-        ->where('user_id', session('user_id'))
-        ->where('status', 'cancelled')
-        ->latest()
-        ->paginate(10);
-}
+            $registrations = Registration::with(['event.organization', 'event.categories'])
+                ->where('user_id', session('user_id'))
+                ->whereIn('status', ['pending', 'confirmed', 'attended'])   
+                ->latest()
+                ->paginate(10);
+        } else {
+            $registrations = Registration::with(['event.organization', 'event.categories'])
+                ->where('user_id', session('user_id'))
+                ->where('status', 'cancelled')
+                ->latest()
+                ->paginate(10);
+        }
 
         return view('volunteer.history', compact('registrations', 'tab'));
     }

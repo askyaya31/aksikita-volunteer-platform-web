@@ -4,7 +4,7 @@
 @push('styles')
 <style>
     :root {
-        --color-navy: #1c3d72; /* Warna biru gelap sesuai UI */
+        --color-navy: #1c3d72; 
         --color-blue: #3b82f6;
         --color-blue-ghost: #eff6ff;
         --color-blue-mid: #bfdbfe;
@@ -16,13 +16,11 @@
         --color-bg: #f8fafc;
         --color-danger: #ef4444;
         --radius-sm: 8px;
-        --radius-md: 16px; /* Radius card lebih membulat */
+        --radius-md: 16px;
         --radius-full: 9999px;
         --font-display: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         --font-body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     }
-
-    /* Efek smooth scroll untuk seluruh halaman */
     html {
         scroll-behavior: smooth;
     }
@@ -61,7 +59,6 @@
         margin-bottom: 32px;
     }
 
-    /* Alerts & Errors */
     .ef-alert-rejected, .ef-errors {
         background: #fff5f5;
         border: 1px solid #fecaca;
@@ -79,7 +76,6 @@
     .ef-errors__list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 4px; }
     .ef-errors__item { font-size: 0.8125rem; color: #b91c1c; display: flex; align-items: flex-start; gap: 6px; }
 
-    /* Stepper UI */
     .ef-steps {
         display: flex;
         align-items: center;
@@ -94,7 +90,7 @@
         background: var(--color-bg);
         z-index: 1;
         padding-right: 12px;
-        text-decoration: none; /* Hilangkan garis bawah link */
+        text-decoration: none; 
         transition: opacity 0.2s;
     }
     .ef-step:hover {
@@ -128,7 +124,6 @@
         margin: 0 16px;
     }
 
-    /* Form Cards */
     .ef-card {
         background: var(--color-surface);
         border: 1px solid var(--color-border);
@@ -136,7 +131,7 @@
         padding: 28px 32px;
         margin-bottom: 24px;
         box-shadow: 0 1px 2px rgba(0,0,0,0.02);
-        scroll-margin-top: 100px; /* Jarak aman supaya judul card tidak tertutup navbar atas */
+        scroll-margin-top: 100px; 
     }
 
     .ef-section-label {
@@ -163,7 +158,6 @@
         margin-top: -4px;
     }
 
-    /* Inputs */
     .ef-input {
         width: 100%;
         height: 44px;
@@ -194,7 +188,6 @@
         .ef-step-sep { display: none; }
     }
 
-    /* Categories */
     .ef-categories { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 8px; }
     .ef-cat-chip {
         display: flex; align-items: center; gap: 8px;
@@ -216,7 +209,6 @@
     }
     .ef-cat-chip:has(input:checked) .ef-cat-chip__check { display: block; }
 
-    /* Poster Upload */
     .ef-poster-current {
         display: flex; align-items: center; gap: 16px;
         padding: 12px; border: 1px solid var(--color-border);
@@ -242,7 +234,6 @@
     .ef-upload-zone__meta { font-size: 0.8125rem; color: var(--color-ink-muted); }
     #ef-poster-preview-img { max-height: 160px; width: auto; margin: 0 auto 12px; display: block; border-radius: 8px; object-fit: cover; }
 
-    /* Actions */
     .ef-actions {
         display: flex; gap: 16px; align-items: center; margin-top: 32px;
     }

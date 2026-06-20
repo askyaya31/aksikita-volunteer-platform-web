@@ -135,4 +135,10 @@ Route::prefix('organizer')->name('organizer.')->middleware(['web.auth', 'web.rol
     Route::get('/chat/{room}',               [OrgChat::class, 'show'])->name('chat.show');
     Route::post('/chat/{room}/send',         [OrgChat::class, 'send'])->name('chat.send');
     Route::get('/chat/{room}/poll',          [OrgChat::class, 'poll'])->name('chat.poll');
+    Route::get('/candidates', [App\Http\Controllers\Web\Organizer\CandidateController::class, 'index'])
+     ->name('candidates.index');
+    Route::get('/schedule', [App\Http\Controllers\Web\Organizer\ScheduleController::class, 'index'])
+     ->name('schedule');
+     Route::get('/candidates/{registrationId}', [App\Http\Controllers\Web\Organizer\CandidateController::class, 'show'])
+     ->name('candidates.show');
 });

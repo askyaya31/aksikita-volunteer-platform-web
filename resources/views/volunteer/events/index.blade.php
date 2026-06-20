@@ -21,7 +21,6 @@
     margin-top: 6px;
 }
 
-/* Pembaruan Logika Layout Form: Separated Pills */
 .search-form-container {
     display: flex;
     align-items: center;
@@ -43,7 +42,6 @@
 .search-input-box:focus { border-color: #0F2057; }
 .search-input-box::placeholder { color: #9099B0; }
 
-/* Proporsi dinamis dari gambar */
 .input-keyword { flex: 3; min-width: 250px; }
 .input-city { flex: 1.5; min-width: 150px; }
 .input-category { flex: 1.5; min-width: 150px; cursor: pointer; appearance: auto; }
@@ -56,7 +54,7 @@
 .btn-search {
     display: inline-flex; align-items: center; gap: 6px;
     padding: 10px 24px;
-    background: #1A3575; /* Biru tua solid */
+    background: #1A3575; 
     color: #fff;
     border-radius: 999px;
     font-size: 14px; font-weight: 600;
@@ -91,7 +89,6 @@
     margin-bottom: 2rem;
 }
 
-/* Event Card CSS ditarik ke sini agar tersentralisasi */
 .ecard {
     background: #fff;
     border-radius: 16px;
@@ -117,7 +114,7 @@
 }
 .ecard-body { padding: 16px; flex: 1; display: flex; flex-direction: column; }
 .ecard-org {
-    font-size: 11px; font-weight: 600; color: #5A6278; /* Netral, tidak oranye lagi */
+    font-size: 11px; font-weight: 600; color: #5A6278; 
     text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px;
 }
 .ecard-title {
@@ -136,7 +133,7 @@
 }
 .ecard-slots { font-size: 13px; font-weight: 600; color: #5A6278; display: flex; align-items: center; gap: 6px; }
 .ecard-btn {
-    padding: 8px 24px; background: #1A3575; color: #fff; /* Solid primary */
+    padding: 8px 24px; background: #1A3575; color: #fff; 
     border-radius: 999px; font-size: 13px; font-weight: 600;
     text-decoration: none; transition: all 0.15s;
 }

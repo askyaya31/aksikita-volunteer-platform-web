@@ -9,7 +9,6 @@
     align-items: stretch;
 }
 
-/* ── Panel kiri ── */
 .auth-panel {
     flex: 0 0 300px;
     background: linear-gradient(150deg, #1E3A8A 0%, #1a3580 40%, #2563EB 100%);
@@ -39,7 +38,6 @@
     align-items: flex-start;
 }
 
-/* Logo dalam lingkaran putih */
 .auth-panel__logo-circle {
     width: 140px;
     height: 140px;
@@ -106,7 +104,6 @@
     color: rgba(191,219,254,0.6);
 }
 
-/* ── Panel kanan: form ── */
 .auth-form-area {
     flex: 1;
     display: flex;
@@ -207,11 +204,8 @@
 @section('content')
 <div class="auth-wrap">
 
-    {{-- Panel kiri --}}
     <aside class="auth-panel" role="complementary" aria-label="Informasi AksiKita">
         <div class="auth-panel__content">
-
-            {{-- Logo dalam lingkaran putih --}}
             <div class="auth-panel__logo-circle" aria-hidden="true">
                 <img src="{{ asset('images/logo_aksikita.png') }}" alt="Logo AksiKita">
             </div>
@@ -240,7 +234,6 @@
         </div>
     </aside>
 
-    {{-- Panel kanan: form --}}
     <div class="auth-form-area">
         <div class="auth-form-box">
 

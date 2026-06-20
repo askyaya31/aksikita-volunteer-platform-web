@@ -44,33 +44,34 @@ class EventController extends Controller
 
     public function create()
     {
+        $org        = $this->getOrg();
         $categories = Category::all();
-        return view('organizer.events.create', compact('categories'));
+        return view('organizer.events.create', compact('categories', 'org'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'title'         => 'required|string|max:255',
-            'description'   => 'required|string',
-            'location_name' => 'required|string',
-            'city'          => 'required|string|max:100',
-            'province'      => 'required|string|max:100',
-            'start_date'    => 'required|date|after_or_equal:today',
-            'end_date'      => 'required|date|after_or_equal:start_date',
-            'start_time'    => 'nullable|date_format:H:i',
-            'end_time'      => 'nullable|date_format:H:i',
-            'quota'         => 'required|integer|min:1',
-            'category_ids'  => 'required|array|min:1',
-            'category_ids.*'=> 'exists:categories,id',
-            'poster'        => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'title'          => 'required|string|max:255',
+            'description'    => 'required|string',
+            'location_name'  => 'required|string',
+            'city'           => 'required|string|max:100',
+            'province'       => 'required|string|max:100',
+            'start_date'     => 'required|date|after_or_equal:today',
+            'end_date'       => 'required|date|after_or_equal:start_date',
+            'start_time'     => 'nullable|date_format:H:i',
+            'end_time'       => 'nullable|date_format:H:i',
+            'quota'          => 'required|integer|min:1',
+            'category_ids'   => 'required|array|min:1',
+            'category_ids.*' => 'exists:categories,id',
+            'poster'         => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ], [
             'category_ids.required'     => 'Pilih minimal 1 kategori.',
             'start_date.after_or_equal' => 'Tanggal mulai tidak boleh di masa lalu.',
         ]);
 
         $org = $this->getOrg();
-        
+
         if ($org->verification_status !== 'verified') {
             return back()->with('error', 'Organisasi Anda belum diverifikasi. Menunggu persetujuan admin.');
         }
@@ -79,6 +80,7 @@ class EventController extends Controller
         if ($request->hasFile('poster')) {
             $posterPath = $request->file('poster')->store('posters', 'public');
         }
+
         $event = Event::create([
             'organization_profile_id' => $org->id,
             'title'                   => $request->title,
@@ -112,12 +114,12 @@ class EventController extends Controller
         $event = Event::with([
                     'categories',
                     'registrations.user.volunteerProfile',
-                    'registrations.chatRoom',   
+                    'registrations.chatRoom',
                 ])
                 ->where('organization_profile_id', $org->id)
                 ->findOrFail($id);
 
-        return view('organizer.events.show', compact('event'));
+        return view('organizer.events.show', compact('event', 'org'));
     }
 
     public function edit(int $id)
@@ -130,22 +132,22 @@ class EventController extends Controller
         }
 
         $categories = Category::all();
-        return view('organizer.events.edit', compact('event', 'categories'));
+        return view('organizer.events.edit', compact('event', 'categories', 'org'));
     }
 
     public function update(Request $request, int $id)
     {
         $request->validate([
-            'title'         => 'required|string|max:255',
-            'description'   => 'required|string',
-            'location_name' => 'required|string',
-            'city'          => 'required|string|max:100',
-            'province'      => 'required|string|max:100',
-            'start_date'    => 'required|date',
-            'end_date'      => 'required|date|after_or_equal:start_date',
-            'quota'         => 'required|integer|min:1',
-            'category_ids'  => 'required|array|min:1',
-            'poster'        => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'title'          => 'required|string|max:255',
+            'description'    => 'required|string',
+            'location_name'  => 'required|string',
+            'city'           => 'required|string|max:100',
+            'province'       => 'required|string|max:100',
+            'start_date'     => 'required|date',
+            'end_date'       => 'required|date|after_or_equal:start_date',
+            'quota'          => 'required|integer|min:1',
+            'category_ids'   => 'required|array|min:1',
+            'poster'         => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
         $org   = $this->getOrg();
@@ -217,7 +219,6 @@ class EventController extends Controller
 
         $event->update(['status' => 'pending_review']);
 
-        // notif ke semua admin
         User::where('role', 'admin')->each(function ($admin) use ($event, $org) {
             Notification::create([
                 'user_id'          => $admin->id,
@@ -266,7 +267,7 @@ class EventController extends Controller
             ->findOrFail($id);
 
         $reg->update(['status' => 'confirmed']);
-$reg->event->increment('registered_count'); 
+        $reg->event->increment('registered_count');
 
         Notification::create([
             'user_id'          => $reg->user_id,
@@ -275,6 +276,7 @@ $reg->event->increment('registered_count');
             'type'             => 'registration_confirmed',
             'related_event_id' => $reg->event_id,
         ]);
+
         ChatRoom::firstOrCreate(
             ['registration_id' => $reg->id],
             [
@@ -314,29 +316,29 @@ $reg->event->increment('registered_count');
     }
 
     public function attend(int $id)
-{
-    $org = $this->getOrg();
-    $reg = Registration::with('event')
-        ->whereHas('event', fn($q) => $q->where('organization_profile_id', $org->id))
-        ->findOrFail($id);
+    {
+        $org = $this->getOrg();
+        $reg = Registration::with('event')
+            ->whereHas('event', fn($q) => $q->where('organization_profile_id', $org->id))
+            ->findOrFail($id);
 
-    if ($reg->status !== 'confirmed') {
-        return back()->with('error', 'Hanya volunteer berstatus terdaftar yang bisa ditandai hadir.');
+        if ($reg->status !== 'confirmed') {
+            return back()->with('error', 'Hanya volunteer berstatus terdaftar yang bisa ditandai hadir.');
+        }
+
+        $reg->update([
+            'status'      => 'attended',
+            'attended_at' => now(),
+        ]);
+
+        Notification::create([
+            'user_id'          => $reg->user_id,
+            'title'            => 'Kehadiran Dikonfirmasi',
+            'message'          => "Kehadiran kamu di '{$reg->event->title}' telah dikonfirmasi. Terima kasih sudah hadir!",
+            'type'             => 'attendance_confirmed',
+            'related_event_id' => $reg->event_id,
+        ]);
+
+        return back()->with('success', 'Volunteer berhasil ditandai hadir');
     }
-
-    $reg->update([
-        'status'      => 'attended',
-        'attended_at' => now(),
-    ]);
-
-    Notification::create([
-        'user_id'          => $reg->user_id,
-        'title'            => 'Kehadiran Dikonfirmasi',
-        'message'          => "Kehadiran kamu di '{$reg->event->title}' telah dikonfirmasi. Terima kasih sudah hadir!",
-        'type'             => 'attendance_confirmed',
-        'related_event_id' => $reg->event_id,
-    ]);
-
-    return back()->with('success', 'Volunteer berhasil ditandai hadir');
-}
 }

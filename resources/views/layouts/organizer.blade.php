@@ -32,7 +32,6 @@
             padding: 0 24px;
         }
 
-        /* ─── NAVBAR (Sora Font) ───────────────────────────────────────── */
         .org-navbar {
             position: fixed;
             top: 0; left: 0; right: 0;
@@ -64,7 +63,6 @@
             width: auto;
         }
 
-        /* Navigasi Menu Tengah */
         .org-nav-menu {
             display: flex;
             align-items: center;
@@ -85,7 +83,6 @@
             font-weight: 600;
         }
 
-        /* Navigasi Kanan (Aksi & Profil) */
         .org-nav-actions {
             display: flex;
             align-items: center;
@@ -109,7 +106,6 @@
             border-color: #CBD5E1;
         }
 
-        /* Pill Profile Nama Organisasi */
         .org-profile-pill {
             display: flex;
             align-items: center;
@@ -294,16 +290,17 @@
         }
 
         @media (max-width: 768px) {
-            .org-nav-menu { display: none; } /* Hambuger menu bisa ditambahkan nanti */
+            .org-nav-menu { display: none; } 
             .org-footer-grid { grid-template-columns: 1fr; gap: 32px; }
         }
+        
     </style>
 </head>
 <body>
 
     <nav class="org-navbar">
         <div class="ak-container org-nav-wrapper">
-            <a href="{{ route('volunteer.dashboard') }}" class="ak-logo">
+            <a href="{{ route('organizer.dashboard') }}" class="org-brand">
                 <img src="{{ asset('images/logo_aksikita.png') }}" alt="Logo AksiKita" style="height: 36px; width: auto;">
                 AksiKita
             </a>
@@ -317,6 +314,17 @@
                 <li>
                     <a href="{{ route('organizer.events') }}" class="org-nav-link {{ request()->routeIs('organizer.events*') ? 'active' : '' }}">
                         Kelola Event
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('organizer.candidates.index') }}" class="org-nav-link {{ request()->routeIs('organizer.candidates*') ? 'active' : '' }}">
+                        Kandidat
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('organizer.schedule') }}"
+                    class="org-nav-link {{ request()->routeIs('organizer.schedule') ? 'active' : '' }}">
+                        Jadwal
                     </a>
                 </li>
             </ul>

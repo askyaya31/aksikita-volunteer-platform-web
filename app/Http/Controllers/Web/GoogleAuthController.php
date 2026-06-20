@@ -114,11 +114,16 @@ class GoogleAuthController extends Controller
                 ->with('error', 'Akun Anda telah dinonaktifkan.');
         }
 
+        $avatarPath = $user->volunteerProfile?->avatar;
+
         session([
-            'user_id'    => $user->id,
-            'user_name'  => $user->name,
-            'user_email' => $user->email,
-            'user_role'  => $user->role,
+            'user_id'      => $user->id,
+            'user_name'    => $user->name,
+            'user_email'   => $user->email,
+            'user_role'    => $user->role,
+            'user_avatar'  => $avatarPath
+                ? asset('storage/' . $avatarPath)
+                : null,
         ]);
 
         return match($user->role) {

@@ -27,7 +27,7 @@ class User extends Authenticatable
     public function organizationProfile()
     {
         return $this->hasOne(OrganizationProfile::class);
-    }
+    }   
 
     public function volunteerProfile()
     {

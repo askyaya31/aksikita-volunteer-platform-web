@@ -1,19 +1,3 @@
-{{--
-    Halaman: Panduan Organisasi
-    Layout : extends('layouts.organizer') -> navbar & footer ikut layout
-
-    ASUMSI LOKASI & NAMA FILE GAMBAR (letakkan semua di: public/image/panduan-organisasi/):
-      1. langkah1-siapkan-berkas.png   -> ilustrasi checklist dokumen
-      2. langkah1-isi-formulir.png     -> ilustrasi orang bawa formulir
-      3. langkah1-verifikasi-akun.png  -> ilustrasi layar verifikasi
-      4. langkah2-buat-aktivitas.png   -> ilustrasi mockup dashboard/browser
-      5. langkah2-cari-relawan.png     -> ilustrasi orang + panah + ikon medsos (1 gambar gabungan)
-      6. langkah2-kelola-monitor.png   -> ilustrasi orang depan komputer
-      7. langkah2-kelola-chat.png      -> ilustrasi mockup percakapan chat
-      8. langkah2-kelola-grafik.png    -> ilustrasi orang dengan grafik bar
-
-    Kalau nama/lokasi filenya beda, tinggal sesuaikan path di asset('image/panduan-organisasi/...').
---}}
 @extends('layouts.organizer')
 @section('title', 'Panduan Organisasi')
 
@@ -35,8 +19,6 @@
     }
 
     .guide-page { padding: 2.5rem 0 4rem; }
-
-    /* Judul Halaman */
     .guide-page-title {
         display: inline-block;
         font-size: 30px;
@@ -49,7 +31,6 @@
         text-underline-offset: 8px;
     }
 
-    /* Card Pembungkus Setiap Langkah */
     .guide-card {
         background: #fff;
         border: 1.5px solid #B9C8E0;
@@ -58,7 +39,6 @@
         margin-bottom: 2rem;
     }
 
-    /* Header "LANGKAH X: ..." + garis pemisah ke kanan */
     .guide-card-header {
         display: flex;
         align-items: center;
@@ -78,7 +58,6 @@
         background: #E1E6EF;
     }
 
-    /* Box Kriteria / Intro (background abu, garis aksen kiri) */
     .guide-intro-box {
         background: #F3F4F6;
         border-left: 3px solid #D1D5DB;
@@ -102,14 +81,11 @@
     }
     .guide-intro-box li { margin-bottom: 2px; }
 
-    /* Baris 3 Kolom Untuk Langkah 1 */
     .guide-steps-row {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
         gap: 2rem;
     }
-
-    /* Header Setiap Step: Bulatan Nomor + Judul */
     .guide-step-head {
         display: flex;
         align-items: center;
@@ -137,7 +113,6 @@
         line-height: 1.4;
     }
 
-    /* Area Gambar Step (Langkah 1, layout vertikal/centang) */
     .guide-step-media {
         display: flex;
         justify-content: center;
@@ -179,7 +154,6 @@
         text-align: left;
     }
 
-    /* Step Lebar Untuk Langkah 2 (gambar kiri, teks kanan) */
     .guide-step-wide { margin-bottom: 2.5rem; }
     .guide-step-wide:last-child { margin-bottom: 0; }
     .guide-step-wide .guide-step-head h3 { max-width: 720px; }
@@ -222,8 +196,6 @@
 <div class="ak-container guide-page">
 
     <h1 class="guide-page-title">Panduan Organisasi</h1>
-
-    {{-- ============================ LANGKAH 1 ============================ --}}
     <div class="guide-card">
         <div class="guide-card-header">
             <span>LANGKAH 1: MENDAFTAR ORGANISASI</span>
@@ -247,7 +219,6 @@
         </div>
 
         <div class="guide-steps-row">
-            {{-- Step 1: Siapkan berkas legalitas --}}
             <div class="guide-step">
                 <div class="guide-step-head">
                     <span class="guide-step-num">1</span>
@@ -258,7 +229,6 @@
                 </div>
             </div>
 
-            {{-- Step 2: Isi Formulir Pendaftaran --}}
             <div class="guide-step">
                 <div class="guide-step-head">
                     <span class="guide-step-num">2</span>
@@ -269,8 +239,6 @@
                 </div>
                 <p class="guide-step-desc">Daftarkan email organisasi dan aktivasi email kamu untuk membuat aktivitas di platform AksiKita</p>
             </div>
-
-            {{-- Step 3: Verifikasi Akun --}}
             <div class="guide-step">
                 <div class="guide-step-head">
                     <span class="guide-step-num">3</span>
@@ -284,14 +252,12 @@
         </div>
     </div>
 
-    {{-- ============================ LANGKAH 2 ============================ --}}
     <div class="guide-card">
         <div class="guide-card-header">
             <span>LANGKAH 2: MEMBUAT AKTIVITAS &amp; MENCARI RELAWAN</span>
             <span class="guide-card-header-line"></span>
         </div>
 
-        {{-- Step 1: Buat Aktivitas --}}
         <div class="guide-step-wide">
             <div class="guide-step-head">
                 <span class="guide-step-num">1</span>
@@ -305,7 +271,6 @@
             </div>
         </div>
 
-        {{-- Step 2: Cari Relawan --}}
         <div class="guide-step-wide">
             <div class="guide-step-head">
                 <span class="guide-step-num">2</span>
@@ -319,7 +284,6 @@
             </div>
         </div>
 
-        {{-- Step 3: Kelola Relawan (3 sub-bagian dalam satu judul) --}}
         <div class="guide-step-wide">
             <div class="guide-step-head">
                 <span class="guide-step-num">3</span>

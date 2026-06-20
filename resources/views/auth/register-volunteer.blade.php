@@ -10,7 +10,6 @@
     background: var(--color-bg);
 }
 
-/* ── Panel kiri: branding ── */
 .auth-brand-panel {
     display: none;
     flex-direction: column;
@@ -218,10 +217,8 @@
     font-weight: 500;
 }
 
-/* ── Responsive ── */
 @media (min-width: 900px) {
     .auth-brand-panel { display: flex; }
-    /* Sembunyikan tombol back & header biru di form saat panel kiri tampil */
     .auth-register-header__back { display: none; }
 }
 

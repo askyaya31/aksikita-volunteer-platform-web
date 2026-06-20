@@ -13,16 +13,20 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        $user = User::with('volunteerProfile')->find(session('user_id'));
-        $city = $user->volunteerProfile?->city;
         $userId = session('user_id');
+        $user   = User::with('volunteerProfile')->find($userId);
+        $city   = $user?->volunteerProfile?->city;
+
+        if ($user?->volunteerProfile?->avatar) {
+            session(['user_avatar' => $user->volunteerProfile->avatar]);
+        }
 
         $nearbyEvents = Event::with(['organization', 'categories'])
             ->where('status', 'published')
             ->when($city, fn($q) => $q->where('city', $city))
             ->where('start_date', '>=', now()->toDateString())
             ->orderBy('start_date')
-            ->limit(3)
+            ->limit(5)
             ->get();
 
         $latestEvents = Event::with(['organization', 'categories'])
@@ -32,12 +36,13 @@ class DashboardController extends Controller
             ->limit(6)
             ->get();
 
-        $unreadCount = Notification::where('user_id', session('user_id'))
-            ->where('is_read', false)->count();
+        $unreadCount = Notification::where('user_id', $userId)
+            ->where('is_read', false)
+            ->count();
         session(['unread_count' => $unreadCount]);
 
-        $upcomingSchedule = \App\Models\Registration::with(['event.organization'])
-            ->where('user_id', session('user_id'))
+        $upcomingSchedule = Registration::with(['event.organization'])
+            ->where('registrations.user_id', $userId)
             ->whereIn('registrations.status', ['confirmed', 'attended'])
             ->whereHas('event', fn($q) => $q->where('start_date', '>=', now()->toDateString()))
             ->join('events', 'registrations.event_id', '=', 'events.id')
@@ -47,15 +52,27 @@ class DashboardController extends Controller
             ->limit(3)
             ->get();
 
-         $recommendations = (new EventRecommendationService())->recommend($userId, 6);
+        $recommendations = collect();
+        try {
+            $recommendations = (new EventRecommendationService())->recommend($userId, 6);
+        } catch (\Throwable $e) {
+           
+        }
+
+        $fallbackEvents = collect();
+        if ($recommendations->isEmpty()) {
+            $fallbackEvents = Event::with(['organization', 'categories'])
+                ->where('status', 'published')
+                ->where('end_date', '>=', now()->toDateString())
+                ->latest()
+                ->limit(6)
+                ->get();
+        }
 
         return view('volunteer.dashboard', compact(
-            'user',
-            'nearbyEvents',
-            'latestEvents',
-            'unreadCount',
-            'upcomingSchedule',
-            'recommendations'  
+            'user', 'nearbyEvents', 'latestEvents',
+            'unreadCount', 'upcomingSchedule',
+            'recommendations', 'fallbackEvents'
         ));
     }
 }

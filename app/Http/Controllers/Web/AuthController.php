@@ -32,11 +32,17 @@ class AuthController extends Controller
             return back()->with('error', 'Akun Anda telah dinonaktifkan.');
         }
 
+        $volunteerAvatar = null;
+        if ($user->role === 'volunteer') {
+            $volunteerAvatar = $user->volunteerProfile?->avatar;
+        }
+
         session([
-            'user_id'    => $user->id,
-            'user_name'  => $user->name,
-            'user_email' => $user->email,
-            'user_role'  => $user->role,
+            'user_id'     => $user->id,
+            'user_name'   => $user->name,
+            'user_email'  => $user->email,
+            'user_role'   => $user->role,
+            'user_avatar' => $volunteerAvatar,   
         ]);
 
         return match($user->role) {
@@ -82,10 +88,11 @@ class AuthController extends Controller
         ]);
 
         session([
-            'user_id'    => $user->id,
-            'user_name'  => $user->name,
-            'user_email' => $user->email,
-            'user_role'  => 'volunteer',
+            'user_id'     => $user->id,
+            'user_name'   => $user->name,
+            'user_email'  => $user->email,
+            'user_role'   => 'volunteer',
+            'user_avatar' => null,  
         ]);
 
         return redirect()->route('volunteer.dashboard')

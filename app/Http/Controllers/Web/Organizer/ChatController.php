@@ -5,14 +5,21 @@ namespace App\Http\Controllers\Web\Organizer;
 use App\Http\Controllers\Controller;
 use App\Models\ChatRoom;
 use App\Models\ChatMessage;
+use App\Models\OrganizationProfile;
 use App\Models\Registration;
 use Illuminate\Http\Request;
 
 class ChatController extends Controller
 {
+    private function getOrg()
+    {
+        return OrganizationProfile::where('user_id', session('user_id'))->first();
+    }
+
     public function index(Request $request)
     {
         $userId = (int) session('user_id');
+        $org    = $this->getOrg();
 
         $rooms = ChatRoom::with(['event', 'volunteer.volunteerProfile', 'latestMessage'])
             ->where('organizer_id', $userId)
@@ -20,12 +27,13 @@ class ChatController extends Controller
             ->latest('updated_at')
             ->get();
 
-        return view('organizer.chat.index', compact('rooms', 'userId'));
+        return view('organizer.chat.index', compact('org', 'rooms', 'userId'));
     }
 
     public function show(Request $request, ChatRoom $room)
     {
         $userId = (int) session('user_id');
+        $org    = $this->getOrg();
 
         abort_if($room->organizer_id !== $userId, 403);
 
@@ -38,7 +46,7 @@ class ChatController extends Controller
 
         $room->load('volunteer.volunteerProfile');
 
-        return view('organizer.chat.show', compact('room', 'messages'));
+        return view('organizer.chat.show', compact('org', 'room', 'messages'));
     }
 
     public function send(Request $request, ChatRoom $room)

@@ -3,14 +3,11 @@
 
 @push('styles')
 <style>
-    /* ─── PAGE WRAPPER ──────────────────────────────────────────── */
     .ev-page {
         max-width: 980px;
         margin-inline: auto;
         padding: 32px 24px 64px;
     }
-
-    /* ─── BACK LINK ─────────────────────────────────────────────── */
     .ev-back {
         display: inline-flex;
         align-items: center;
@@ -23,8 +20,6 @@
         transition: color 0.15s;
     }
     .ev-back:hover { color: #0F2057; }
-
-    /* ─── HEADER: title + badge ─────────────────────────────────── */
     .ev-header {
         display: flex;
         align-items: flex-start;
@@ -59,8 +54,6 @@
     .ev-badge--rejected       { background: #FEE2E2; color: #991B1B; }
     .ev-badge--completed      { background: #DBEAFE; color: #1D4ED8; }
     .ev-badge--cancelled      { background: #F1F5F9; color: #94A3B8; }
-
-    /* ─── CATEGORIES ─────────────────────────────────────────────── */
     .ev-cats {
         display: flex;
         flex-wrap: wrap;
@@ -77,7 +70,6 @@
         border: 1px solid #BFDBFE;
     }
 
-    /* ─── REJECTION BANNER ───────────────────────────────────────── */
     .ev-rejection {
         background: #FFF5F5;
         border: 1px solid #FECACA;
@@ -98,8 +90,6 @@
     .ev-rejection__title { font-size: 0.8rem; font-weight: 700; color: #991B1B; margin-bottom: 3px; }
     .ev-rejection__body  { font-size: 0.8rem; color: #B91C1C; line-height: 1.5; }
     .ev-rejection__link  { font-size: 0.75rem; font-weight: 600; color: #DC2626; text-decoration: underline; text-underline-offset: 2px; display: inline-block; margin-top: 6px; }
-
-    /* ─── MAIN GRID ──────────────────────────────────────────────── */
     .ev-layout {
         display: grid;
         grid-template-columns: 1fr 248px;
@@ -109,8 +99,6 @@
     @media (max-width: 700px) {
         .ev-layout { grid-template-columns: 1fr; }
     }
-
-    /* ─── MAIN CARD ──────────────────────────────────────────────── */
     .ev-card {
         background: #FFFFFF;
         border: 1px solid #EAEFF5;
@@ -119,7 +107,6 @@
         box-shadow: 0 1px 4px rgba(15,32,87,0.05);
     }
 
-    /* Poster */
     .ev-poster {
         width: 100%;
         height: 200px;
@@ -135,7 +122,6 @@
         justify-content: center;
     }
 
-    /* Meta rows inside card */
     .ev-meta-list {
         padding: 20px;
         display: flex;
@@ -175,7 +161,6 @@
         margin-top: 2px;
     }
 
-    /* Quota bar */
     .ev-quota-wrap { display: flex; align-items: center; gap: 10px; margin-top: 4px; }
     .ev-quota-track {
         flex: 1;
@@ -192,10 +177,8 @@
     }
     .ev-quota-label { font-size: 0.7rem; color: #6B7280; font-weight: 500; }
 
-    /* Divider */
     .ev-divider { height: 1px; background: #F1F5F9; margin: 4px 20px; }
 
-    /* Description / Requirements */
     .ev-text-section { padding: 16px 20px; }
     .ev-text-label {
         font-size: 0.65rem;
@@ -212,7 +195,6 @@
         white-space: pre-line;
     }
 
-    /* ─── SIDEBAR ────────────────────────────────────────────────── */
     .ev-sidebar { display: flex; flex-direction: column; gap: 12px; }
 
     .ev-side-card {
@@ -231,7 +213,6 @@
         margin-bottom: 12px;
     }
 
-    /* Action buttons */
     .ev-btn {
         display: flex;
         align-items: center;
@@ -269,7 +250,6 @@
     }
     .ev-btn--danger:hover { background: #FFF5F5; }
 
-    /* Pending / completed state */
     .ev-state-box {
         border-radius: 10px;
         padding: 14px;
@@ -294,8 +274,6 @@
     .ev-state-box--pending .ev-state-sub     { color: #B45309; }
     .ev-state-box--completed .ev-state-title { color: #1E40AF; }
     .ev-state-box--cancelled .ev-state-title { color: #6B7280; font-size: 0.8rem; }
-
-    /* Volunteer stats */
     .ev-stat-row {
         display: flex;
         align-items: center;
@@ -316,8 +294,6 @@
         flex-shrink: 0;
     }
     .ev-stat-val { font-size: 0.8rem; font-weight: 700; }
-
-    /* ─── VOLUNTEER TABLE ────────────────────────────────────────── */
     .ev-vol-section {
         background: #FFFFFF;
         border: 1px solid #EAEFF5;
@@ -469,16 +445,12 @@
 @endphp
 
 <div class="ev-page">
-
-    {{-- Back --}}
     <a href="{{ route('organizer.events') }}" class="ev-back">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
             <line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/>
         </svg>
         Kembali ke daftar event
     </a>
-
-    {{-- Title + Badge --}}
     <div class="ev-header">
         <h1 class="ev-title">{{ $event->title }}</h1>
         <span class="ev-badge ev-badge--{{ $event->status }}">
@@ -486,7 +458,6 @@
         </span>
     </div>
 
-    {{-- Categories --}}
     @if($event->categories->count())
         <div class="ev-cats">
             @foreach($event->categories as $cat)
@@ -495,7 +466,6 @@
         </div>
     @endif
 
-    {{-- Rejection banner --}}
     @if($event->status === 'rejected' && $event->rejection_reason)
         <div class="ev-rejection">
             <div class="ev-rejection__icon">
@@ -513,14 +483,9 @@
         </div>
     @endif
 
-    {{-- MAIN GRID --}}
     <div class="ev-layout">
-
-        {{-- LEFT: Main card --}}
         <div>
             <div class="ev-card">
-
-                {{-- Poster --}}
                 @if($event->poster)
                     <img src="{{ asset('storage/' . $event->poster) }}"
                          alt="{{ $event->title }}"
@@ -535,10 +500,7 @@
                     </div>
                 @endif
 
-                {{-- Meta rows --}}
                 <div class="ev-meta-list">
-
-                    {{-- Tanggal --}}
                     <div class="ev-meta-row">
                         <div class="ev-meta-icon">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
@@ -561,7 +523,6 @@
 
                     <div class="ev-divider"></div>
 
-                    {{-- Lokasi --}}
                     <div class="ev-meta-row">
                         <div class="ev-meta-icon">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
@@ -577,7 +538,6 @@
 
                     <div class="ev-divider"></div>
 
-                    {{-- Kuota --}}
                     <div class="ev-meta-row">
                         <div class="ev-meta-icon">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
@@ -618,7 +578,6 @@
                     @endif
                 </div>
 
-                {{-- Requirements --}}
                 @if($event->requirements)
                     <div class="ev-divider" style="margin: 0 0;"></div>
                     <div class="ev-text-section">
@@ -627,7 +586,6 @@
                     </div>
                 @endif
 
-                {{-- Description --}}
                 @if($event->description)
                     <div class="ev-divider" style="margin: 0 0;"></div>
                     <div class="ev-text-section">
@@ -638,11 +596,7 @@
 
             </div>
         </div>
-
-        {{-- RIGHT: Sidebar --}}
         <div class="ev-sidebar">
-
-            {{-- Volunteer Stats --}}
             <div class="ev-side-card">
                 <p class="ev-side-label">Volunteer</p>
                 <div class="ev-stat-row">
@@ -674,8 +628,6 @@
                     <span class="ev-stat-val" style="color:#9CA3AF;">{{ $cancelled }}</span>
                 </div>
             </div>
-
-            {{-- Actions --}}
             <div class="ev-side-card">
                 <p class="ev-side-label">Aksi</p>
 
@@ -747,7 +699,6 @@
         </div>
     </div>
 
-    {{-- VOLUNTEER LIST --}}
     <div class="ev-vol-section">
         <div class="ev-vol-header">
             <p class="ev-vol-title">Daftar Volunteer</p>
